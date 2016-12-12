@@ -6,7 +6,7 @@ is-parent: yes
 number: 4100
 title: 1. Web Framework
 ---
-Web Frameworks simplify the task of building a website or web API by pre-formatting the common functionalities usually found in these structures such as HTTP Requests and Responses, Routing, MVC Design Pattern, Database Connection, Middleware, Authentication, Security and much more. Because of time constraints, we considered frameworks that we already had prior knowledge to reduce time spent learning them.
+[Web Frameworks](https://en.wikipedia.org/wiki/Web_framework) simplify the task of building a website or web API by pre-formatting the common functionalities usually found in these structures such as HTTP Requests and Responses, Routing, MVC Design Pattern, Database Connection, Middleware, Authentication, Security and much more. Because of time constraints, we considered frameworks that we already had prior knowledge to reduce time spent learning them.
 
 <a href="https://laravel.com/"><img src="{{ site.url }}/img/laravel-logo.png" alt="laravel-logo" style="width: 300px; height: 100px;"></a>
 <b>[Laravel](https://laravel.com/)</b> is a popular PHP Web Framework. 
@@ -23,7 +23,8 @@ Its disadvantages include ships with unnecessary functionality making the file s
 Its disadvantages include slow startup time, confusing Python syntax (as compared to C++/Java similar languages) and lack of knowledge on Python.
 
 ### Result
-It was difficult to make a decision since both Web Frameworks were very similar in nature. We chose Laravel because we it is easier to extend since it with services such as E-Mail protocols, OAuth2 Socialite, PHP Redis and Laravel Passport much more. We found out that it is also more suitable for beginner to intermediate web developers since we were all new to API Development. Though Laravel is slower to develop in, the our requirements for the web API are small so the development time will still be short. Laravel also has routing support for APIs with built in user authentication. 
+
+It was difficult to make a decision since both Web Frameworks were very similar in nature. We chose Laravel because it is easier to extend it with services such as E-Mail protocols, OAuth2 Socialite, PHP Redis and Laravel Passport much more. We found out that it is also more suitable for beginner to intermediate web developers since we were all new to API Development. Though Laravel is slower to develop in, the our requirements for the web API are small so the development time will still be short. Laravel also has routing support for APIs with built in user authentication. 
 
 
-Sources: [Django vs Laravel vs Rails](http://www.findalltogether.com/post/django-vs-laravel-vs-rails/), [Why did I Embrace Laravel](https://www.toptal.com/laravel/why-i-decided-to-embrace-laravel), [Laravel vs. Django](http://vschart.com/compare/laravel/vs/django-framework)
+Sources: [Laravel](https://laravel.com), [Django](https://www.djangoproject.com/), [Django vs Laravel vs Rails](http://www.findalltogether.com/post/django-vs-laravel-vs-rails/), [Why did I Embrace Laravel](https://www.toptal.com/laravel/why-i-decided-to-embrace-laravel), [Laravel vs. Django](http://vschart.com/compare/laravel/vs/django-framework)

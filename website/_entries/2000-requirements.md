@@ -2,7 +2,7 @@
 sectionclass: h1
 sectionid: requirements
 is-parent: yes
-title: Requirements & Use Cases
+title: Requirements
 number: 2000
 ---
 This section discusses the requirements of our project given by the client, then broken down. Most of the discussion surrounds priority of "Must Have" and very little discussion on "Should Have", "Could Have" and non on "Won't Have".
