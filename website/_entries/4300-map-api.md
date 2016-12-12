@@ -8,7 +8,7 @@ title: 3. Map API
 ---
 A Map API will be required for our project to be able to create and customize a visible a route, and generate directions.
 
-<img src="/img/bing-map-logo.png" alt="Bing Map Logo" style="width: 500px; height: 100px;">
+<img src="{{ site.url }}/img/bing-map-logo.png" alt="Bing Map Logo" style="width: 500px; height: 100px;">
 
 <b>Bing Maps API</b>
 
@@ -17,7 +17,7 @@ The Bing Maps V8 is supported on standard PC & Mac browsers as well as many mobi
 
 The Bing Maps REST Services are excellent services for performing tasks such as geocoding, reverse-geocoding, routing and static imagery. Being that this is REST-based API, it can be easily accessed from almost any development environment.
 
-<img src="/img/google-maps-logo.png" alt="Bing Map Logo" style="width: 250px; height: 250px;">
+<img src="{{ site.url }}/img/google-maps-logo.png" alt="Bing Map Logo" style="width: 250px; height: 250px;">
 
 <b>Google Maps API</b>
 

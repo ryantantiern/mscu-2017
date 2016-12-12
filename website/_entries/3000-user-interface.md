@@ -10,18 +10,18 @@ We have already created a part of our User Interface using IONIC which implies t
 <i>From left to right: Home Page, Registration Page, Landing Page, View Friends Page, Error Alert</i>
 <div class="container">
 	<div style="display: inline-block; ">
-		<img src="/img/ui/login.jpg" alt="" style="width: 250px; height: 400px">
+		<img src="{{ site.url }}/img/ui/login.jpg" alt="" style="width: 250px; height: 400px">
 	</div>
 	<div style="display: inline-block;">
-		<img src="/img/ui/register.jpg" alt="" style="width: 250px; height: 400px">
+		<img src="{{ site.url }}/img/ui/register.jpg" alt="" style="width: 250px; height: 400px">
 	</div>
 	<div style="display: inline-block;">
-		<img src="/img/ui/landing.jpg" alt="" style="width: 250px; height: 400px">
+		<img src="{{ site.url }}/img/ui/landing.jpg" alt="" style="width: 250px; height: 400px">
 	</div>
 	<div style="display: inline-block;">
-		<img src="/img/ui/friendlist.jpg" alt="" style="width: 250px; height: 400px">
+		<img src="{{ site.url }}/img/ui/friendlist.jpg" alt="" style="width: 250px; height: 400px">
 	</div>
 	<div style="display: inline-block;">
-		<img src="/img/ui/validation.jpg" alt="" style="width: 250px; height: 400px">
+		<img src="{{ site.url }}/img/ui/validation.jpg" alt="" style="width: 250px; height: 400px">
 	</div>
 </div>
