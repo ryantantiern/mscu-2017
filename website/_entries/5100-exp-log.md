@@ -6,7 +6,7 @@ parent-id: exp-testing
 number: 5100
 title: Experiment Log
 ---
-<div class="container" style="overflow-x: auto">
+<div class="container">
 	<table border="1">
 		<thead>
 			<th>Exp no.</th>

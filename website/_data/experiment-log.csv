@@ -1,4 +1,16 @@
 expno,title,details,result,success,done_by,date
-1.0,Setup Experiment log,Import CSV data into Jekyll with format, All data exported into table, 1,Ryan,26/11/16 - 26/11/16
-1.1,Test,Testing the test,Sucesss hopefully,Ryan,test date, test, 
-1.2,Test,Testing the test,Sucesss hopefully,Ryan,test date ,test, 
+1.0,Get route from Bing Maps API,Enter start route and end route address into  Bing Maps API and generate the route,Route was generated,Successful,Nadia,20/11/2016
+1.1,Create route by entering via points in Bing API,"Enter start route, end route, and via points as way points in Bing Maps API to generate route that goes through waypoints",Route was generated,Successful,Nadia,22/11/2016
+1.2,Displaying route on a map in Safari Web Browser,Enter start route and end route address into  Bing Maps API and generate the route on a visible map in Safari Web Browser,Route was visible on a map,Successful,Nadia,25/11/2016
+1.3,Get directions from Bing Maps API and displaying them in Safari Web Browser,Enter start route and end route address into  Bing Maps API and display directions in Safari Web Browser,Directions generated and visible,Successful,Nadia,28/11/2016
+1.4,Change path of route on map in Safari Web Browser,"Enter start and end route into Bing Maps API, to generate the route on a visible map in Safari Web Browser, which is then possible to alter, by dragging the path on the route",Route was possible to drag to change the path on the visible map,Successful,Nadia,30/11/2016
+2.0, Create user API, Create and store a user in PostgreSQL from Postman. Verified in phppgadmin, Successful, Ryan, 21/11/2016
+2.1, Create route API, Create and store a route in PostgreSQL from Postman. Verified in phppgadmin, Successful, Ryan, 21/11/2016
+2.2, Login user API, Login a user in PostgreSQL from Postman. Verified in Json response with user credentials, Successful, Ryan, 21/11/2016
+2.3, Share route API, Add a record in the SharedRoutes table in PostgreSQL from Postman. Verified in phppgadmin, Successful, Ryan, 25/11/2016
+2.4, Create route API, Create and store a route which is a 2D Decimal Json Array in PostgreSQL from Postman. Verified in phppgadmin, Successful, Ryan, 21/11/2016
+2.4, Share route API, Share a route in PostgreSQL from Postman. Verified in phppgadmin, Successful, Ryan, 21/11/2016
+3.5,Creating a project using IONIC,"After installing the dependencies, choosing the template between BLANK and TABS",Definitely going for the BLANK one because the Tabs one does not fit the app requirements,Successful,Stefan,20/11/2016
+3.1,Audio user-interaction,Looking into using  a text to speech converting  API,Definitely possible, although there might by issues when integrating it,Further investigation needed,Stefan,23/11/2016
+3.2,Angular routing,Creating a different app to learn how to create new pages and route using Angular JS,Understand how the routing in IONIC works and learn how to  create controllers,Success,Stefan,26/11/2016
+3.3,Passing data between states,Using Angular service capability to access the data from the current state in others.,Managing to save the name provided in the Registration page and use it in the  main Dashboard page.,Success,Stefan,2/12/2016

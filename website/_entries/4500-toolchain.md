@@ -6,4 +6,4 @@ is-parent: yes
 number: 4500
 title: Toolchain
 ---
-Chosen toolchain
+<b>Toolchain: Laravel, Ionic, Bing Map API, Bing Speech API, Postman, PostgreSQL, Azure Cloud Hosting</b>

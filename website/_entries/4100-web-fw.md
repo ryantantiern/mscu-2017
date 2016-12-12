@@ -8,19 +8,21 @@ title: 1. Web Framework
 ---
 [Web Frameworks](https://en.wikipedia.org/wiki/Web_framework) simplify the task of building a website or web API by pre-formatting the common functionalities usually found in these structures such as HTTP Requests and Responses, Routing, MVC Design Pattern, Database Connection, Middleware, Authentication, Security and much more. Because of time constraints, we considered frameworks that we already had prior knowledge to reduce time spent learning them.
 
-<a href="https://laravel.com/"><img src="{{ site.url }}/img/laravel-logo.png" alt="laravel-logo" style="width: 300px; height: 100px;"></a>
+<a href="https://laravel.com/"><img src="{{ site.url }}/img/laravel-logo.png" alt="laravel-logo" ></a>
 <b>[Laravel](https://laravel.com/)</b> is a popular PHP Web Framework. 
 
-Its advantages include its active and growing community, quick and functional core, it is well documented, easily integratable since most hosting servers support PHP, its out of the box support for unit tests and PostgreSQL, a availability of mature extended libraries using Composer and Packagist, Eloquent ORM support and Migrations for database support. 
+Advantages: Active and growing community, quick and functional core, it is well documented, easily integratable since most hosting servers support PHP, its out of the box support for unit tests and PostgreSQL, a availability of mature extended libraries using Composer and Packagist, Eloquent ORM support and Migrations for database support. 
 
-Its disadvantages include ships with unnecessary functionality making the file structure occupy more space, supports much less databases, does not have an official IDE and is slower to develop in. 
+Disadvantages: Ships with unnecessary functionality making the file structure occupy more space, supports much less databases, does not have an official IDE and is slower to develop in. 
 
 
-<a href="https://www.djangoproject.com/"><img src="{{ site.url }}/img/django-logo.png" alt="django-logo" style="width: 300px; height: 100px;"></a>
+<a href="https://www.djangoproject.com/"><img src="{{ site.url }}/img/django-logo.png" alt="django-logo" style="width: 600px; height: 200;"></a>
 
-<b>[Django](https://www.djangoproject.com/)</b> is a popular Python Framework. Its advantages include it comes with an admin table out of the box, it has auto generated forms for models with validation, authentication system, PIP Package Manager, great for GIS applications, serialization of Django models and growing and active community. 
+<b>[Django](https://www.djangoproject.com/)</b> is a popular Python Framework. 
 
-Its disadvantages include slow startup time, confusing Python syntax (as compared to C++/Java similar languages) and lack of knowledge on Python.
+Advantages: Comes with an admin table out of the box, it has auto generated forms for models with validation, authentication system, PIP Package Manager, great for GIS applications, serialization of Django models and growing and active community. 
+
+Disadvantages: Slow startup time, confusing Python syntax (as compared to C++/Java similar languages) and lack of knowledge on Python.
 
 ### Result
 
