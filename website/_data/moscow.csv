@@ -1,0 +1,18 @@
+id,description,category,priority
+F1, The app shall allow users to create a route,Functional, Must Have
+F2, The app shall allow a Mobility Instructor to share routes with a Visually Impaired person ,Functional, Must Have
+F3, The app shall allow a Visually Impaired person to access the shared route, Functional, Must Have
+F4, The app shall allow users to add a trusted friend, Functional, Must Have
+F5, The web API shall generate a user profile along with the users routes and shared routes in the database, Functional, Must Have
+F6, The web API shall execute neccessary logic on the database for friending&comma; storing a route&comma; sharing a route and accepting and declining a route shared, Functional, Must Have
+F8, The app shall display all of a users routes, Functional, Must Have
+F9, A user shall be able to accept or decline routes shared with him or her, Functional, Must Have
+F10, A user can listen to what's around them at each way point from a remote place, Functional, Should Have
+NF1, A Visiually Imparied person shall easily be able to interact with the app, Non-Functional, Must Have
+NF2, A Visiually Imparied person shall easily be able to create a route, Non-Functional, Must Have
+NF3, The app must have text to speech support, Non-Functional, Must Have
+NF4, The app shall be easy to use for the general public, Non-Functional, Should Have
+NF5, The general public can easily interact with a map in the app in order to select and change a route, Non-Functional, Should Have
+NF6, The app should have speech to text recognition, Non-Functional, Could Have
+NF7, The web api shall receive requests and send responses in an encrypted form, Non-Functional, Must Have
+NF8, The database shall securely store data with the proper encryptions, Non-Functional, Must Have

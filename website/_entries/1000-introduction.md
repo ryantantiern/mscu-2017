@@ -2,8 +2,8 @@
 sectionid: background
 sectionclass: h1
 is-parent: yes
-title: Background
-number: 2000
+title: Introduction
+number: 1000
 ---
 purpose of design, give the context, initial problem statement
 

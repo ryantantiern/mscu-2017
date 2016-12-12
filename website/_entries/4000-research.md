@@ -9,11 +9,11 @@ Research. should have different topics of research with multiple choices for eac
 
 Topics - research 
 
-##### Web Server
+Web Server
 Discussion of web server language: Laravel vs Django
 
-##### Map API
+Map API
 Discussion of which Maps API to choose: Bing Map vs Google Map
 
-##### Platform
+Platform
 Discussion of suitable medium and platform: PC, Mobile App, Wearable, IOS, Windows, Android

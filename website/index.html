@@ -9,13 +9,21 @@ title: index
         <section id="{{ entry.sectionid }}" class="{{ entry.sectionclass }}">
             {% case entry.sectionclass %}
                 {% when 'h1' %}
+                <div class="container">
                     <h1>{{ entry.title }}</h1>
+                </div>
                 {% when 'h2' %}
+                <div class="container">
                     <h2>{{ entry.title }}</h2>
+                </div>
                 {% when 'h3' %}
+                <div class="container">
                     <h3>{{ entry.title }}</h3>
+                </div>
                 {% when 'h4' %}
+                <div class="container">
                     <h4>{{ entry.title }}</h4>
+                </div>
             {% endcase %}
 
             {{ entry.content }}

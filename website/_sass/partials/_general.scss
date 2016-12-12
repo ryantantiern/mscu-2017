@@ -2,7 +2,7 @@ body{
     font:{
         family: $roboto;
         weight: $light;
-        size: 22px;
+        size: 18px;
     }
     line-height: 1.4;
     background: $white;
@@ -16,13 +16,13 @@ body{
 }
 
 .overview{
-    width: 320px;
+    width: 280px;
     font-size: 18px;
 }
 
 .content{
     counter-reset: h1-counter;
-    width: calc(100% - 320px);
+    width: calc(100% - 265px);
     position: absolute;
     right: 0;
     
@@ -47,7 +47,7 @@ th, td{
     border:3px solid #006666;
     text-align: left;
     vertical-align: center;
-    padding: 10px;
+    padding: 8px;
 }
 tr:nth-child(odd) {background-color: #f2f2f2}
 
@@ -86,16 +86,16 @@ section{
 }
 
 h1, h2, h3, h4, h5, h6{
-    text-transform: uppercase;
+    padding: 0;
     font-weight: $bold;
     line-height: 1;
     color: $green;
 }
 
 h1 {
-    font-size: 3.1em;
-    padding: 30px 0 0;
-    text-align: right;
+    text-transform: uppercase;
+    font-size: 2.3em;
+    text-align: left;
     border-bottom: $green 9px solid;
     width: 99%;
     line-height: 0.61;
@@ -109,42 +109,34 @@ h1 {
 .h1{
     counter-increment: h1-counter;
     counter-reset: h2-counter;
-    padding-top: 80px;
+    padding-top: 40px;
 }
 
 h2 {
     font-size: 2em;
-    padding: 30px 0 0;
-    width: 90%;
-    text-align: center;
+    width: 99%;
+    text-align: left;
     border-bottom: 5px solid $green;
     margin: 0 auto 20px;
     line-height: 0.63;
 
-    &:before {
-        content: counter(h1-counter) "." counter(h2-counter) " ";
-    }
 }
 
 .h2{
     counter-increment: h2-counter;
     counter-reset: h3-counter;
-    padding-top: 60px;
+    padding-top: 40px;
 }
 
 
 h3{
     font-size: 1.7em;
-    padding: 20px 0 0;
-    width: 90%;
+    width: 99%;
     text-align: left;
     border-bottom: 4px solid $green;
     margin: 0 auto 20px;
     line-height: 0.65;
 
-    &:before {
-        content: counter(h1-counter) "." counter(h2-counter) "." counter(h3-counter) " ";
-    }
 }
 
 .h3{
@@ -155,36 +147,30 @@ h3{
 
 h4{
     font-size: 1.5em;
-    padding: 18px 0 0;
-    width: 90%;
+    width: 99%;
     text-align: left;
     border-bottom: 3px solid $green;
     margin: 0 auto 18px;
     line-height: 0.67;
 
-    &:before {
-        content: counter(h1-counter) "." counter(h2-counter) "." counter(h3-counter) "." counter(h4-counter) " ";
-    }
+
 }
 
 .h4{
     counter-increment: h4-counter;
     counter-reset: h5-counter 1;
-    padding-top: 30px;
+    padding-top: 40px;
 }
 
 h5{
     font-size: 1.3em;
-    padding: 40px 0 0;
-    width: 90%;
+    width: 99%;
     text-align: left;
     border-bottom: 2px solid $green;
     margin: 0 auto 15px;
     line-height: 0.68;
 
-    &:before {
-        content: counter(h1-counter) "." counter(h2-counter) "." counter(h3-counter) "." counter(h4-counter) "." counter(h5-counter) " ";
-    }
+
 }
 
 
@@ -204,13 +190,6 @@ a{
 
     &:hover{
         color: $darkgreen;
-    }
-}
-
-
-#research > h5{
-    &:before {
-        content: "";
     }
 }
 
@@ -253,5 +232,5 @@ iframe{
 }
 
 p + p{
-    margin-top: 20px;
+    margin-top: 5px;
 }

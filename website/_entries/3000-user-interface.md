@@ -2,7 +2,6 @@
 sectionclass: h1
 sectionid: user-interface
 is-parent: yes
-number: 6000
 title: User Interface
+number: 3000
 ---
-Discussion of user interface
