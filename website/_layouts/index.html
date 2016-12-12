@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include head.html %}
+    </head>
+
+    <body>
+    {% include header.html %}
+        <div class="container">
+            <div class="overview">
+                <span class="toggle">close</span>
+          
+                {% include nav.html %}
+            </div>
+
+            <div class="content">
+                <span class="toggle"></span>
+                {{ content }}
+            </div>
+        </div>
+
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script scr="js/jquery.scrollTo.js"></script>
+        <script src="js/jquery.nav.js"></script>
+        <script src="js/scripts.js"></script>
+        <script>
+            var table = "<thead><th>test</th></thead><tr>test row</tr>"
+            $('#log-table').append(table);
+        </script>
+    
+    </body>
+</html>
