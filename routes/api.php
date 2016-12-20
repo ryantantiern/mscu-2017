@@ -18,3 +18,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::post('/register', 'RegisterController@register');
+
+Route::group(['prefix' => 'routes'], function() {
+	Route::post('/create', 'RouteController@create')->middleware('auth:api');
+	Route::get('/', 'RouteController@routes')->middleware('auth:api');
+});
+

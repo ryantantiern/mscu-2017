@@ -32,7 +32,7 @@ class User extends Authenticatable
 
     public function routes()
     {
-        $this->hasMany(Route::class);
+        return $this->hasMany(Route::class);
     }
 
     /**
