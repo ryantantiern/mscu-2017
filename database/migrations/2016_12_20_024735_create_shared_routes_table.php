@@ -19,6 +19,7 @@ class CreateSharedRoutesTable extends Migration
             $table->integer('sender_id');
             $table->integer('receiver_id');
             $table->boolean('accepted')->default(0);
+            $table->timestamps();
         });
     }
 

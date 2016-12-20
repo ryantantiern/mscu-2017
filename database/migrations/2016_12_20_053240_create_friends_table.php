@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoutesTable extends Migration
+class CreateFriendsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateRoutesTable extends Migration
      */
     public function up()
     {
-        Schema::create('routes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->json('body');
-            $table->timestamps();
+        Schema::create('friends', function (Blueprint $table) {
+           $table->increments('id');
+           $table->integer('user_id');
+           $table->integer('friend_id');
+           $table->boolean('accepted')->default(0);
+           $table->timestamps();
         });
     }
 
@@ -28,6 +29,6 @@ class CreateRoutesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('routes');
+        Schema::dropIfExists('friends');
     }
 }

@@ -27,9 +27,6 @@ class RegisterController extends Controller
     		'email' => $user->email, 
     		'password' => $user->password, 
     		'status' => 'all ok!',
-            'nested_test' => [
-                                'nested_data' => 'hello!'
-                            ]
     	];
 
         return $response;
