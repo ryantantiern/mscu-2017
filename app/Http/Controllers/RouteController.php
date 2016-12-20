@@ -13,7 +13,7 @@ class RouteController extends Controller
         $user = $request->user();
         $routes = $user->routes()->get();
 
-        $response = $routes;
+        $response = ['status' => 'response', 'response' => 'routes', 'routes' => $routes];
 
         /*
         Todo: response should not expose id of route within the table
@@ -40,20 +40,20 @@ class RouteController extends Controller
     	$array_coordinates = json_decode($json_coordinates);
 
     	if (!is_array($array_coordinates)) {
-    		return ['error' => 'Route is not an array'];
+    		return ['status' => 'error', 'error' => 'Route is not an array'];
       	}
 
       	foreach ($array_coordinates as $coord) {
       		if (!is_array($coord)) {
-      			return ['error' => 'Coordinates are not an array'];
+      			return ['status' => 'error' , 'error' => 'Coordinates are not an array'];
       		}
       		if (!count($coord) == 2) {
-      			return ['error' => 'Not a a pair of coordinates'];
+      			return ['status' => 'error', 'error' => 'Not a a pair of coordinates'];
       		}
 
 			foreach ($coord as $val) {
 				if (!is_numeric($val)) {
-					return ['error' => 'Coordinate is not numeric value'];
+					return ['status' => 'error', 'error' => 'Coordinate is not numeric value'];
 				}
   			}
       	}
@@ -62,6 +62,8 @@ class RouteController extends Controller
     		'user_id' => $request->user()->id,
     		'body' => $json_coordinates
     	]);
+
+        $response = ['status' => 'response', 'response' => 'route', 'route' => $route];
 
     	return $route;
     }

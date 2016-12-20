@@ -21,13 +21,7 @@ class RegisterController extends Controller
     		'password' => bcrypt($request->input('password')),
     	]);
 
-
-
-    	$response = [
-    		'email' => $user->email, 
-    		'password' => $user->password, 
-    		'status' => 'all ok!',
-    	];
+    	$response = ['email' => $user->email, 'password' => $user->password, 'status' => 'all ok!'];
 
         return $response;
     }

@@ -20,7 +20,12 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', 'RegisterController@register');
 
 Route::group(['prefix' => 'routes'], function() {
-	Route::post('/create', 'RouteController@create')->middleware('auth:api');
 	Route::get('/', 'RouteController@routes')->middleware('auth:api');
+	Route::post('/create', 'RouteController@create')->middleware('auth:api');
+});
+
+Route::group(['prefix' => 'friends'], function () {
+	Route::get('/', 'FriendController@friends')->middleware('auth:api');
+	Route::get('/add/{user_id}', 'FriendController@add')->middleware('auth:api');
 });
 
