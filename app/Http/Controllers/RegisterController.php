@@ -15,18 +15,23 @@ class RegisterController extends Controller
     		'email' => 'required|email|unique:users,email|max:60',
     		'password' => 'required|min:6|max:30',
     	]);
-
-    	User::create([
+    
+    	$user = User::create([
     		'email' => $request->input('email'),
     		'password' => bcrypt($request->input('password')),
     	]);
 
 
 
-    	return [
-    		'email' => $request->input('email'), 
-    		'password' => $request->input('password'), 
-    		'status' => 'all ok!'
+    	$response = [
+    		'email' => $user->email, 
+    		'password' => $user->password, 
+    		'status' => 'all ok!',
+            'nested_test' => [
+                                'nested_data' => 'hello!'
+                            ]
     	];
+
+        return $response;
     }
 }
