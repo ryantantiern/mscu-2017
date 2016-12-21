@@ -38,6 +38,31 @@ class FriendController extends Controller
 
     public function accept(Request $request, $user_id)
     {
-
+        
     }
+    public function decline(Request $request, $user_id)
+    {
+      
+    }
+
+    public function received(Request $request)
+    {
+        $user = $request->user();
+        if (empty($user->friendRequestsReceivedPending()->toArray())){
+            return ['status' => 'response', 'response' => 'No friend requests received'];
+        }
+
+        return $user->friendRequestsReceivedPending();
+    }
+
+    public function sent(Request $request)
+    {
+      $user = $request->user();
+      if (empty($user->friendRequestsSentPending()->toArray())){
+          return ['status' => 'response', 'response' => 'No friend requests sent'];
+      }
+
+      return $user->friendRequestsSentPending();
+    }
+
 }
