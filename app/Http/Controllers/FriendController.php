@@ -10,9 +10,11 @@ class FriendController extends Controller
 {
     public function friends(Request $request)
     {
-    	$user = $request->user();
-    	if ($user->friends()->isEmpty()){ return ['status' => 'response', 'response' => 'You have no friends'];}
-    	return $user->friends()->toArray();
+        $response = ['status' => 'response', 'response' => ''];
+        $user = $request->user();
+        if ($user->friends()->isEmpty()){ $response['response'] = 'You have no friends';}
+        else {$response['response'] = $user->friends()->toArray();}
+        return $response;
     }
 
     public function add(Request $request, $user_id)
@@ -59,11 +61,11 @@ class FriendController extends Controller
         $friend = User::find($user_id);
 
         if ($user->friendRequestsReceivedPending()->where('id', $user_id)->isEmpty()){
-            $response = ['status' => 'response', 'response' => 'No friend request received from user: ' . $user_id];
+            $response = ['status' => 'fail', 'fail' => 'No friend request received from user: ' . $user_id];
         }
 
         else if ($user->isFriendsWith($friend)){
-            $response = ['status' => 'response', 'response' => 'Already friends with user: ' . $user_id];
+            $response = ['status' => 'fail', 'fail' => 'Already friends with user: ' . $user_id];
         }
 
         else { $user->declineFriendRequest($friend);}

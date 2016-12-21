@@ -67,4 +67,21 @@ class RouteController extends Controller
 
     	return $route;
     }
+
+    public function share(Request $request, $user_id, $route_id)
+    {
+        $response = ['status' => 'success'];
+        $user = $request->user();
+        $friend = User::find($user_id);
+        $route = $user->routes()->find($route_id);
+
+        if (empty($friend)){
+            $respons = ['status' => 'fail', 'fail' => 'Friend with id ' . $user_id . 'does not exist'];
+        }
+        else if (empty($route)){ $response = ['status' => 'fail' , 'fail' => 'You do not own a route with id ' . $route_id]; }
+        else if (!$user->isFriendsWith($friend)) { $response = ['status' => 'fail', 'fail' => 'You are not friends with user: ' . $user_id];}
+        else{ $user->shareRoute($friend, $route); }
+        return $response;
+    }
+
 }

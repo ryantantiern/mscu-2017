@@ -22,6 +22,7 @@ Route::post('/register', 'RegisterController@register');
 Route::group(['prefix' => 'routes'], function() {
 	Route::get('/', 'RouteController@routes')->middleware('auth:api');
 	Route::post('/create', 'RouteController@create')->middleware('auth:api');
+	Route::get('/share/{user_id}/{route_id}', 'RouteController@share')->middleware('auth:api');
 });
 
 Route::group(['prefix' => 'friends'], function () {
@@ -31,7 +32,6 @@ Route::group(['prefix' => 'friends'], function () {
 	Route::get('/requests/sent', 'FriendController@sent')->middleware('auth:api');
 	Route::get('/accept/{user_id}', 'FriendController@accept')->middleware('auth:api');
 	Route::get('/decline/{user_id}', 'FriendController@decline')->middleware('auth:api');
-
 
 });
 
