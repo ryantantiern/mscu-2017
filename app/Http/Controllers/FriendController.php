@@ -18,16 +18,21 @@ class FriendController extends Controller
     public function add(Request $request, $user_id)
     {
     	$user = $request->user();
-    	$response = ['Failed at try/catch'];
+    	$response = ['error' => 'Internal Server Error'];
   		try {
   			$friend = User::find($user_id);
-  			if ($user->isFriendWith($friend)) { $response = ['status' => 'fail', 'fail' => 'Already friends with' . $friend->id]; }
+  			if ($user->HasSentFriendRequest($friend)) { 
+  				$response = ['status' => 'fail', 'fail' => 'Already friends with user id: ' . $friend->id]; 
+  			}
+  			else if ($user->id == $friend->id) {
+  				$response = ['status' => 'fail', 'fail' => 'Cannot add self']; 
+  			}
   			else { 
   				$user->addFriend($friend);
   				$response = ['status' => 'success'];
   			}
   		} 
   		catch (Exception $e) { $response = ['status' => 'error', 'error' => $e]; } 
-  		finally { return $response; }
+  		finally {return $response;}
     }
 }

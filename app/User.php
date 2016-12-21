@@ -102,7 +102,7 @@ class User extends Authenticatable
 
     public function addFriend(User $user)
     {
-         $this->friendOf()->attach($user->id);
+         $this->friendsWith()->attach($user->id);
     }
 
     // Returns list of users User sent friend requests to AND friends has not accepted
@@ -127,6 +127,11 @@ class User extends Authenticatable
     public function isFriendsWith(User $user)
     {
         return (bool) $this->friends()->where('id', $user->id)->count();
+    }
+
+    public function HasSentFriendRequest(User $user)
+    {
+        return (bool) ($this->friendsWith()->get()->merge($this->friendOf()->get()))->where('id', $user->id)->count();
     }
 
 
