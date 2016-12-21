@@ -21,7 +21,7 @@ class FriendController extends Controller
     	$response = ['error' => 'Internal Server Error'];
   		try {
   			$friend = User::find($user_id);
-  			if ($user->HasSentFriendRequest($friend)) { 
+  			if ($user->HasAFriendRequest($friend)) { 
   				$response = ['status' => 'fail', 'fail' => 'Already friends with user id: ' . $friend->id]; 
   			}
   			else if ($user->id == $friend->id) {
@@ -34,5 +34,10 @@ class FriendController extends Controller
   		} 
   		catch (Exception $e) { $response = ['status' => 'error', 'error' => $e]; } 
   		finally {return $response;}
+    }
+
+    public function accept(Request $request, $user_id)
+    {
+
     }
 }

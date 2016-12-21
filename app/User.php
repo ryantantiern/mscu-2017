@@ -105,6 +105,12 @@ class User extends Authenticatable
          $this->friendsWith()->attach($user->id);
     }
 
+    // Returns true if there was a friend request made by user to User or User to user
+    public function HasAFriendRequest(User $user)
+    {
+        return (bool) ($this->friendsWith()->get()->merge($this->friendOf()->get()))->where('id', $user->id)->count();
+    }
+
     // Returns list of users User sent friend requests to AND friends has not accepted
     public function friendRequestsSentPending()
     {
@@ -119,20 +125,24 @@ class User extends Authenticatable
 
     public function acceptFriendRequest(User $user)
     {
-        $this->friendRequests()->where('id', $user->id)->first()->pivot->update([
+        $this->friendRequestsReceivedPending()->where('id', $user->id)->first()->pivot->update([
             'accepted' => true,
             ]);
     }
+
+    public function declineFriendRequest(User $user)
+    {
+        $this->friendRequestsReceivedPending()->detach($user->id);
+    }
+
+
 
     public function isFriendsWith(User $user)
     {
         return (bool) $this->friends()->where('id', $user->id)->count();
     }
 
-    public function HasSentFriendRequest(User $user)
-    {
-        return (bool) ($this->friendsWith()->get()->merge($this->friendOf()->get()))->where('id', $user->id)->count();
-    }
+
 
 
 }
