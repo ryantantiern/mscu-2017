@@ -106,7 +106,7 @@ class User extends Authenticatable
     }
 
     // Returns true if there was a friend request made by user to User or User to user
-    public function HasAFriendRequest(User $user)
+    public function hasAFriendRequest(User $user)
     {
         return (bool) ($this->friendsWith()->get()->merge($this->friendOf()->get()))->where('id', $user->id)->count();
     }
@@ -132,7 +132,7 @@ class User extends Authenticatable
 
     public function declineFriendRequest(User $user)
     {
-        $this->friendRequestsReceivedPending()->detach($user->id);
+        $this->friendOf()->detach($user->id);
     }
 
 

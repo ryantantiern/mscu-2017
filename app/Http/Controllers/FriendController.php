@@ -11,7 +11,7 @@ class FriendController extends Controller
     public function friends(Request $request)
     {
     	$user = $request->user();
-    	if (empty($user->friends()->toArray())){ return ['status' => 'response', 'response' => 'You have no friends'];}
+    	if ($user->friends()->isEmpty()){ return ['status' => 'response', 'response' => 'You have no friends'];}
     	return $user->friends()->toArray();
     }
 
@@ -21,8 +21,8 @@ class FriendController extends Controller
     	$response = ['error' => 'Internal Server Error'];
   		try {
   			$friend = User::find($user_id);
-  			if ($user->HasAFriendRequest($friend)) { 
-  				$response = ['status' => 'fail', 'fail' => 'Already friends with user id: ' . $friend->id]; 
+  			if ($user->hasAFriendRequest($friend)) { 
+  				$response = ['status' => 'fail', 'fail' => 'Friend request was already sent to user id: ' . $friend->id]; 
   			}
   			else if ($user->id == $friend->id) {
   				$response = ['status' => 'fail', 'fail' => 'Cannot add self']; 
@@ -38,17 +38,43 @@ class FriendController extends Controller
 
     public function accept(Request $request, $user_id)
     {
+        $response = ['status' => 'success'];
+        $user = $request->user();
+        $friend = User::find($user_id);
+
+        if ($user->friendRequestsReceivedPending()->where('id', $user_id)->isEmpty()){
+            $response = ['status' => 'response', 'response' => 'No friend request received from user: ' . $user_id];
+        }
+        else {
+            $user->acceptFriendRequest($friend);        
+        }
         
+        return $response;
     }
+
     public function decline(Request $request, $user_id)
     {
-      
+        $response = ['status' => 'success'];
+        $user = $request->user();
+        $friend = User::find($user_id);
+
+        if ($user->friendRequestsReceivedPending()->where('id', $user_id)->isEmpty()){
+            $response = ['status' => 'response', 'response' => 'No friend request received from user: ' . $user_id];
+        }
+
+        else if ($user->isFriendsWith($friend)){
+            $response = ['status' => 'response', 'response' => 'Already friends with user: ' . $user_id];
+        }
+
+        else { $user->declineFriendRequest($friend);}
+
+        return $response;
     }
 
     public function received(Request $request)
     {
         $user = $request->user();
-        if (empty($user->friendRequestsReceivedPending()->toArray())){
+        if ($user->friendRequestsReceivedPending()->isEmpty()){
             return ['status' => 'response', 'response' => 'No friend requests received'];
         }
 
@@ -58,7 +84,7 @@ class FriendController extends Controller
     public function sent(Request $request)
     {
       $user = $request->user();
-      if (empty($user->friendRequestsSentPending()->toArray())){
+      if ($user->friendRequestsSentPending()->isEmpty()){
           return ['status' => 'response', 'response' => 'No friend requests sent'];
       }
 

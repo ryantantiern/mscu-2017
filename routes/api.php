@@ -29,6 +29,9 @@ Route::group(['prefix' => 'friends'], function () {
 	Route::get('/add/{user_id}', 'FriendController@add')->middleware('auth:api');
 	Route::get('/requests/received', 'FriendController@received')->middleware('auth:api');
 	Route::get('/requests/sent', 'FriendController@sent')->middleware('auth:api');
+	Route::get('/accept/{user_id}', 'FriendController@accept')->middleware('auth:api');
+	Route::get('/decline/{user_id}', 'FriendController@decline')->middleware('auth:api');
+
 
 });
 
