@@ -1,3 +1,9 @@
+# Set up 
+After pulling, run 'composer install' in terminal, then create a .env file and Configure settings according to .env.example fields*.
+*DB_CONNECTION = pgsql
+DB_PORT = 5432
+APP_KEY = base64:bCgff0uX4w5m/cVSr7FEyEMVHmKi9MoJh7DLy4eWHjg=
+
 # Laravel PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)

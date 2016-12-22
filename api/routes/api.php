@@ -23,6 +23,7 @@ Route::group(['prefix' => 'routes'], function() {
 	Route::get('/', 'RouteController@routes')->middleware('auth:api');
 	Route::post('/create', 'RouteController@create')->middleware('auth:api');
 	Route::get('/share/{user_id}/{route_id}', 'RouteController@share')->middleware('auth:api');
+	Route::get('/shared/received', 'RouteController@received')->middleware('auth:api');
 });
 
 Route::group(['prefix' => 'friends'], function () {

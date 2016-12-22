@@ -84,9 +84,16 @@ class RouteController extends Controller
         return $response;
     }
 
-    public function received()
+    public function received(Request $request)
     {
-        
+        $response = [];
+        $user = $request->user();
+
+        return $user->sharedRoutesReceivedFrom()->pivot->where('accepted', false)->isEmpty();
+        if ($user->sharedRoutesReceivedFrom()->pivot->where('accepted', false)->isEmpty()){
+            $response = ['status' => 'response', 'response' => 'You have no routes pending']; 
+        }
+
     }
 
     public function accept() 
