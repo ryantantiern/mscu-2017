@@ -84,4 +84,20 @@ class RouteController extends Controller
         return $response;
     }
 
+    public function received()
+    {
+        
+    }
+
+    public function accept() 
+    {
+
+    }
+
+    public function decline()
+    {
+
+    }
+
+
 }
