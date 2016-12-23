@@ -1,6 +1,5 @@
 # Set up 
-After pulling, run 'composer install' in terminal, then create a .env file and Configure settings according to .env.example fields*. <br>
-<code>*DB_CONNECTION = pgsql </code><br>
+After pulling, run 'composer install' in terminal, then create a .env file and Configure settings according to .env.example fields*.<br><code>*DB_CONNECTION = pgsql</code><br>
 <code>DB_PORT = 5432 </code><br>
 <code>APP_KEY = base64:bCgff0uX4w5m/cVSr7FEyEMVHmKi9MoJh7DLy4eWHjg= </code><br>
 
