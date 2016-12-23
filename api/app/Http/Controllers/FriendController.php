@@ -13,7 +13,7 @@ class FriendController extends Controller
         $response = ['status' => 'response', 'response' => ''];
         $user = $request->user();
         if ($user->friends()->isEmpty()){ $response['response'] = 'You have no friends';}
-        else {$response['response'] = $user->friends()->toArray();}
+        else {$response['response'] = $user->friends()->toArray(); $response['count'] = $user->friends()->count();}
         return $response;
     }
 
@@ -36,6 +36,19 @@ class FriendController extends Controller
   		} 
   		catch (Exception $e) { $response = ['status' => 'error', 'error' => $e]; } 
   		finally {return $response;}
+    }
+
+    public function delete(Request $request, $user_id)
+    {
+      $user = $request->user();
+      $response = ['status' => 'success'];
+      if (empty($user->friends()->where('id', $user_id)->first())){
+          $response = ['status' => 'fail', 'fail' => 'User is not your friend'];
+      }
+      else {
+          $user->friends()->where('id', $user_id)->first()->pivot->delete();
+      }
+      return $response;
     }
 
     public function accept(Request $request, $user_id)

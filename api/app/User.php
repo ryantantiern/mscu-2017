@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Route;
 
+use Illuminate\Support\Collection as Collection;
+
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
@@ -39,43 +41,44 @@ class User extends Authenticatable
      *  Shared Routes User-User-Route Relationship Definitions
      */
 
-
-    // Returns list of users User has sent routes to
-    private function sharedRoutesWith()
+    // Returns list of routes that User has received AND is still pending
+    public function receivedRoutes()
     {
-        return $this->belongsToMany(User::class, 'shared_routes', 'sender_id', 'receiver_id')->withPivot('route_id');
+        return $this->belongsToMany(Route::class, 'shared_routes', 'receiver_id', 'route_id')
+            ->wherePivot('accepted', false)
+            ->withTimestamps();
     }
 
-    // Returns list of users that User has received routes from
-    private function sharedRoutesReceivedFrom()
-    {
-        return $this->belongsToMany(User::class, 'shared_routes', 'receiver_id', 'sender_id')->withPivot('route_id');
+    // Returns list of routes User has shared AND is still pending
+    public function sharedRoutes()
+    {   
+        return $this->belongsToMany(Route::class, 'shared_routes', 'sender_id', 'route_id')
+            ->wherePivot('accepted', false)
+            ->withTimestamps();
     }
 
-    // Returns list of route ids User has sent AND is still pending
-    public function sharedRoutesSentPending()
-    {
-        return $this->sharedRoutesWith()->wherePivot('accepted' , false)->pivot->route_id->get();
-    }
-
-    // Returns list of route ids User has received AND is still pending
-    public function sharedRoutesReceivedPending()
-    {
-        return $this->sharedRoutesReceivedFrom()->wherePivot('accepted' , false)->pivot->route_id->get();
-    }
-
-    // Accept a shared route where composite key is User (receiver_id), sender_id and route_id
-    public function acceptSharedRouteRequest(User $user, Route $route)
-    {
-        $this->sharedRoutesReceivedFrom()->where('id', $user->id)->pivot->where('route_id', $route->id)->update([
-            'accepted' => true
-            ]);
-    }
-
-    // Share route with a User
+    // Share route with a user
     public function shareRoute(User $user, Route $route)
     {
-        $this->sharedRoutesWith()->attach($user->id, ['route_id' => $route->id]);
+        $this->sharedRoutes()->attach($route->id, ['receiver_id' => $user->id]);
+    }
+
+    // Accept Route from user
+    public function accept(Route $route)
+    {   
+        Route::create([
+                'user_id' => $this->id,
+                'body' => $route->body
+        ]);
+        $this->receivedRoutes()->wherePivot('route_id', $route->id)->first()->pivot->update([
+            'accepted' => true
+        ]);
+    }
+
+    // Decline Route from user
+    public function decline(Route $route)
+    {
+        $this->receivedRoutes()->detach($route->id);
     }
 
     /**

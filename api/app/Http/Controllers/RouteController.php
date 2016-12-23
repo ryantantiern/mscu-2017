@@ -10,32 +10,15 @@ class RouteController extends Controller
 {
     public function routes(Request $request)
     {
+        //Todo: response should not expose id of route within the table
         $user = $request->user();
         $routes = $user->routes()->get();
-
-        $response = ['status' => 'response', 'response' => 'routes', 'routes' => $routes];
-
-        /*
-        Todo: response should not expose id of route within the table
-         */
-
+        $response = ['status' => 'response', 'response' => 'routes', 'count' => $routes->count() , 'routes' => $routes];
         return $response;
     }
 
     public function create(Request $request)
     {
-    /*	Test Data
-    $coordinates = [
-    		[26.15430, 12.45632],
-    		[134.13256, 66.29301],
-    		[145.22410, 70.30109],
-    		[150.00156, 73.44561],
-    		[153.32962, 74.22701],
-    		[154.48327, 78.97830],
-    	];
-
-    	$json_coordinates = json_encode($coordinates);*/
-
     	$json_coordinates = $request->input('coordinates');
     	$array_coordinates = json_decode($json_coordinates);
 
@@ -43,18 +26,12 @@ class RouteController extends Controller
     		return ['status' => 'error', 'error' => 'Route is not an array'];
       	}
 
+        // Error checking
       	foreach ($array_coordinates as $coord) {
-      		if (!is_array($coord)) {
-      			return ['status' => 'error' , 'error' => 'Coordinates are not an array'];
-      		}
-      		if (!count($coord) == 2) {
-      			return ['status' => 'error', 'error' => 'Not a a pair of coordinates'];
-      		}
-
+      		if (!is_array($coord)) { return ['status' => 'error' , 'error' => 'Coordinates are not an array']; }
+      		if (!count($coord) == 2) { return ['status' => 'error', 'error' => 'Not a a pair of coordinates']; }
 			foreach ($coord as $val) {
-				if (!is_numeric($val)) {
-					return ['status' => 'error', 'error' => 'Coordinate is not numeric value'];
-				}
+				if (!is_numeric($val)) { return ['status' => 'error', 'error' => 'Coordinate is not numeric value']; }
   			}
       	}
 	    
@@ -64,8 +41,20 @@ class RouteController extends Controller
     	]);
 
         $response = ['status' => 'response', 'response' => 'route', 'route' => $route];
-
     	return $route;
+    }
+
+    public function delete(Request $request, $route_id)
+    {
+        $user = $request->user();
+        $response = ['status' => 'success'];
+        if (empty($user->routes()->where('id', $route_id)->first())){
+            $response = ['status' => 'fail', 'fail' => 'Route does not exist'];
+        }
+        else {
+            $user->routes()->where('id', $route_id)->first()->delete();
+        }
+        return $response;
     }
 
     public function share(Request $request, $user_id, $route_id)
@@ -75,35 +64,65 @@ class RouteController extends Controller
         $friend = User::find($user_id);
         $route = $user->routes()->find($route_id);
 
-        if (empty($friend)){
-            $respons = ['status' => 'fail', 'fail' => 'Friend with id ' . $user_id . 'does not exist'];
-        }
-        else if (empty($route)){ $response = ['status' => 'fail' , 'fail' => 'You do not own a route with id ' . $route_id]; }
-        else if (!$user->isFriendsWith($friend)) { $response = ['status' => 'fail', 'fail' => 'You are not friends with user: ' . $user_id];}
+        if (empty($friend))
+            { $respons = ['status' => 'fail', 'fail' => 'Friend with id ' . $user_id . 'does not exist']; }
+        else if (empty($route))
+            { $response = ['status' => 'fail' , 'fail' => 'You do not own a route with id ' . $route_id]; }
+        else if (!$user->isFriendsWith($friend)) 
+            { $response = ['status' => 'fail', 'fail' => 'You are not friends with user: ' . $user_id];}
+        else if ($friend->receivedRoutes()->wherePivot('route_id', $route->id)->get()->count())
+        { $response = ['status' => 'fail', 'fail' => 'You have already shared route ' . $route_id . ' from user: ' . $user_id]; }
         else{ $user->shareRoute($friend, $route); }
         return $response;
     }
 
     public function received(Request $request)
     {
-        $response = [];
+        $response = ['status' => 'response'];
         $user = $request->user();
 
-        return $user->sharedRoutesReceivedFrom()->pivot->where('accepted', false)->isEmpty();
-        if ($user->sharedRoutesReceivedFrom()->pivot->where('accepted', false)->isEmpty()){
-            $response = ['status' => 'response', 'response' => 'You have no routes pending']; 
+        if ($user->receivedRoutes()->get()->isEmpty()){
+            $response['response'] ='You have no routes pending'; 
         }
+        else {
+            $response['response'] = $user->receivedRoutes()->get();
+        }
+        return $response;
 
     }
 
-    public function accept() 
+    public function accept(Request $request, $route_id) 
     {
+        $response = ['status' => 'response'];
+        $user = $request->user();
+        $route = Route::find($route_id) ?? NULL;
 
+        if (empty($route)) { $response['response'] = 'Route does not exist';}
+        else if ($user->receivedRoutes()->wherePivot('route_id', $route_id)->get()->isEmpty()) { 
+            $response['response'] = 'You do not have access to this shared route.'; 
+        }
+        else {
+            $user->accept($route);
+            $response['status'] = 'success!';
+        }
+        return $response;
     }
 
-    public function decline()
+    public function decline(Request $request, $route_id)
     {
+        $response = ['status' => 'response'];
+        $user = $request->user();
+        $route = Route::find($route_id) ?? NULL;
 
+        if (empty($route)) { $response['response'] = 'Route does not exist';}
+        else if ($user->receivedRoutes()->wherePivot('route_id', $route_id)->get()->isEmpty()) { 
+            $response['response'] = 'You do not have access to this shared route.'; 
+        }
+        else {
+            $user->decline($route);
+            $response['status'] = 'success!';
+        }
+        return $response;
     }
 
 

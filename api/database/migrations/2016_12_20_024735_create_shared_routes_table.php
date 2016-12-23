@@ -20,6 +20,8 @@ class CreateSharedRoutesTable extends Migration
             $table->integer('receiver_id');
             $table->boolean('accepted')->default(0);
             $table->timestamps();
+
+            $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
         });
     }
 

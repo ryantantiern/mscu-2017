@@ -4,6 +4,8 @@ After pulling, run 'composer install' in terminal, then create a .env file and C
 DB_PORT = 5432
 APP_KEY = base64:bCgff0uX4w5m/cVSr7FEyEMVHmKi9MoJh7DLy4eWHjg=
 
+Run php artisan migrate, then php artisan passport:install to initialize client_id and client_secret in oauth_client table
+
 # Laravel PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)

@@ -18,6 +18,8 @@ class CreateRoutesTable extends Migration
             $table->integer('user_id');
             $table->json('body');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
