@@ -1,10 +1,8 @@
 # Set up 
 After pulling, run 'composer install' in terminal, then create a .env file and Configure settings according to .env.example fields*. <br>
-<code>
-*DB_CONNECTION = pgsql <br>
-DB_PORT = 5432 <br>
-APP_KEY = base64:bCgff0uX4w5m/cVSr7FEyEMVHmKi9MoJh7DLy4eWHjg= <br>
-</code>
+<code>*DB_CONNECTION = pgsql </code><br>
+<code>DB_PORT = 5432 </code><br>
+<code>APP_KEY = base64:bCgff0uX4w5m/cVSr7FEyEMVHmKi9MoJh7DLy4eWHjg= </code><br>
 
 Run <code>php artisan migrate</code>, then <code>php artisan passport:install</code> to initialize client_id and client_secret in oauth_client table
 
