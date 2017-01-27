@@ -23,11 +23,8 @@ angular.module('starter', ['ionic', 'ngResource'])
 
     var host = 'http://second-year-project.azurewebsites.net';
     var test_conn = $resource('http://second-year-project.azurewebsites.net/api/connection');
-    test_conn.get({
-      'Accept' : 'application/json',
-      'Content-type' : 'application/json'
-    }, function (response) {
-      console.log(response);
+    test_conn.get( function (response) {
+      console.log(response.friends);
     });
 
   });
