@@ -66,8 +66,6 @@ angular.module('starter', ['ionic', 'ngResource'])
        if ($scope.data.username && $scope.data.password)
        {
           loginData.updateForm(user_data);
-
-        
        }
        else
        {
