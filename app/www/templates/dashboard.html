@@ -1,0 +1,47 @@
+<ion-view view-title="Dashboard">
+      <ion-content class="padding-top padding-bottom login-bg">
+        <div class="row">
+          <h3>Welcome back, {{ user_data.username }} !</h3>
+        </div>
+
+        <div class="list card">
+
+          <a ng-click="goViewFriends()" class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i>
+            View friends
+          </a>
+
+          <a  class="item item-icon-left">
+            <i class="icon ion-person-add"></i>
+            Add friend
+          </a>
+
+          <a  ng-click="goCreateRoute()"class="item item-icon-left">
+            <i class="icon ion-fork-repo"></i>
+            Create Route
+          </a>
+
+          <a  class="item item-icon-left">
+            <i class="icon ion-star"></i>
+            View Saved Routes
+          </a>
+
+          <a  class="item item-icon-left">
+            <i class="icon ion-email-unread"></i>
+            View friend/route requests
+          </a>
+
+          <a  class="item item-icon-left">
+            <i class="icon ion-settings"></i>
+            Account settings
+          </a>
+
+          <a href="#"  style="background:red" class="item item-icon-left">
+            <i class="icon ion-log-out"></i>
+            Log Out
+          </a>
+
+        </div>
+
+      </ion-content>
+    </ion-view>

@@ -1,0 +1,38 @@
+<ion-view view-title="Create Route">
+    <ion-content class="padding login-bg">
+	
+		<a ng-click="goBack()"  class="item item-icon-left">
+          <i class="icon ion-chevron-left"></i>
+          Go back
+        </a>
+		
+		<iframe 
+		  name="mapframe" width="425" height="350" 
+		  src="https://www.google.com/maps?z=11&amp;f=d&amp;output=embed&amp">
+		</iframe>
+		<form method="get" action="https://www.google.com/maps" target="mapframe">
+			<div class="list">
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">Start Point</span>
+				<input name="saddr" id="saddr" type="text" placeholder="UCL, London">
+			</label>
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">End Point</span>
+				<input name="daddr" id="daddr" type="text" placeholder="King's College, London">
+			</label>
+				<input name="output" type="hidden" value="embed">
+				<input name="f" type="hidden" value="d">
+				<input name="z" type="hidden" value="13">
+				
+				<div class="padding">
+					<button type="submit" class="button button-block button-positive">Submit</button>
+				</div>
+			</div>
+		</form>
+		
+		
+
+		
+
+	</ion-content>
+</ion-view>
