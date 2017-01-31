@@ -1,0 +1,23 @@
+<ion-view view-title="Friends">
+      <ion-content class="padding-top padding-bottom login-bg">
+        <a ng-click="goBack()"  class="item item-icon-left">
+          <i class="icon ion-chevron-left"></i>
+          Go back
+        </a>
+        <div>
+          <h3> You have {{ friends.length }} friends:</h3>
+        </div>
+
+        <div class="list">
+          <a class="item item-avatar" ng-repeat="friend in friends" >
+            <img src="img/avatar.jpg">
+            <h2>{{friend.name }}</h2>
+            <p>Back off, man. I'm a scientist.</p>
+          </a>
+
+
+
+        </div>
+
+      </ion-content>
+</ion-view>
