@@ -1,4 +1,4 @@
-angular.module('starter.controllers',[])
+angular.module('starter.controllers',['starter.services'])
 
 .controller('LoginCtrl', function($scope, $state, loginData) {
    $scope.data = {};
@@ -14,22 +14,34 @@ angular.module('starter.controllers',[])
         else alert("Please fill out the fields before submitting");
        }
     };
-   $scope.goToRegister = function(){
+   $scope.goToRegister = function(){  
         $state.go('register');
    };
   })
 
-.controller('RegisterCtrl', function($scope, $state) {
+.controller('RegisterCtrl', function($scope, $state, Auth) {
   $scope.goToLogin = function(){
     $state.go('login');
   };
+
   $scope.register = function() {
+
     if ($scope.register.firstName && $scope.register.lastName && $scope.register.email &&
         $scope.register.password && $scope.register.password_confirm){
         if ($scope.register.password == $scope.register.password_confirm)
         {
-          alert("You have successfuly created an account");
-          $scope.goToLogin();
+          // Ryan
+          // Register a user
+          $scope.user = new Auth();
+          $scope.user.data = {
+            email : $scope.register.email,
+            password : $scope.register.password
+          };
+          Auth.save($scope.user, function (result) {
+              alert("You have successfuly created an account");
+              $scope.goToLogin();            
+          });          
+
         }else {
           alert("Warning! The password do not match. Please try again.");
         }
