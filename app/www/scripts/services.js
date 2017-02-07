@@ -28,6 +28,7 @@ angular.module('starter.services', ['ngResource'])
 						method : 'token',
 						grant_type : '@password',
 						client_id : '@client_id',
+						client_secret: '@client_secret',
 						username : '@email',
 						password : '@password',
 						scope : '@scope'
@@ -35,5 +36,5 @@ angular.module('starter.services', ['ngResource'])
 				}
 			}
 		);
-	}]);
+	}])
 

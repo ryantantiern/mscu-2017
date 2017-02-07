@@ -1,11 +1,25 @@
 angular.module('starter.controllers',['starter.services'])
 
 .controller('LoginCtrl', function($scope, $state, loginData) {
-   $scope.data = {};
+
+   $scope.data = {
+      client_id : 2, 
+      client_secret: 'Bz49wi5uKhFW6c2993W6FnOYxsJ60FPMSgqx0m1H',
+      scope : '*'
+   };
+
    $scope.default_text = "Please login";
    $scope.login = function(user_data) {
        if ($scope.data.username && $scope.data.password)
-       {
+       {  
+          // Ryan - Login
+          // Login then set token to access token.
+          Auth.login($scope, function(result) {
+            $scope.credentials = {
+              token : result.access_token
+            }
+          });
+
           loginData.updateForm(user_data);
        }
        else
@@ -31,13 +45,12 @@ angular.module('starter.controllers',['starter.services'])
         if ($scope.register.password == $scope.register.password_confirm)
         {
           // Ryan
-          // Register a user
-          $scope.user = new Auth();
-          $scope.user.data = {
+          // Register a user with email and password
+          var auth = {
             email : $scope.register.email,
             password : $scope.register.password
           };
-          Auth.save($scope.user, function (result) {
+          Auth.save(auth, function (result) {
               alert("You have successfuly created an account");
               $scope.goToLogin();            
           });          
