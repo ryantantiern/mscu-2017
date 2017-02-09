@@ -29,7 +29,6 @@ angular.module('starter.controllers',[])
           }
           $http(request).then(function(result) {
             if (result.data.access_token) {
-              //$http.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.access_token;
               var user = {
                 access_token : result.data.access_token,
                 username : $scope.data.username
@@ -128,6 +127,8 @@ angular.module('starter.controllers',[])
   // Assign user_data to autheticated user
   $scope.user_data = Auth.getUser();
 
+  // Ryan - end
+  
   $scope.goViewFriends = function(){
       $state.go('friends');
   };
@@ -188,6 +189,7 @@ angular.module('starter.controllers',[])
     alert("Error: Could not update friends list");
   });
 
+// Ryan - End
   
 
 
