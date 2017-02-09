@@ -142,11 +142,13 @@ angular.module('starter.controllers',[])
 
   $scope.sendFriendRequest = function(id) {
     for (var i in $scope.filteredPeople)
+      // TODO: Send API friend request
         if ($scope.filteredPeople[i].id== id) $scope.filteredPeople[i].request_sent = true;
 
   };
   $scope.cancelFriendRequest = function(id) {
      for (var i in $scope.filteredPeople)
+      // TODO: Cancel API friend request
          if ($scope.filteredPeople[i].id== id) $scope.filteredPeople[i].request_sent = false;
 
   };
