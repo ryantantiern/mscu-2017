@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -26,14 +26,14 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
   $stateProvider
     .state('login', {
-		  url: "/login",
-		  templateUrl: "templates/login.html",
-		  controller: "LoginCtrl"
+          url: "/login",
+          templateUrl: "templates/login.html",
+          controller: "LoginCtrl"
     })
     .state('register', {
-		  url: "/register",
-		  templateUrl: "templates/register.html",
-		  controller: "RegisterCtrl"
+          url: "/register",
+          templateUrl: "templates/register.html",
+          controller: "RegisterCtrl"
     })
     .state('dashboard', {
           url: "/dashboard",
@@ -45,25 +45,24 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           templateUrl: "templates/friends.html",
           controller: "FriendsCtrl"
      })
-	 .state('create_route', {
-		   url: "/create_route",
-		   templateUrl: "templates/create_route.html",
-		   controller: "CreateRouteCtrl"
-	 })
+	  .state('create_route', {
+          url: "/create_route",
+          templateUrl: "templates/create_route.html",
+          controller: "CreateRouteCtrl"
+	  })
+	  .state('add_friend', {
+              url: "/add_friend",
+              templateUrl: "templates/add_friend.html",
+              controller: "AddFriendCtrl"
+    	  })
+    .state('profile', {
+           url: "/profile",
+           templateUrl: "templates/profile.html",
+           controller: "ProfileCtrl"
 
-
+    })
   $urlRouterProvider.otherwise("/login");
 })
 
 
-.service('loginData', function() {
- return {
-   form: {},
-   getForm: function() {
-     return this.form;
-   },
-   updateForm: function(form) {
-     this.form = form;
-   }
- }
-})
+

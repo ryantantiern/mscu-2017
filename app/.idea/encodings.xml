@@ -2,6 +2,13 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/www/css/style.css" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/www/js/app.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/scripts/app.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/scripts/controllers.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/scripts/services.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/add_friend.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/dashboard.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/friends.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/profile.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/register.html" charset="UTF-8" />
   </component>
 </project>

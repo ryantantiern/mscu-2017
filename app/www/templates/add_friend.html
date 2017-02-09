@@ -1,0 +1,37 @@
+<ion-view view-title="Add Friend">
+
+  <ion-content class="padding-top padding-bottom">
+        <div class="row">
+          <div class="col col-40">
+          <a ng-click="goBack()"  class="item item-icon-left">
+            <i class="icon ion-chevron-left"></i>
+            Go back
+          </a>
+          </div>
+          <div class="col">
+          <input type="text" ng-change="updateList(searchQuery)" ng-model="searchQuery" name="search-bar"
+                 placeholder="Search by phone number">
+          </div>
+        </div>
+
+    <div class="list">
+      <a class="item item-avatar item-button-right" ng-repeat="item in filteredPeople" >
+            <img src="img/avatar.jpg">
+            <h2>{{item.firstName + " " + item.lastName }}</h2>
+            <p>{{ item.phone }}</p>
+
+            <button ng-if="!item.request_sent" class="button button-large button-calm" ng-click="sendFriendRequest(item.id)">
+              <i class="icon ion-person-add"></i>
+            </button>
+            <button ng-if="item.request_sent" class="button button-large  button-outline button-stable" ng-click="cancelFriendRequest(item.id)">
+              Cancel request
+            </button>
+
+      </a>
+
+    </div>
+
+
+
+  </ion-content>
+</ion-view>
