@@ -102,7 +102,7 @@ angular.module('starter.controllers',[])
           }
 
         $http(request).then(function(result) {
-          if (result.data.status == 'all ok!') {
+          if (result.data.status == 'ok') {
             alert("You have successfuly created an account");
             $scope.goToLogin();
           }
