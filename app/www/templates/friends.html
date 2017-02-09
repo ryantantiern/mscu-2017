@@ -5,18 +5,15 @@
           Go back
         </a>
         <div>
-          <h3> You have {{ friends.length }} friends:</h3>
+          <h3> You have {{ rawFriends.length }} friends:</h3>
         </div>
 
         <div class="list">
-          <a class="item item-avatar" ng-repeat="friend in friends" >
+          <a class="item item-avatar" ng-repeat="friend in rawFriends" >
             <img src="img/avatar.jpg">
-            <h2>{{friend.name }}</h2>
+            <h2>{{friend.firstName}} {{friend.lastName}}</h2>
             <p>Back off, man. I'm a scientist.</p>
           </a>
-
-
-
         </div>
 
       </ion-content>
