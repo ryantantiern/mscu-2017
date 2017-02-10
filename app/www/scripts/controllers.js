@@ -152,9 +152,10 @@ angular.module('starter.controllers',['starter.services'])
   $scope.searchQuery = "";
 
   // Ryan - List friends
-  // 
-
+  //
+  $scope.friend_list = {};
   $scope.rawFriends = [];
+
   console.log($scope.rawFriends);
 
   $scope.$on('$ionicView.beforeEnter', function () {
@@ -171,24 +172,19 @@ angular.module('starter.controllers',['starter.services'])
       console.log(result);
 
       for (var i in result.data.friends) {
-        var friend = {
-          "firstName" : result.data.friends[i].email,
-          "lastName" : result.data.friends[i].id,
-          "phone" : '07935682465'
-        };
 
-        // TODO: FIX THIS
-        var j = 0;
-        while(j < $scope.rawFriends.length) {
-          if ($scope.rawFriends[j].firstName == friend.firstName && $scope.rawFriends[j].lastName == friend.lastName) {
-            break;
-          }
-          j++;
-        }
-        if (j == $scope.rawFriends.length){
+        if (!$scope.friend_list[result.data.friends[i].id]) {
+          var friend = {
+            "id" : result.data.friends[i].id,
+            "firstName" : result.data.friends[i].email,
+            "lastName" : result.data.friends[i].id,
+            "phone" : '07935682465'
+          };
           $scope.rawFriends.push(friend);
-         }
+          $scope.friend_list[result.data.friends[i].id] = friend;
 
+          console.log(friend);
+        }
       }
       console.log($scope.rawFriends);
     });
