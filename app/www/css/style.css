@@ -11,3 +11,23 @@
 .has-header {
   padding-top: 30px;
 }
+
+input[name=search-bar] {
+    width: 200px;
+    height: 53px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    background-image: url('../img/searchicon.png');
+    background-position: 4px 16px;
+    background-repeat: no-repeat;
+    padding: 12px 2px 12px 30px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+    width: 100%;
+}

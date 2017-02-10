@@ -3,7 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'starter.controllers', 'services'])
+
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -22,20 +23,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'services'])
     }  
   });
 })
-
-
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+.config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider){
 
   $stateProvider
     .state('login', {
-      url: "/login",
-      templateUrl: "templates/login.html",
-      controller: "LoginCtrl"
+          url: "/login",
+          templateUrl: "templates/login.html",
+          controller: "LoginCtrl"
     })
     .state('register', {
-      url: "/register",
-      templateUrl: "templates/register.html",
-      controller: "RegisterCtrl"
+          url: "/register",
+          templateUrl: "templates/register.html",
+          controller: "RegisterCtrl"
     })
     .state('dashboard', {
           url: "/dashboard",
@@ -47,13 +46,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'services'])
           templateUrl: "templates/friends.html",
           controller: "FriendsCtrl"
      })
-   .state('create_route', {
-       url: "/create_route",
-       templateUrl: "templates/create_route.html",
-       controller: "CreateRouteCtrl"
-   })
+	  .state('create_route', {
+          url: "/create_route",
+          templateUrl: "templates/create_route.html",
+          controller: "CreateRouteCtrl"
+	  })
+	  .state('add_friend', {
+              url: "/add_friend",
+              templateUrl: "templates/add_friend.html",
+              controller: "AddFriendCtrl"
+    	  })
+    .state('profile', {
+           url: "/profile",
+           templateUrl: "templates/profile.html",
+           controller: "ProfileCtrl"
 
-
+    })
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
@@ -61,33 +69,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'services'])
 })
 
 
-.service('loginData', function() {
- return {
-   form: {},
-   getForm: function() {
-     return this.form;
-   },
-   updateForm: function(form) {
-     this.form = form;
-   }
- }
-})
-
 .run(function($rootScope, $location, $state, Auth) {
+
   // Prevent non authenticated user to access app
   $rootScope.$on('$stateChangeStart', function (event) {
-      if ($location.path() == '/login' || $location.path() == '/register') {
-          return;
-       }
-       else {
-        if (!Auth.getUser()) {
-          console.log('DENY');
-          event.preventDefault();
-          $location.path('/login'); // Set path to /login
-          $state.go('login'); // Actually navigate to /login
-          console.log($location.path());
-        }
+      if (!Auth.getBaseUrl()) Auth.setBaseUrl("http://localhost:8000");
+
+      if ($location.path() != '/login' && $location.path() != '/register') {
+          if (!Auth.getUser()) {
+            console.log('DENY');
+            event.preventDefault();
+            $location.path('/login'); // Set path to /login
+            $state.go('login'); // Actually navigate to /login
+            console.log($location.path());
+          }
        }
    });
 
 })
+
