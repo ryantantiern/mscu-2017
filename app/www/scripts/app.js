@@ -39,7 +39,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     .state('dashboard', {
           url: "/dashboard",
           templateUrl: "templates/dashboard.html",
-          controller: "DashboardCtrl"
+          controller: "DashboardCtrl",
     })
     .state('friends', {
           url: "/friends",
@@ -71,17 +71,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($rootScope, $location, $state, Auth) {
 
-  // Prevent non authenticated user to access app
   $rootScope.$on('$stateChangeStart', function (event) {
+      // Set hostname of app here
       if (!Auth.getBaseUrl()) Auth.setBaseUrl("http://localhost:8000");
 
+      if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
+
+      // Prevent non authenticated user to access app
       if ($location.path() != '/login' && $location.path() != '/register') {
+
           if (!Auth.getUser()) {
-            console.log('DENY');
             event.preventDefault();
             $location.path('/login'); // Set path to /login
             $state.go('login'); // Actually navigate to /login
-            console.log($location.path());
           }
        }
    });

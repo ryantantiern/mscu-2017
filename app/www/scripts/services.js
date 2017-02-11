@@ -15,6 +15,7 @@ angular.module('starter.services',[])
 	.factory('Auth', function() {
 		var user;
 		var baseurl;
+		var apiurl;
 		 return {
 		 	setUser : function(newUser) {
 		 		user = newUser;
@@ -27,6 +28,12 @@ angular.module('starter.services',[])
 		 	},
 		 	getBaseUrl : function() {
 		 		return(baseurl)? baseurl : false;
+		 	},
+		 	setApiUrl : function(url) {
+		 		apiurl = url;
+		 	},
+		 	getApiUrl : function() {
+		 		return (apiurl)? apiurl : false;
 		 	}
 		 }
 	})

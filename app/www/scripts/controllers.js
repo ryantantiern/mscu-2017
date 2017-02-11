@@ -14,11 +14,11 @@ angular.module('starter.controllers',['starter.services'])
           // Login then set token to access token.
          var request = {
            method : 'POST',
-           url : Auth.getBaseUrl() + "/oauth/token",
+           url : Auth.getApiUrl() + "/oauth/token",
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "Bz49wi5uKhFW6c2993W6FnOYxsJ60FPMSgqx0m1H",
+             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -30,23 +30,21 @@ angular.module('starter.controllers',['starter.services'])
          }
          $http(request).then(function(result) {
            if (result.data.access_token) {
-             var user = {
-               access_token : result.data.access_token,
-               username : $scope.data.username
-             };
 
-             // get current user's data and save them locally
-             Auth.setUser(user);
+            $http({
+              method: "GET",
+              url : Auth.getApiUrl() + "/api/user",
+              headers: {
+                Authorization : 'Bearer ' +  result.data.access_token
+              }
+            }).then(function(user) {
+              user.data.access_token = result.data.access_token;
+              Auth.setUser(user.data);
+              $state.go('dashboard');
+              
 
-/*             $http.get(request.url).then(function(user) {
-               // get current user's data and save them locally
-                 var newUser = {
-                 }
-             });*/
-
-             console.log("Success");
-             loginData.updateForm(user);
-             $state.go('dashboard');
+              // loginData.updateForm(Auth.getUser());
+            });
            }
        }, function(e) {
               alert(e.data.error + ': ' + e.data.message);
@@ -70,7 +68,7 @@ angular.module('starter.controllers',['starter.services'])
  * REGISTER CONTROLLER
  */
 
-.controller('RegisterCtrl', function($scope, $state, $http) {
+.controller('RegisterCtrl', function($scope, $state, $http, Auth, $filter) {
 
   $scope.goToLogin = function(){
     $state.go('login');
@@ -86,12 +84,15 @@ angular.module('starter.controllers',['starter.services'])
           // register username and password then send post request then handle response
           var request = {
             method : 'POST',
-            url : Auth.getBaseUrl() + "/api/register",
+            url : Auth.getApiUrl() + "/api/register",
             data : {
               firstname : $scope.register.firstName,
               lastname : $scope.register.lastName,
               email : $scope.register.email,
-              password : $scope.register.password
+              password : $scope.register.password,
+              phone: $scope.register.phone,
+              dob : ($scope.register.birth_date)? $filter('date')($scope.register.birth_date, 'dd-MM-yyyy') : null,
+
             },
             headers :  {
               'Content-Type' : 'application/json',
@@ -100,7 +101,7 @@ angular.module('starter.controllers',['starter.services'])
           }
 
         $http(request).then(function(result) {
-          if (result.data.status == 'ok') {
+          if (result.data) {
             alert("You have successfuly created an account");
             $scope.goToLogin();
           }
@@ -119,11 +120,19 @@ angular.module('starter.controllers',['starter.services'])
   };
 })
 
-.controller('DashboardCtrl', function($scope, $state, loginData, Auth) {
-  //$scope.user_data = loginData.getForm();
+/**
+ * DASHBOARD CONTROLLER
+ */
+
+.controller('DashboardCtrl', function($scope, $state, Auth, $rootScope) {
   // Ryan 
   // Assign user_data to autheticated user
+  $scope.$on('$ionicView.beforeEnter', function () {
+      $scope.user_data = Auth.getUser();
+  });
   $scope.user_data = Auth.getUser();
+  console.log($scope.user_data);
+
 
   // Ryan - end
   
@@ -161,7 +170,7 @@ angular.module('starter.controllers',['starter.services'])
   $scope.$on('$ionicView.beforeEnter', function () {
     var request = {
       method : 'GET',
-      url : "http://localhost:8000/api/friends",
+      url : Auth.getApiUrl() + "/api/friends",
       headers : {
         Authorization : 'Bearer ' + Auth.getUser().access_token
       }
@@ -176,9 +185,9 @@ angular.module('starter.controllers',['starter.services'])
         if (!$scope.friend_list[result.data.friends[i].id]) {
           var friend = {
             "id" : result.data.friends[i].id,
-            "firstName" : result.data.friends[i].email,
-            "lastName" : result.data.friends[i].id,
-            "phone" : '07935682465'
+            "firstName" : result.data.friends[i].firstname,
+            "lastName" : result.data.friends[i].lastname,
+            "phone" : result.data.friends[i].phone
           };
           $scope.rawFriends.push(friend);
           $scope.friend_list[result.data.friends[i].id] = friend;
