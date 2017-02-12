@@ -72,9 +72,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 .run(function($rootScope, $location, $state, Auth) {
 
   $rootScope.$on('$stateChangeStart', function (event) {
-      // Set hostname of app here
-      if (!Auth.getBaseUrl()) Auth.setBaseUrl("http://localhost:8000");
-
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
 
       // Prevent non authenticated user to access app
