@@ -18,7 +18,7 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
+             client_secret: "BzaSA8Z4dmWrzxFI9fcaZ6pCP7ic8wNy9jz0l4iy", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -127,9 +127,6 @@ angular.module('starter.controllers',['starter.services'])
 .controller('DashboardCtrl', function($scope, $state, Auth, $rootScope) {
   // Ryan 
   // Assign user_data to autheticated user
-  $scope.$on('$ionicView.beforeEnter', function () {
-      $scope.user_data = Auth.getUser();
-  });
   $scope.user_data = Auth.getUser();
   console.log($scope.user_data);
 
@@ -156,15 +153,24 @@ angular.module('starter.controllers',['starter.services'])
 
 .controller('FriendsCtrl', function($scope, $state, $http, Auth) {
  
+/*
+  Leave out for now - not in use
+
   $scope.friends = [];
   $scope.filteredFriends = [];
   $scope.searchQuery = "";
 
-  // Ryan - List friends
-  //
-  $scope.friend_list = {};
-  $scope.rawFriends = [];
+*/
 
+  // Ryan - List friends
+  
+  /**
+   * @hashmap friend_list := update friends list only if friend is not already in list
+   * TODO: Allow update on deletion too 
+   */
+  $scope.friend_list = {}; 
+
+  $scope.rawFriends = [];
   console.log($scope.rawFriends);
 
   $scope.$on('$ionicView.beforeEnter', function () {
@@ -177,7 +183,6 @@ angular.module('starter.controllers',['starter.services'])
     }
 
     $http(request).then(function(result) {
-      // flush rawFriends and friends if callaback is successful
       console.log(result);
 
       for (var i in result.data.friends) {
@@ -189,9 +194,13 @@ angular.module('starter.controllers',['starter.services'])
             "lastName" : result.data.friends[i].lastname,
             "phone" : result.data.friends[i].phone
           };
+
+          // Should be written better 
+          // 
           $scope.rawFriends.push(friend);
           $scope.friend_list[result.data.friends[i].id] = friend;
-
+          // END - Should be written better 
+          // 
           console.log(friend);
         }
       }
@@ -229,11 +238,11 @@ angular.module('starter.controllers',['starter.services'])
       $state.go('dashboard');
   };
 })
-.controller('ProfileCtrl', function($scope, $state, loginData) {
+.controller('ProfileCtrl', function($scope, $state, loginData, Auth) {
   $scope.goBack = function(){
       $state.go('dashboard');
   };
-  $scope.user_data = loginData.getForm();
+  $scope.user_data = Auth.getUser();
 
   /* Delete this when grabbing from database */
   $scope.user_data['firstName'] = [];
@@ -264,38 +273,93 @@ angular.module('starter.controllers',['starter.services'])
   };
 })
 
-.controller('AddFriendCtrl', function($scope, $state) {
+.controller('AddFriendCtrl', function($scope, $state, Auth, $http) {
   $scope.goBack = function(){
       $state.go('dashboard');
   };
-  $scope.rawPeople = [{'id': 0,'firstName':'John' , 'lastName': 'Smith', 'phone':'07935682465', 'request_sent': false},
+
+/*  $scope.rawPeople = [{'id': 0,'firstName':'John' , 'lastName': 'Smith', 'phone':'07935682465', 'request_sent': false},
                       {'id': 1,'firstName':'Ryan' , 'lastName': 'Alexander', 'phone':'07956324589', 'request_sent': false},
                       {'id': 2,'firstName':'Maya' , 'lastName': 'Morgenstein', 'phone':'07945652401', 'request_sent': false},
-                      {'id': 3,'firstName':'Arthur' , 'lastName': 'Pendragon', 'phone':'07923690222', 'request_sent': false}];
+                      {'id': 3,'firstName':'Arthur' , 'lastName': 'Pendragon', 'phone':'07923690222', 'request_sent': false}];*/
+  $scope.rawPeople = [];
   $scope.show = [];
-  $scope.filteredPeople = $scope.rawPeople;
+  $scope.filteredPeople = [];
   $scope.searchQuery = "";
 
+  // Search for user based on phone number or first/last (or both) name
   $scope.updateList = function(searchQuery){
-    $scope.filteredPeople = $scope.rawPeople;
+    //$scope.filteredPeople = $scope.rawPeople;
+    $scope.filteredPeople = [];
     if (searchQuery && searchQuery.trim()!='') {
-      $scope.filteredPeople = $scope.filteredPeople.filter((friend) => {
-              return (friend.phone.indexOf(searchQuery) > -1);
-            })
+        var request = {
+          method : "GET",
+          url : Auth.getApiUrl() + "/api/search/" + searchQuery,
+          headers :  {
+            Authorization: "Bearer " + Auth.getUser().access_token 
+          }
+        }
 
+      $http(request).then(function(result) {
+        if (result.data) {
+          console.log(result);
+          for (var i = result.data.length - 1; i >= 0; i--) {
+            $scope.filteredPeople.push(result.data[i]);
+          }
+        }
+        else {
+          $scope.filteredPeople = [];
+        }
+      });
+/*      $scope.filteredPeople = $scope.filteredPeople.filter((friend) => {
+              return (friend.phone.indexOf(searchQuery) > -1);
+            })*/
     }
   };
 
   $scope.sendFriendRequest = function(id) {
     for (var i in $scope.filteredPeople)
       // TODO: Send API friend request
-        if ($scope.filteredPeople[i].id== id) $scope.filteredPeople[i].request_sent = true;
+        if ($scope.filteredPeople[i].id == id) {
+          var request = {
+            method : "GET",
+            url : Auth.getApiUrl() + "/api/friends/add/" + id,
+            headers :  {
+              Authorization: "Bearer " + Auth.getUser().access_token 
+            }
+          }
 
+          $http(request).then(function(result) {
+            if (result.data.message == 'success') {
+              console.log(result);
+              $scope.filteredPeople[i].request_sent = true;
+            }
+          });
+          break;
+        }
   };
   $scope.cancelFriendRequest = function(id) {
      for (var i in $scope.filteredPeople)
       // TODO: Cancel API friend request
-         if ($scope.filteredPeople[i].id== id) $scope.filteredPeople[i].request_sent = false;
+         if ($scope.filteredPeople[i].id== id) {
+          var request = {
+            method : "DELETE",
+            url : Auth.getApiUrl() + "/api/friends/requests/cancel/" + id,
+            headers :  {
+              Authorization: "Bearer " + Auth.getUser().access_token 
+            }
+          }
+          $http(request).then(function(result) {
+            if (result.data.message == 'success') {
+              console.log(result);
+              $scope.filteredPeople[i].request_sent = false;
+            }
+            else {
+              alert(result.data.message);
+            }
+          });
+          break;
+        }
 
   };
 })
