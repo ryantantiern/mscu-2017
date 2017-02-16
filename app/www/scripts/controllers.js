@@ -251,6 +251,11 @@ angular.module('starter.controllers',['starter.services'])
       $state.go('dashboard');
   };
 })
+
+/**
+ * PROFILE CONTROLLER
+ */
+
 .controller('ProfileCtrl', function($scope, $state, loginData, Auth) {
   $scope.goBack = function(){
       $state.go('dashboard');
