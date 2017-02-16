@@ -17,7 +17,7 @@
     <div class="list">
       <a class="item item-avatar item-button-right" ng-repeat="item in filteredPeople" >
             <img src="img/avatar.jpg">
-            <h2>{{item.firstName + " " + item.lastName }}</h2>
+            <h2>{{item.firstname}} {{item.lastname }}</h2>
             <p>{{ item.phone }}</p>
 
             <button ng-if="!item.request_sent" class="button button-large button-calm" ng-click="sendFriendRequest(item.id)">
