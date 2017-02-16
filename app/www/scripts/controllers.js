@@ -8,6 +8,16 @@ angular.module('starter.controllers',['starter.services'])
    $scope.data = {};
    $scope.default_text = "Please login";
    $scope.login = function(user_data) {
+/*    var user = {
+      'firstname' : 'Ryan' ,
+      'lastname' : 'Tan',
+      'email' : 'ryan@test.com',
+      'phone' : '012345678910' ,
+      'access_token' : 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjVjMTc5MTRmNmY3NGM4Mjg2ZTliMTZlODY1Y2I0MDkzMDU4ZTlhMmY2NzJlOGZiM2IyMjUzOWQzNzk0ZTE4OGZkMGQwYzYyN2E5ODZlOGMxIn0.eyJhdWQiOiIyIiwianRpIjoiNWMxNzkxNGY2Zjc0YzgyODZlOWIxNmU4NjVjYjQwOTMwNThlOWEyZjY3MmU4ZmIzYjIyNTM5ZDM3OTRlMTg4ZmQwZDBjNjI3YTk4NmU4YzEiLCJpYXQiOjE0ODcwMDE1MzQsIm5iZiI6MTQ4NzAwMTUzNCwiZXhwIjoxNTE4NTM3NTM0LCJzdWIiOiIxMCIsInNjb3BlcyI6WyIqIl19.iiJLez7V3nIUy9McYL39vEt5ir8kMq__M3BCpi7s5SCcnhQLBBvunb41sdd7Il-if54Xz2tQmBYcFXYN29zFaPrlRmKykZ-_qZNRLZMk0J8vWATpNcEI9JN-n0_BV5fye9D3inriM-XlQMnksAmC0BbyWUmLszZVr0ZAwBPZ6xs93i0A1wA3Zfsgx77xHS2p5tX3jgl978zTuuNgc2opI4h0z8s34HBuyz-0lxv4caoZKLc2zmL5UNwro97RWYO2gxV8m0KZz6QSglf_3h24XlJmufgrdqvySYM1WyXjopQKGuXBrnIVXr3pFMVRuSVC48F76GBs1T-qvMcSKYKnHqw2rv0PnRshaxbiCaiRye34wRUZZoNP-BvcaU3PEg2qzrzrK2Mi0RK_GebntUsvvGQeKgxQp3YzAZ-k4HKdYVCbxnxlnNjKNcziN2_pQV8g0IjBRNuXTPJCOn0enVlBEYAqn4z2re4XVpgF6nrbm_PdMDXw8QJtoKMFBIXbyHQ3hdlOXB1vOTbagt7LHQ855ne2CGOA6ODwERp4O5MzfLhQvg1juVQlC3B0Mo2uoD_dtozT1qlGDVttNW3AXd8rpidqUjxk4aLlN4SaTrllysyGDGekZUeKVyN3rdu7UbgInALqGLLn3Dj1PSQQkMW7lXQ_PAhuTVmQlSk9J4t82i4'
+    }
+    Auth.setUser(user);
+    $state.go('dashboard');*/
+
        if ($scope.data.username && $scope.data.password)
        {  
           // Ryan - Login
@@ -18,7 +28,7 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "BzaSA8Z4dmWrzxFI9fcaZ6pCP7ic8wNy9jz0l4iy", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
+             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",//"xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -124,27 +134,30 @@ angular.module('starter.controllers',['starter.services'])
  * DASHBOARD CONTROLLER
  */
 
-.controller('DashboardCtrl', function($scope, $state, Auth, $rootScope) {
+.controller('DashboardCtrl', function($scope, $state, Auth) {
   // Ryan 
   // Assign user_data to autheticated user
-  $scope.user_data = Auth.getUser();
-  console.log($scope.user_data);
-
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.user_data = Auth.getUser();
+  });
 
   // Ryan - end
   
-  $scope.goViewFriends = function(){
+  $scope.goViewFriends = function (){
       $state.go('friends');
   };
-  $scope.goAddFriend = function(){
+  $scope.goAddFriend = function () {
         $state.go('add_friend');
     };
-  $scope.goCreateRoute = function(){
+  $scope.goCreateRoute = function () {
           $state.go('create_route');
     };
-    $scope.goProfile = function(){
-          $state.go('profile');
-      };
+  $scope.goProfile = function () {
+        $state.go('profile');
+    };
+  $scope.goViewFrRequests = function () {
+        $state.go('friend_requests')
+  }
 })
 
 /**
@@ -363,3 +376,81 @@ angular.module('starter.controllers',['starter.services'])
 
   };
 })
+
+.controller('FrRequestsCtrl', function($scope, $state, Auth, $http) {
+  var data = {};
+  $scope.friend_requests = [];
+
+  $scope.$on('$ionicView.beforeEnter', function () {
+    var request = {
+      method : 'GET',
+      url : Auth.getApiUrl() + "/api/friends/requests/received",
+      headers : {
+        Authorization : 'Bearer ' + Auth.getUser().access_token
+      }
+    }
+
+    $http(request).then(function(result) {
+      for (var i in result.data.friends) {
+        if (!data[result.data.friends[i].id]) {
+          var user = {
+            "id" : result.data.friends[i].id,
+            "firstname" : result.data.friends[i].firstname,
+            "lastname" : result.data.friends[i].lastname,
+            "phone" : result.data.friends[i].phone
+          };
+
+          // Should be written better 
+          // 
+          $scope.friend_requests.push(user);
+          data[result.data.friends[i].id] = user;
+          // END - Should be written better 
+          // 
+        }
+      }
+      console.log(data);
+      console.log($scope.friend_requests);
+    });
+  });
+
+  $scope.accept = function (user) {
+
+    var request = {
+      method : 'GET',
+      url : Auth.getApiUrl() + "/api/friends/accept/" + user.id,
+      headers : {
+        Authorization : 'Bearer ' + Auth.getUser().access_token
+      }
+    }
+
+    $http(request).then(function(result) {
+      var i = $scope.friend_requests.indexOf(user);
+      $scope.friend_requests.splice(i,1);
+      data[user.id] = null;
+      console.log(result);
+      });
+  } 
+
+  $scope.decline = function (user) {
+
+    var request = {
+      method : 'GET',
+      url : Auth.getApiUrl() + "/api/friends/decline/" + user.id,
+      headers : {
+        Authorization : 'Bearer ' + Auth.getUser().access_token
+      }
+    }
+
+    $http(request).then(function(result) {
+      var i = $scope.friend_requests.indexOf(user);
+      $scope.friend_requests.splice(i,1);
+      data[user.id] = null;
+      console.log(result);
+      });
+  }
+
+  $scope.goBack = function () {
+    $state.go('dashboard');
+  }
+})
+

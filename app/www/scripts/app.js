@@ -55,13 +55,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
               url: "/add_friend",
               templateUrl: "templates/add_friend.html",
               controller: "AddFriendCtrl"
-    	  })
+    })
+
     .state('profile', {
            url: "/profile",
            templateUrl: "templates/profile.html",
            controller: "ProfileCtrl"
-
     })
+    .state('friend_requests', {
+           url: "/friend_requests",
+           templateUrl: "templates/friend_requests.html",
+           controller: "FrRequestsCtrl"
+    })
+    
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
