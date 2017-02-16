@@ -9,29 +9,26 @@
           </a>
           </div>
           <div class="col">
-          <input type="text" ng-change="updateList(searchQuery)" ng-model="searchQuery" ng-model-options='{ debounce: 300 }' name="search-bar"
+          <input type="text" ng-change="updateList(searchQuery)" ng-model="searchQuery" name="search-bar"
                  placeholder="Search by phone number">
           </div>
         </div>
 
     <div class="list">
-      <div ng-if="filteredPeople.length > 0 ">       
-       <a class="item item-avatar item-button-right" ng-repeat="item in filteredPeople" >
-              <img src="img/avatar.jpg">
-              <h2>{{ item.firstname + " " + item.lastname }}</h2>
-              <p>{{ item.phone }}</p>
+      <a class="item item-avatar item-button-right" ng-repeat="item in filteredPeople" >
+            <img src="img/avatar.jpg">
+            <h2>{{item.firstName + " " + item.lastName }}</h2>
+            <p>{{ item.phone }}</p>
 
-              <button ng-if="!item.request_sent" class="button button-large button-calm" ng-click="sendFriendRequest(item.id)">
-                <i class="icon ion-person-add"></i>
-              </button>
-              <button ng-if="item.request_sent" class="button button-large  button-outline button-stable" ng-click="cancelFriendRequest(item.id)">
-                Cancel request
-              </button>
-        </a>
-      </div>
-      <div ng-if="filteredPeople.length == 0">
-        <h2>No results</h2>
-      </div>
+            <button ng-if="!item.request_sent" class="button button-large button-calm" ng-click="sendFriendRequest(item.id)">
+              <i class="icon ion-person-add"></i>
+            </button>
+            <button ng-if="item.request_sent" class="button button-large  button-outline button-stable" ng-click="cancelFriendRequest(item.id)">
+              Cancel request
+            </button>
+
+      </a>
+
     </div>
 
 
