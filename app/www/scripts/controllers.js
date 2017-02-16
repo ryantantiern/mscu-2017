@@ -28,7 +28,7 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
+             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",//"xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
