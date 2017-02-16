@@ -137,18 +137,9 @@ angular.module('starter.controllers',['starter.services'])
 .controller('DashboardCtrl', function($scope, $state, Auth) {
   // Ryan 
   // Assign user_data to autheticated user
-<<<<<<< HEAD
-  $scope.$on('$ionicView.beforeEnter', function () {
-      $scope.user_data = Auth.getUser();
-  });
-  $scope.user_data = Auth.getUser();
-  console.log($scope.user_data);
-
-=======
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.user_data = Auth.getUser();
   });
->>>>>>> friends
 
   // Ryan - end
   
