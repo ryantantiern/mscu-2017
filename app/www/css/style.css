@@ -32,3 +32,19 @@ input[type=text]:focus {
     width: 100%;
 }
 
+input:disabled {
+    background: RGBa(0,0,0,0);
+}
+
+textarea:disabled {
+    background: RGBa(0,0,0,0);
+}
+
+.profile {
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+     overflow: hidden;
+
+}
+

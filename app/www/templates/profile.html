@@ -1,6 +1,6 @@
 <ion-view view-title="My profile">
 
-  <ion-content class="padding-top padding-bottom">
+  <ion-content class="padding-top padding-bottom has-footer">
 
     <a ng-click="goBack()"  class="item item-icon-left">
       <i class="icon ion-chevron-left"></i>
@@ -8,9 +8,63 @@
     </a>
 
     <div class="container">
-      <img ng-src="{{ user_data.photo }}">
-      <button ng-click="takePic()">grsg</button>
+      <div class="row">
+        <div class="col col-offset-20 col-60">
+          <img class="profile" src="{{user_data.photo || defaultPhoto}}" >
+
+        </div>
+        <div class="col col-bottom">
+          <button ng-click="changePhoto()" class="button button-small button-outline button-positive">
+            Upload picture
+          </button>
+        </div>
+      </div>
+      <div class="list  ">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">First Name</span>
+          <input id="firstName" ng-disabled="!editing"value="{{user_data.firstName}}" type="text"  placeholder="{{user_data.firstName}}">
+        </label>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Last Name</span>
+          <input id="lastName"  ng-disabled="!editing"value="{{user_data.lastName}}" type="text"  placeholder="{{user_data.lastName}}">
+        </label>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Phone</span>
+          <input id="phone" ng-disabled="!editing"value="{{user_data.phone}}" type="text"  placeholder="{{user_data.phone}}">
+        </label>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Date of birth</span>
+          <input id="dob" ng-disabled="!editing"value="{{user_data.dob}}" type="text"  placeholder="{{user_data.dob}}">
+        </label>
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Address</span>
+          <textarea id="address"  ng-disabled="!editing" placeholder="{{user_data.address}}">{{user_data.address}}
+            </textarea>
+        </label>
+      </div>
+
     </div>
 
   </ion-content>
+  <div class="bar bar-footer bar-dark">
+    <button id="changeButton" ng-click="changePassword()" class="button button-clear">
+      <i class="icon ion-edit"></i>
+      Change Password
+    </button>
+    <button style="display:none" ng-click="saveChanges()"id="saveButton" class="button button-clear">
+      <i class="icon ion-checkmark"></i>
+      Save changes
+    </button>
+    <button id="editButton" ng-click="editProfile()" class="button button-clear">
+      Edit profile
+      <i class="icon ion-lock-combination"></i>
+    </button>
+
+  </div>
+
+
 </ion-view>

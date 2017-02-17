@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'ngStorage'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $localStorage, $cordovaPush) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -20,7 +20,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
     if(window.StatusBar) {
       StatusBar.styleDefault();
-    }  
+    }
   });
 })
 .config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider){
@@ -62,12 +62,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
            templateUrl: "templates/profile.html",
            controller: "ProfileCtrl"
     })
+
     .state('friend_requests', {
            url: "/friend_requests",
            templateUrl: "templates/friend_requests.html",
            controller: "FrRequestsCtrl"
     })
-    
+
+
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
@@ -75,7 +77,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 })
 
 
-.run(function($rootScope, $location, $state, Auth) {
+.run(function($rootScope, $location,  $state, Auth) {
 
   $rootScope.$on('$stateChangeStart', function (event) {
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");

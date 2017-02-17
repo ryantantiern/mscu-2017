@@ -19,7 +19,7 @@ angular.module('starter.controllers',['starter.services'])
     $state.go('dashboard');*/
 
        if ($scope.data.username && $scope.data.password)
-       {  
+       {
           // Ryan - Login
           // Login then set token to access token.
          var request = {
@@ -51,7 +51,7 @@ angular.module('starter.controllers',['starter.services'])
               user.data.access_token = result.data.access_token;
               Auth.setUser(user.data);
               $state.go('dashboard');
-              
+
 
               // loginData.updateForm(Auth.getUser());
             });
@@ -69,7 +69,7 @@ angular.module('starter.controllers',['starter.services'])
         else alert("Please fill out the fields before submitting");
        }
     };
-   $scope.goToRegister = function(){  
+   $scope.goToRegister = function(){
         $state.go('register');
    };
   })
@@ -121,7 +121,7 @@ angular.module('starter.controllers',['starter.services'])
           }
         });
 
-      // END Ryan - register        
+      // END Ryan - register
 
         }else {
           alert("Warning! The password do not match. Please try again.");
@@ -135,14 +135,14 @@ angular.module('starter.controllers',['starter.services'])
  */
 
 .controller('DashboardCtrl', function($scope, $state, Auth) {
-  // Ryan 
+  // Ryan
   // Assign user_data to autheticated user
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.user_data = Auth.getUser();
   });
 
   // Ryan - end
-  
+
   $scope.goViewFriends = function (){
       $state.go('friends');
   };
@@ -165,7 +165,7 @@ angular.module('starter.controllers',['starter.services'])
  */
 
 .controller('FriendsCtrl', function($scope, $state, $http, Auth) {
- 
+
 /*
   Leave out for now - not in use
 
@@ -176,12 +176,12 @@ angular.module('starter.controllers',['starter.services'])
 */
 
   // Ryan - List friends
-  
+
   /**
    * @hashmap friend_list := update friends list only if friend is not already in list
-   * TODO: Allow update on deletion too 
+   * TODO: Allow update on deletion too
    */
-  $scope.friend_list = {}; 
+  $scope.friend_list = {};
 
   $scope.rawFriends = [];
   console.log($scope.rawFriends);
@@ -208,12 +208,12 @@ angular.module('starter.controllers',['starter.services'])
             "phone" : result.data.friends[i].phone
           };
 
-          // Should be written better 
-          // 
+          // Should be written better
+          //
           $scope.rawFriends.push(friend);
           $scope.friend_list[result.data.friends[i].id] = friend;
-          // END - Should be written better 
-          // 
+          // END - Should be written better
+          //
           console.log(friend);
         }
       }
@@ -225,8 +225,8 @@ angular.module('starter.controllers',['starter.services'])
   });
 
 // Ryan - End
-  
-  /* 
+
+  /*
     REDUNDANT - BAD CODE?
     for (var i in $scope.rawFriends)
     {
@@ -251,39 +251,151 @@ angular.module('starter.controllers',['starter.services'])
       $state.go('dashboard');
   };
 })
-.controller('ProfileCtrl', function($scope, $state, loginData, Auth) {
+
+.controller('ProfileCtrl', function($scope, $ionicPopup, $state, loginData, $cordovaCamera, $ionicLoading, $localStorage, Auth) {
+
   $scope.goBack = function(){
       $state.go('dashboard');
   };
-  $scope.user_data = Auth.getUser();
+  $scope.changePhoto = function(){
+      $scope.data = {};
+            var myPopup = $ionicPopup.show({
+                  template: ' ',
+                  title: 'Change profile picture',
+                  subTitle: '',
+                  scope: $scope,
+                  buttons: [ {
+                     text: '<b>Take photo</b>',
+                     type: 'button-positive',
+                     onTap: function(e) {
+                           $scope.takePicture();
+                        }
+                     },
 
-  /* Delete this when grabbing from database */
-  $scope.user_data['firstName'] = [];
-  $scope.user_data['lastName'] = [];
-  $scope.user_data['phone'] = [];
-  $scope.user_data['address'] = [];
-  $scope.user_data['photo'] = [];
-  $scope.user_data['firstName'].push('John');
-  $scope.user_data['lastName'].push('Doe');
-  $scope.user_data['phone'].push('07999999999');
-  $scope.user_data['address'].push('');
-  $scope.user_data['photo'].push('/img/'+'profile.jpg');
-  /* until here */
-  $scope.takePic = function() {
-      var options =   {
-          quality: 50,
-          destinationType: Camera.DestinationType.DATA_URL,
-          sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-          encodingType: 0     // 0=JPG 1=PNG
-      }
-      // Take picture using device camera and retrieve image as base64-encoded string
-      navigator.camera.getPicture(onSuccess,onFail,options);
-  }
-  var onSuccess = function(imageData) {
-      console.log("On Success! ");
-      $scope.picData = "data:image/jpeg;base64," +imageData;
-      $scope.$apply();
+                   {
+                      text: '<b>Choose from library</b>',
+                      type: 'button-positive',
+                      onTap: function(e) {
+                          $scope.selectPicture();
+                       }
+                   }
+                   ]
+               });
+
+
   };
+  $scope.defaultPhoto ='img/avatar.jpg';
+  $scope.user_data = Auth.getUser();
+  $scope.editing = false;
+  /* Delete this when grabbing from database */
+  $scope.user_data['firstName']= 'John';
+  $scope.user_data['lastName']='Doe';
+  $scope.user_data['phone']='07999999999';
+  $scope.user_data['address']='Cuca macaii land';
+  $scope.user_data['dob']='11/06/1996';
+  $scope.user_data['photo']=null;
+
+  $scope.editProfile = function(){
+    document.getElementById("changeButton").style.display='none';
+    document.getElementById("editButton").style.display='none';
+    document.getElementById("saveButton").style.display='block';
+    $scope.editing = true;
+
+  };
+
+  $scope.saveChanges = function(){
+      document.getElementById("changeButton").style.display='block';
+      document.getElementById("editButton").style.display='block';
+      document.getElementById("saveButton").style.display='none';
+      $scope.editing = false;
+
+    };
+
+    $scope.changePassword = function()
+    {
+      $scope.data = {};
+      var myPopup = $ionicPopup.show({
+            template: ' Old Password<input type="password" ng-model="data.oldPassword">   <br> New Password  <input type="password" ng-model="data.newPassword" > <br> Confirm Password  <input type="password" ng-model="data.confirmPassword" >',
+            title: 'Change Password',
+            subTitle: '',
+            scope: $scope,
+            buttons: [{
+               text: 'Cancel'
+            }, {
+               text: '<b>Save</b>',
+               type: 'button-positive',
+               onTap: function(e) {
+                  if ($scope.data.newPassword != $scope.data.confirmPassword) {
+                     //don't allow the user to continue if the 2 passwords do not match
+                     alert("Passwords do not match. Please try again.");
+                     e.preventDefault();
+                  } else
+                  if (!$scope.data.oldPassword || !$scope.data.newPassword || !$scope.data.confirmPassword)
+                  {
+                    alert("Please complete all the fields.");
+                    e.preventDefault();
+                  } else
+
+                  {
+                     return $scope.data;
+                  }
+               }
+            }, ]
+         });
+    };
+
+
+
+    $scope.takePicture = function() {
+      	  var options = {
+              quality: 100,
+              destinationType: Camera.DestinationType.FILE_URL,
+              sourceType: Camera.PictureSourceType.CAMERA,
+              saveToPhotoAlbum: true
+            };
+      	  $cordovaCamera.getPicture(options).then(
+      		function(imageData) {
+      			$scope.picData = imageData;
+      			$scope.ftLoad = true;
+      			$localstorage.set('photo', imageData);
+      			$scope.user_data.photo = "data:image/jpeg;base64,"+imageData;
+
+      			$ionicLoading.show({template: 'Getting photo...', duration:500});
+      		},
+      		function(err){
+      			$ionicLoading.show({template: 'Errore di caricamento...', duration:500});
+      			})
+      	  };
+
+     $scope.selectPicture = function() {
+      		var options = {
+              quality: 100,
+      			destinationType: Camera.DestinationType.FILE_URI,
+      			sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+      		};
+
+      	  $cordovaCamera.getPicture(options).then(
+      		function(imageURI) {
+      			window.resolveLocalFileSystemURI(imageURI, function(fileEntry) {
+      				$scope.picData = fileEntry.nativeURL;
+      				$scope.ftLoad = true;
+      				$scope.user_data.photo = fileEntry.nativeURL;
+        			});
+      			$ionicLoading.show({template: 'Foto acquisita...', duration:500});
+      		},
+      		function(err){
+      			$ionicLoading.show({template: 'Errore di caricamento...', duration:500});
+      		})
+      	};
+
+
+
+
+
+
+
+
+
 })
 
 .controller('AddFriendCtrl', function($scope, $state, Auth, $http) {
@@ -309,7 +421,7 @@ angular.module('starter.controllers',['starter.services'])
           method : "GET",
           url : Auth.getApiUrl() + "/api/search/" + searchQuery,
           headers :  {
-            Authorization: "Bearer " + Auth.getUser().access_token 
+            Authorization: "Bearer " + Auth.getUser().access_token
           }
         }
 
@@ -338,7 +450,7 @@ angular.module('starter.controllers',['starter.services'])
             method : "GET",
             url : Auth.getApiUrl() + "/api/friends/add/" + id,
             headers :  {
-              Authorization: "Bearer " + Auth.getUser().access_token 
+              Authorization: "Bearer " + Auth.getUser().access_token
             }
           }
 
@@ -359,7 +471,7 @@ angular.module('starter.controllers',['starter.services'])
             method : "DELETE",
             url : Auth.getApiUrl() + "/api/friends/requests/cancel/" + id,
             headers :  {
-              Authorization: "Bearer " + Auth.getUser().access_token 
+              Authorization: "Bearer " + Auth.getUser().access_token
             }
           }
           $http(request).then(function(result) {
@@ -400,12 +512,12 @@ angular.module('starter.controllers',['starter.services'])
             "phone" : result.data.friends[i].phone
           };
 
-          // Should be written better 
-          // 
+          // Should be written better
+          //
           $scope.friend_requests.push(user);
           data[result.data.friends[i].id] = user;
-          // END - Should be written better 
-          // 
+          // END - Should be written better
+          //
         }
       }
       console.log(data);
@@ -429,7 +541,7 @@ angular.module('starter.controllers',['starter.services'])
       data[user.id] = null;
       console.log(result);
       });
-  } 
+  }
 
   $scope.decline = function (user) {
 
