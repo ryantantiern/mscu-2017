@@ -11,7 +11,7 @@ angular.module('starter.directives', [])
     link: function ($scope, $element, $attr) {
       function initialize() {
          var mapOptions = {
-        credentials: "AruHnkjZjBTd4ZwdQlT94tYjM5KfVi_tsADRx6cTQILhBymOpnD0MVJxuL0amUyz",
+        credentials: "Av5wBqmsnnQASubvgnpJc-tfOm8-nSSCq3KteunuqY4s4lhtA3LuyupF5Xq1R8ng",
         mapTypeId: Microsoft.Maps.MapTypeId.road,
         center: new Microsoft.Maps.Location(53.688, -2.039),
         zoom: 5,
