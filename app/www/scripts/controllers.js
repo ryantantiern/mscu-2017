@@ -305,6 +305,10 @@ angular.module('starter.controllers',['starter.services'])
       document.getElementById("editButton").style.display='block';
       document.getElementById("saveButton").style.display='none';
       $scope.editing = false;
+      // TODO: 
+      // compare differences with user_data and Auth.getUser()
+      // send api request to update differences
+      // make local change on Auth.set(user_data)
 
     };
 
@@ -334,7 +338,11 @@ angular.module('starter.controllers',['starter.services'])
                   } else
 
                   {
-                     return $scope.data;
+                    // TODO: 
+                    // send api request to check if old password is same  
+                    // if so, update to new password
+                    // 
+                    return $scope.data;
                   }
                }
             }, ]
