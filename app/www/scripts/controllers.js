@@ -28,11 +28,7 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-<<<<<<< HEAD
-             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",/*"xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y",*/ //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
-=======
              client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",//"xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
->>>>>>> 36ead67af5ae077e89216521574c96120c4af937
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -292,11 +288,8 @@ angular.module('starter.controllers',['starter.services'])
   $scope.user_data = Auth.getUser();
   $scope.editing = false;
   /* Delete this when grabbing from database */
-  $scope.user_data['firstName']= 'John';
-  $scope.user_data['lastName']='Doe';
-  $scope.user_data['phone']='07999999999';
+
   $scope.user_data['address']='Cuca macaii land';
-  $scope.user_data['dob']='11/06/1996';
   $scope.user_data['photo']=null;
 
   $scope.editProfile = function(){
