@@ -4,15 +4,14 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.directives'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, GeoLocation) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
       // Don't remove this line unless you know what you are doing. It stops the viewport
       // from snapping when text inputs are focused. Ionic handles this internally for
       // a much nicer keyboard experience.
@@ -21,6 +20,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }  
+
+    GeoLocation.getConstantLocation()
+
   });
 })
 .config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider){
@@ -68,7 +70,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
            controller: "FrRequestsCtrl"
     })
     
-  $urlRouterProvider.otherwise("/login");
+  $urlRouterProvider.otherwise("/dashboard");
 
   // Cache forward navigations
   $ionicConfigProvider.views.forwardCache(true);
@@ -78,15 +80,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 .run(function($rootScope, $location, $state, Auth) {
 
   $rootScope.$on('$stateChangeStart', function (event) {
-      if (!Auth.getApiUrl()) Auth.setApiUrl("http://localhost:8000");
+      if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
 
       // Prevent non authenticated user to access app
-      if ($location.path() != '/login' && $location.path() != '/register') {
+      if ($location.path() != '/dashboard' /*&& $location.path() != '/register'*/) {
 
           if (!Auth.getUser()) {
             event.preventDefault();
-            $location.path('/login'); // Set path to /login
-            $state.go('login'); // Actually navigate to /login
+            $location.path('/dashboard'); // Set path to /login
+            $state.go('dashboard'); // Actually navigate to /login
           }
        }
    });

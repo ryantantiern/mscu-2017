@@ -28,7 +28,7 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
+             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW", // "xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -134,11 +134,12 @@ angular.module('starter.controllers',['starter.services'])
  * DASHBOARD CONTROLLER
  */
 
-.controller('DashboardCtrl', function($scope, $state, Auth) {
+.controller('DashboardCtrl', function($scope, $state, Auth, GeoLocation) {
   // Ryan 
   // Assign user_data to autheticated user
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.user_data = Auth.getUser();
+
   });
 
   // Ryan - end
@@ -246,10 +247,49 @@ angular.module('starter.controllers',['starter.services'])
  * CREATE ROUTE CONTROLLER
  */
 
-.controller('CreateRouteCtrl', function($scope, $state) {
+.controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService ) {
+  var current_point, 
+      start_point, 
+      end_point,
+      start_location;
+      
+
+  $scope.start = "Current Location"
+  $scope.end = ""
+
   $scope.goBack = function(){
       $state.go('dashboard');
   };
+
+  $scope.mapCreated = function(map) {
+    $scope.map = map;
+    map.setView({
+      center: GeoLocation.getLocation(),
+      zoom: 14
+    })
+    var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), {color: "blue"});
+    map.entities.push(pushpin);
+
+    current_point = GeoLocation.getLocation()
+    start_point = current_point
+    start_location = BingLocationService.getStreetName()
+
+  };
+
+  setInterval( function () { 
+   
+  }, 500);
+
+  $scope.navigation = function () {
+/*    setInterval( function () {
+      console.log(start_point, end_point, $scope.start, $scope.end)
+
+    }, 500)*/
+    BingLocationService.getLocationFromAddress(start_location).then(function (result) {
+      start_point = result
+      console.log(result)
+    })
+  }
 })
 
 /**
