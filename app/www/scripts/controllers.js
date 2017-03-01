@@ -161,23 +161,15 @@ angular.module('starter.controllers',['starter.services'])
   }
 })
 
+
+
+
 /**
  * FRIENDS CONTROLLER
  */
 
 .controller('FriendsCtrl', function($scope, $state, $http, Auth) {
- 
-/*
-  Leave out for now - not in use
 
-  $scope.friends = [];
-  $scope.filteredFriends = [];
-  $scope.searchQuery = "";
-
-*/
-
-  // Ryan - List friends
-  
   /**
    * @hashmap friend_list := update friends list only if friend is not already in list
    * TODO: Allow update on deletion too 
@@ -248,49 +240,47 @@ angular.module('starter.controllers',['starter.services'])
  */
 
 .controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService ) {
-  var current_point, 
-      start_point, 
-      end_point,
-      start_location;
-      
-
-  $scope.start = "Current Location"
-  $scope.end = ""
+ 
+ $scope.startAddress = ""
+ $scope.endAddress = ""
+ $scope.wpAddresses = []
 
   $scope.goBack = function(){
       $state.go('dashboard');
   };
 
-  $scope.mapCreated = function(map) {
-    $scope.map = map;
-    map.setView({
-      center: GeoLocation.getLocation(),
-      zoom: 14
-    })
-    var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), {color: "blue"});
-    map.entities.push(pushpin);
-
-    current_point = GeoLocation.getLocation()
-    start_point = current_point
-    start_location = BingLocationService.getStreetName()
-
-  };
-
-  setInterval( function () { 
-   
-  }, 500);
-
-  $scope.navigation = function () {
-/*    setInterval( function () {
-      console.log(start_point, end_point, $scope.start, $scope.end)
-
-    }, 500)*/
-    BingLocationService.getLocationFromAddress(start_location).then(function (result) {
-      start_point = result
-      console.log(result)
-    })
+  $scope.addWpInput = function () {
+    var wpInput = ""
+    $scope.wpAddresses.push(wpInput)
   }
+  $scope.removeWpInput = function () {
+    $scope.wpAddresses.pop()
+  }
+
+
+  $scope.next = function () {
+    $state.go('customize_route')
+  }
+
 })
+
+/**
+/**CONTROLLER
+ */
+
+  .controller('CustomizeRouteCtrl', function($scope, $state) {
+    
+    $scope.goBack = function () {
+      $state.go('create_route')
+    }
+
+    $scope.mapCreated = function (map) {
+      $scope.map = map;
+
+    }
+
+  })
+
 
 /**
  * PROFILE CONTROLLER

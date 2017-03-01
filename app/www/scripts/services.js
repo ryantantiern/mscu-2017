@@ -32,80 +32,80 @@ angular.module('starter.services',[])
 	})
 
 	.factory('GeoLocation',[ '$cordovaGeolocation', '$ionicPopup' ,'BingLocationService', function( $cordovaGeolocation, $ionicPopup, BingLocationService) {
-	var watch;
-	var frequency =700;
-	var latitude=0;
-	var longitude=0;
-	var accuracy =0; 
-	var altitude =0;
-	var streetName=""
-	  function getLatitude() {
-	    return latitude;
-	  }
-	  function getLongitude () {
-	    return longitude;
-	  }
-	  function getAltitude() {
-	    return altitude;
-	  }
-	  function getAccuracy() {
-	    return accuracy;
-	  }
-	  function setFrequency(freq) {
-	    frequency = freq;
-	  }
-	  function clearWatch(){
-	    watch.clearWatch();
-	  }
+		var watch;
+		var frequency =700;
+		var latitude=0;
+		var longitude=0;
+		var accuracy =0; 
+		var altitude =0;
+		var streetName=""
+		  function getLatitude() {
+		    return latitude;
+		  }
+		  function getLongitude () {
+		    return longitude;
+		  }
+		  function getAltitude() {
+		    return altitude;
+		  }
+		  function getAccuracy() {
+		    return accuracy;
+		  }
+		  function setFrequency(freq) {
+		    frequency = freq;
+		  }
+		  function clearWatch(){
+		    watch.clearWatch();
+		  }
 
-	  function Location(lat, long) {
-	  	return new Microsoft.Maps.Location(lat, long)
-	  }
-	  
-	  function getLocation() {
-	  	return this.Location(latitude, longitude)
-	  }
+		  function Location(lat, long) {
+		  	return new Microsoft.Maps.Location(lat, long)
+		  }
+		  
+		  function getLocation() {
+		  	return this.Location(latitude, longitude)
+		  }
 
-	  function getConstantLocation() {
-	  
-	      var watchOptions = {
-	        frequency : frequency,
-	        enableHighAccuracy: false 
-	      };
-	      watch = $cordovaGeolocation.watchPosition(watchOptions);
-	      watch.then(
-	        null,
-	          function(err) {
-	            var alertPopup = $ionicPopup.alert({
-	              title: "GPS not enabled!!",
-	              template: "Please allow this application to use the devices current loaction," +
-	              " go to setting to accept this functionality"
-	            });
-	        },
-	        function(position) {
-	          //console.log("GPS coordinates");
-	            latitude = position.coords.latitude;
-	            longitude = position.coords.longitude;
-	            accuracy = position.coords.accuracy; 
-	           	altitude = position.coords.altitude;
-	           	BingLocationService.setStreetName(latitude, longitude)
-	         }
-	      );
-	    
-	  }
-	
-	 return { 
-	  getLongitude: getLongitude,
-	  getLatitude: getLatitude,
-	  getAltitude: getAltitude,
-	  getAccuracy: getAccuracy,
-	  setFrequency: setFrequency,
-	  getConstantLocation: getConstantLocation,
-	  clearWatch: clearWatch,
-	  getLocation: getLocation,
-	  Location: Location,
-	  }
-	}])
+		  function getConstantLocation() {
+		  
+		      var watchOptions = {
+		        frequency : frequency,
+		        enableHighAccuracy: false 
+		      };
+		      watch = $cordovaGeolocation.watchPosition(watchOptions);
+		      watch.then(
+		        null,
+		          function(err) {
+		            var alertPopup = $ionicPopup.alert({
+		              title: "GPS not enabled!!",
+		              template: "Please allow this application to use the devices current loaction," +
+		              " go to setting to accept this functionality"
+		            });
+		        },
+		        function(position) {
+		          //console.log("GPS coordinates");
+		            latitude = position.coords.latitude;
+		            longitude = position.coords.longitude;
+		            accuracy = position.coords.accuracy; 
+		           	altitude = position.coords.altitude;
+		           	BingLocationService.setStreetName(latitude, longitude)
+		         }
+		      );
+		    
+		  }
+		
+		 return { 
+		  getLongitude: getLongitude,
+		  getLatitude: getLatitude,
+		  getAltitude: getAltitude,
+		  getAccuracy: getAccuracy,
+		  setFrequency: setFrequency,
+		  getConstantLocation: getConstantLocation,
+		  clearWatch: clearWatch,
+		  getLocation: getLocation,
+		  Location: Location,
+		  }
+		}])
 
 	  .factory("BingLocationService", [ '$http', function($http){
 

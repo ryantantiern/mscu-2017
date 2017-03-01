@@ -53,6 +53,13 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           templateUrl: "templates/create_route.html",
           controller: "CreateRouteCtrl"
 	  })
+
+    .state('customize_route', {
+           url: "/customize_route",
+           templateUrl: "templates/customize_route.html",
+           controller: "CustomizeRouteCtrl"
+    })
+
 	  .state('add_friend', {
               url: "/add_friend",
               templateUrl: "templates/add_friend.html",
@@ -78,12 +85,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
 
 .run(function($rootScope, $location, $state, Auth) {
-
+/*
   $rootScope.$on('$stateChangeStart', function (event) {
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
 
       // Prevent non authenticated user to access app
-      if ($location.path() != '/dashboard' /*&& $location.path() != '/register'*/) {
+      if ($location.path() != '/dashboard' && $location.path() != '/register') {
 
           if (!Auth.getUser()) {
             event.preventDefault();
@@ -92,6 +99,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
        }
    });
-
+*/
 })
 

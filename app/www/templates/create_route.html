@@ -1,35 +1,54 @@
 <ion-view view-title="Create Route">
-    <ion-content class="padding login-bg" scroll="false">
-	
-		<a ng-click="goBack()"  class="item item-icon-left">
-          <i class="icon ion-chevron-left"></i>
-          Go back
-        </a>
+    <ion-content class="padding login-bg">
 
-    	<map on-create="mapCreated(map)" style="width:100%; height:45vh; position: absolute; margin-top: 1vh;"></map>
-		
-		<div class= "col" style="position: absolute; top: 55vh; ">
-			    <form method="get">
-			    	<div class="list">
-			    	<label class="item item-input item-stacked-label">
-			    		<span class="input-label">Start Point</span>
-			    		<input ng-model="start" type="text" placeholder="Enter Start Location">
-			    	</label>
-			    	<label class="item item-input item-stacked-label">
-			    		<span class="input-label">End Point</span>
-			    		<input ng-model="end"  type="text" placeholder="Enter End Location">
-			    	</label>
-			    		
-			    		<div class="padding">
-			    			<button ng-click="navigation()" class="button button-block button-positive">Submit</button>
-			    		</div>
-	
-			    </form>
+		<div class="list">
+			<a ng-click="goBack()"  class="item item-icon-left">
+			  <i class="icon ion-chevron-left"></i>
+			  Go back
+			</a>
+		</div>
+
+		<div class="list">
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">Start</span>
+				<input type="text" placeholder="Enter starting address" > 
+			</label>
+			<label class="item item-input item-stacked-label">
+			<span class="input-label">End</span>
+				<input type="text" placeholder="Enter ending address">
+			</label>
+		</div>
+
+		<div ng-if="wpAddresses.length > 0">
+			<div class="list">
+				<div ng-repeat="(i, wp) in wpAddresses track by $index">
+					<label class="item item-input item-label">
+						<span class="input-label">Way Point {{i+1}}</span>
+						<input ng-model="wp" type="text" > 
+					</label>
+				</div>
 			</div>
-	    </div>
+		</div>
+		<div class="row" style="padding-bottom: 5vh;">
+			<div class="col">
+				<div class="button button-clear button-balanced" ng-click="addWpInput()">
+					New Waypoint&nbsp
+					<i class="icon ion-plus-round"></i>
+				</div>
+			</div>
+			<div class="col">
+				<div class="button button-clear button-assertive" ng-click="removeWpInput()">
+					Delete Waypoint&nbsp
+					<i class="icon ion-minus"></i>
+				</div>
+			</div>
+		</div>
+		
+		<div class="button button-block button-large button-positive" ng-click="next()">
+			Next&nbsp
+			<i class="icon-right ion-chevron-right"></i>
+		</div>
 
 	
-
-		
 	</ion-content>
 </ion-view>

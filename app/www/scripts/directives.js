@@ -29,15 +29,15 @@ angular.module('starter.directives', [])
           showLocateMeButton: true,
       };
     
-    //var map = new Microsoft.Maps.Map(document.getElementById("map"), mapOptions);
-     var map = new Microsoft.Maps.Map($element[0], mapOptions);
-    $scope.onCreate({map: map});
+   
+      var map = new Microsoft.Maps.Map($element[0], mapOptions);
+      $scope.onCreate({map: map});
       }
 
       if (document.readyState === "complete") {
         initialize();
       } else {
-      	console.log("done the");
+      	console.log("Failed to initialize");
        //Microsoft.maps.event.addDomListener(window, 'load', initialize);
       }
 
