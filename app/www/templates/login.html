@@ -13,19 +13,19 @@
       <h3 ng-if="!data.username">
         {{ default_text }}
       </h3>
-      <label class="item item-input">
+      <label class="item item-input" on-tap="speakText('Enter email address')">
         <input ng-model="data.username" type="text" placeholder="Email" required>
       </label>
-      <label class="item item-input">
+      <label class="item item-input" on-tap="speakText('Enter password')">
         <input ng-model="data.password" type="password" placeholder="Password" required>
       </label>
       <div class="row">
         <div class="col col-50">
-          <button ng-click="login(data)" class="button button-block button-positive">
+          <button on-tap="login(data)" on-hold="speakText('Log in')" class="button button-block button-positive">
             <i class="icon icon-locked"></i> Log in</button>
         </div>
         <div class="col col-50">
-          <button ng-click="goToRegister()" class="button button-block button-positive">Register</button>
+          <button on-tap="goToRegister()" on-hold= "speakText('Register')" class="button button-block button-positive">Register</button>
         </div>
       </div>
     </ion-content>

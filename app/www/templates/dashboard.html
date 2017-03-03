@@ -13,22 +13,22 @@
 
         <div class="list card">
 
-          <a ng-click="goViewFriends()" class="item item-icon-left">
+          <a on-tap= "goViewFriends()" on-hold="speakText('View Friends')" class="item item-icon-left">
             <i class="icon ion-person-stalker"></i>
             View friends
           </a>
-
-          <a ng-click="goViewFrRequests()" class="item item-icon-left">
+         
+          <a on-tap="goViewFrRequests()" on-hold="speakText('View Friend Requests')" class="item item-icon-left">
             <i class="icon ion-paper-airplane"></i>
             View friend requests
           </a>
 
-          <a  ng-click="goAddFriend()" class="item item-icon-left">
+          <a  on-tap="goAddFriend()" on-hold="speakText('Add Friend')" class="item item-icon-left">
             <i class="icon ion-person-add"></i>
             Add friend
           </a>
 
-          <a  ng-click="goCreateRoute()" class="item item-icon-left">
+          <a  on-tap="goCreateRoute()" on-hold="speakText('Create Route')" class="item item-icon-left">
             <i class="icon ion-fork-repo"></i>
             Create Route
           </a>
@@ -38,12 +38,12 @@
             My routes
           </a>
 
-          <a  ng-click="goProfile()" class="item item-icon-left">
+          <a  on-tap="goProfile()" on-hold="speakText('My Profile')" class="item item-icon-left">
             <i class="icon ion-settings"></i>
             My profile
           </a>
 
-          <a href="#"  style="background:red" class="item item-icon-left">
+          <a href="#"  style="background:red" on-hold="speakText('Log Out')" class="item item-icon-left">
             <i class="icon ion-log-out"></i>
             Log Out
           </a>

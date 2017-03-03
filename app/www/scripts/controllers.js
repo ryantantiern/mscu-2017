@@ -7,6 +7,19 @@ angular.module('starter.controllers',['starter.services'])
 
    $scope.data = {};
    $scope.default_text = "Please login";
+
+     $scope.speakText = function(string) {
+    window.TTS.speak({
+           text: string,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           // Do Something after success
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+  
    $scope.login = function(user_data) {
 /*    var user = {
       'firstname' : 'Ryan' ,
@@ -141,6 +154,31 @@ angular.module('starter.controllers',['starter.services'])
     $scope.user_data = Auth.getUser();
   });
 
+   $scope.recognizedText = '';
+ 
+  $scope.speakText = function(string) {
+    window.TTS.speak({
+           text: string,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           // Do Something after success
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+ 
+  $scope.record = function() {
+    var recognition = new SpeechRecognition();
+    recognition.onresult = function(event) {
+        if (event.results.length > 0) {
+            $scope.recognizedText = event.results[0][0].transcript;
+            $scope.$apply()
+        }
+    };
+    recognition.start();
+  };
+
   // Ryan - end
 
   $scope.goViewFriends = function (){
@@ -202,9 +240,6 @@ angular.module('starter.controllers',['starter.services'])
     alert(routeId);
   }
 })
-
-
-
 
 /**
  * FRIENDS CONTROLLER
@@ -643,7 +678,6 @@ angular.module('starter.controllers',['starter.services'])
           $scope.filteredPeople = [];
         }
       });
-
     }
   };
 
@@ -769,7 +803,6 @@ angular.module('starter.controllers',['starter.services'])
     $state.go('dashboard');
   }
 })
-
 
 .controller('MyRoutesCtrl', function($scope, $state, Auth, $http) {
 

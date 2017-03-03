@@ -1,6 +1,10 @@
 /* Empty. Add your own CSS if you like */
 
+<<<<<<< HEAD
 ion-content {
+=======
+.login-bg{
+>>>>>>> added text to speech
   background-image: url('../img/bg2.jpg');
   background-size: cover;
 }
@@ -48,6 +52,7 @@ textarea:disabled {
 
 }
 
+<<<<<<< HEAD
 
 .ion-ios-bell {
   font-size: 3em !important;
@@ -60,3 +65,5 @@ textarea:disabled {
 .icon-assertive {
   color: #FF0000;
 }
+=======
+>>>>>>> added text to speech

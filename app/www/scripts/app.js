@@ -46,11 +46,11 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
           templateUrl: "templates/friends.html",
           controller: "FriendsCtrl"
      })
-	  .state('create_route', {
+    .state('create_route', {
           url: "/create_route",
           templateUrl: "templates/create_route.html",
           controller: "CreateRouteCtrl"
-	  })
+    })
 
     .state('customize_route', {
            url: "/customize_route",
@@ -58,7 +58,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
            controller: "CustomizeRouteCtrl"
     })
 
-	  .state('add_friend', {
+    .state('add_friend', {
               url: "/add_friend",
               templateUrl: "templates/add_friend.html",
               controller: "AddFriendCtrl"
@@ -103,4 +103,3 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
        }
    });
 })
-

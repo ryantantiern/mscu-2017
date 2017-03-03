@@ -2,21 +2,24 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-  <meta http-equiv="Content-Security-Policy"
-         content="default-src *;
-                  style-src * 'self' 'unsafe-inline' 'unsafe-eval';
-                  script-src * 'self' 'unsafe-inline' 'unsafe-eval';
-                 img-src * 'self' data:;
-                 font-src * 'self' data:">
-  <title></title>
+  <meta name="viewport" content="initial-scale=1, 
+  <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src * 'unsafe-inline' 'unsafe-eval'">  <title></title>
   <link rel="manifest" href="manifest.json">
+  <!-- un-comment this code to enable service worker
+     <script>
+       if ('serviceWorker' in navigator) {
+         navigator.serviceWorker.register('service-worker.js')
+           .then(() => console.log('service worker installed'))
+           .catch(err => console.log('Error', err));
+       }
+     </script>-->
 
   <link href="lib/ionic/css/ionic.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
   <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
      <link href="css/ionic.app.css" rel="stylesheet">
      -->
+
 
   <!-- ionic/angularjs js -->
   <script src="lib/ionic/js/ionic.bundle.js"></script>
