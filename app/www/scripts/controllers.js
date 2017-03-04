@@ -239,7 +239,7 @@ angular.module('starter.controllers',['starter.services'])
  * CREATE ROUTE CONTROLLER
  */
 
-.controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService ) {
+.controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, Route ) {
  
  $scope.startAddress = ""
  $scope.endAddress = ""
@@ -259,7 +259,9 @@ angular.module('starter.controllers',['starter.services'])
 
 
   $scope.next = function () {
-    $state.go('customize_route')
+    BingLocationService.convertToPoint("King's Cross Station", "s");
+
+
   }
 
 })
@@ -268,7 +270,7 @@ angular.module('starter.controllers',['starter.services'])
 /**CONTROLLER
  */
 
-  .controller('CustomizeRouteCtrl', function($scope, $state) {
+  .controller('CustomizeRouteCtrl', function($scope, $state, GeoLocation, BingLocationService) {
     
     $scope.goBack = function () {
       $state.go('create_route')
@@ -276,9 +278,13 @@ angular.module('starter.controllers',['starter.services'])
 
     $scope.mapCreated = function (map) {
       $scope.map = map;
-
+      $scope.map.setView({
+          center: new Microsoft.Maps.Location(GeoLocation.getLatitude(), GeoLocation.getLongitude()),
+          zoom: 12
+      });
+      var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
+      map.entities.push(pushpin);
     }
-
   })
 
 
@@ -326,18 +332,11 @@ angular.module('starter.controllers',['starter.services'])
       $state.go('dashboard');
   };
 
-/*  $scope.rawPeople = [{'id': 0,'firstName':'John' , 'lastName': 'Smith', 'phone':'07935682465', 'request_sent': false},
-                      {'id': 1,'firstName':'Ryan' , 'lastName': 'Alexander', 'phone':'07956324589', 'request_sent': false},
-                      {'id': 2,'firstName':'Maya' , 'lastName': 'Morgenstein', 'phone':'07945652401', 'request_sent': false},
-                      {'id': 3,'firstName':'Arthur' , 'lastName': 'Pendragon', 'phone':'07923690222', 'request_sent': false}];*/
-  $scope.rawPeople = [];
-  $scope.show = [];
   $scope.filteredPeople = [];
   $scope.searchQuery = "";
 
   // Search for user based on phone number or first/last (or both) name
   $scope.updateList = function(searchQuery){
-    //$scope.filteredPeople = $scope.rawPeople;
     $scope.filteredPeople = [];
     if (searchQuery && searchQuery.trim()!='') {
         var request = {
@@ -359,15 +358,12 @@ angular.module('starter.controllers',['starter.services'])
           $scope.filteredPeople = [];
         }
       });
-/*      $scope.filteredPeople = $scope.filteredPeople.filter((friend) => {
-              return (friend.phone.indexOf(searchQuery) > -1);
-            })*/
+
     }
   };
 
   $scope.sendFriendRequest = function(id) {
     for (var i in $scope.filteredPeople)
-      // TODO: Send API friend request
         if ($scope.filteredPeople[i].id == id) {
           var request = {
             method : "GET",
@@ -388,7 +384,6 @@ angular.module('starter.controllers',['starter.services'])
   };
   $scope.cancelFriendRequest = function(id) {
      for (var i in $scope.filteredPeople)
-      // TODO: Cancel API friend request
          if ($scope.filteredPeople[i].id== id) {
           var request = {
             method : "DELETE",

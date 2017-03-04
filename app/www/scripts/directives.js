@@ -1,4 +1,4 @@
-angular.module('starter.directives', [])
+angular.module('starter.directives', ['starter.services'])
 
 
 .directive('map', function() {
@@ -8,7 +8,7 @@ angular.module('starter.directives', [])
     scope: {
       onCreate: '&'
     },
-    link: function ($scope, $element, $attr) {
+    link: function ($scope, $element, $attr, GeoLocation) {
       function initialize() {
         var mapOptions = {
           credentials: "Av5wBqmsnnQASubvgnpJc-tfOm8-nSSCq3KteunuqY4s4lhtA3LuyupF5Xq1R8ng",
@@ -18,6 +18,7 @@ angular.module('starter.directives', [])
           maxZoom: 15,
           minZoom: 5,
           navigationBarOrientation:  Microsoft.Maps.NavigationBarOrientation.horizontal,
+          showDashboard: false,
           showMapTypeSelector: false,
           disableTouchInput: false,
           disableUserInput: false,
