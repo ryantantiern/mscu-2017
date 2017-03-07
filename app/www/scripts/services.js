@@ -31,7 +31,7 @@ angular.module('starter.services',[])
 		 }
 	})
 
-	.factory('Route', function () {
+	.factory('RouteCreator', function () {
 		var start, end, waypoints;
 		return {
 			getStart : function () {return start;},
@@ -53,7 +53,7 @@ angular.module('starter.services',[])
 				}
 				return false;
 			},
-			addWaypoints : function (wp) {
+			addWaypoint : function (wp) {
 				if (!waypoints) waypoints = [];
 				if (wp) {
 					waypoints.push(wp);
@@ -76,6 +76,23 @@ angular.module('starter.services',[])
 			}
 		}
 	})
+
+	.factory('RouteData', function () {
+		var route;
+		return {
+			set(data) {
+				route = data;
+			},
+			get() {
+				return (route)? route : false;
+			},
+			reset() {
+				route = null;
+			}
+		}
+	})
+
+
 
 	.factory('GeoLocation',[ '$cordovaGeolocation', '$ionicPopup' ,'BingLocationService', function( $cordovaGeolocation, $ionicPopup, BingLocationService) {
 		var watch, frequency =700 ,
@@ -126,7 +143,7 @@ angular.module('starter.services',[])
 		}
 	}])
 
-	.factory("BingLocationService", function($http, Route) {
+	.factory("BingLocationService", function($http, RouteCreator) {
 
 		var credentials = "Av5wBqmsnnQASubvgnpJc-tfOm8-nSSCq3KteunuqY4s4lhtA3LuyupF5Xq1R8ng";
 		var distance = 0.5
@@ -140,55 +157,59 @@ angular.module('starter.services',[])
 
 	  	return {
 			convertToPoint : function (address, inputType) {
+				if (address === "") {return;}
 				var baseURL = "http://dev.virtualearth.net/REST/v1/Locations/";
 				var countryReg = ",GB";
 				var addressLine = address + " " + countryReg;
 				var geocodeRequest = baseURL + encodeURI(addressLine) + "?output=json";
 				if (inputType === "s") {
-					Route.reset(true);
+					RouteCreator.reset(true);
 					geocodeRequest = geocodeRequest +  "&jsonp=revGeoStartCallback&key=" + credentials;
 					revGeoStartCallback = function (result) {
 						if (result && result.resourceSets.length > 0 && result.resourceSets[0].resources) {
-							console.log(result);
 							for (var i = 0 ; i < result.resourceSets[0].resources.length; i++) {
 								var suggestion = {
 									address : result.resourceSets[0].resources[i].address.formattedAddress,
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
+									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								Route.addStart(suggestion);
+								console.log(result.resourceSets[0].resources[i]);
+								RouteCreator.addStart(suggestion);
 							}
 				  		}
 					}
 				}
 				else if (inputType === "e") {
-					Route.reset(null, true);
+					RouteCreator.reset(null, true);
 					geocodeRequest = geocodeRequest +  "&jsonp=revGeoEndCallback&key=" + credentials;
 					revGeoEndCallback = function (result) {
 						if (result && result.resourceSets.length > 0 && result.resourceSets[0].resources) {
-							console.log(result);
 							for (var i = 0 ; i < result.resourceSets[0].resources.length; i++) {
 								var suggestion = {
 									address : result.resourceSets[0].resources[i].address.formattedAddress,
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
+									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								Route.addEnd(suggestion);
+								console.log(result.resourceSets[0].resources[i]);
+								RouteCreator.addEnd(suggestion);
 							}
 				  		}
 					}
 
 				}
 				else if (inputType === "wp") {
-					Route.reset(null, null, true);
+					RouteCreator.reset(null, null, true);
 					geocodeRequest = geocodeRequest +  "&jsonp=revGeoWaypointsCallback&key=" + credentials;
 					revGeoWaypointsCallback = function (result) {
 						if (result && result.resourceSets.length > 0 && result.resourceSets[0].resources) {
-							console.log(result);
 							for (var i = 0 ; i < result.resourceSets[0].resources.length; i++) {
 								var suggestion = {
 									address : result.resourceSets[0].resources[i].address.formattedAddress,
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
+									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								Route.addWaypoints(suggestion);
+								console.log(result.resourceSets[0].resources[i]);
+								RouteCreator.addWaypoint(suggestion);
 							}
 				  		}	
 					}

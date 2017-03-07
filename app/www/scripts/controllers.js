@@ -239,29 +239,89 @@ angular.module('starter.controllers',['starter.services'])
  * CREATE ROUTE CONTROLLER
  */
 
-.controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, Route ) {
+.controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, RouteCreator, RouteData ) {
  
- $scope.startAddress = ""
- $scope.endAddress = ""
- $scope.wpAddresses = []
+ $scope.startAddress = {address : ""};
+ $scope.endAddress = {address : ""};
+ $scope.wpAddresses = [];
+ $scope.suggestions = [];
+ $scope.suggestionFlag = null;
 
-  $scope.goBack = function(){
-      $state.go('dashboard');
-  };
-
+  $scope.goBack = function(){ $state.go('dashboard'); };
   $scope.addWpInput = function () {
-    var wpInput = ""
+    var wpInput = {address : ""}
     $scope.wpAddresses.push(wpInput)
   }
-  $scope.removeWpInput = function () {
-    $scope.wpAddresses.pop()
+  $scope.removeWpInput = function () { $scope.wpAddresses.pop() }
+
+  $scope.getSuggestions = function (addr, inputType, wpIndex=null) {
+    var suggestions = null;
+    if (inputType === "s") {
+      BingLocationService.convertToPoint(addr, inputType);
+      var interval = setInterval(function () {
+        suggestions = RouteCreator.getStart();
+        if (suggestions) {
+         // $scope.suggestions.splice(0, $scope.suggestions.length);
+          $scope.suggestions = suggestions;
+
+          // TODO: change this
+          $scope.startAddress = $scope.suggestions[0];
+
+          clearInterval(interval);
+        }
+      }, 200);  
+      $scope.suggestionFlag = "s";
+
+     
+     
+    }
+    else if (inputType === "e") {
+      BingLocationService.convertToPoint(addr, inputType);
+      var interval = setInterval(function () {
+        suggestions = RouteCreator.getEnd();
+        if (suggestions) {
+          $scope.suggestions = suggestions;
+
+          // TODO: change this
+          $scope.endAddress = $scope.suggestions[0];
+
+          clearInterval(interval);
+        }
+      }, 200);  
+      $scope.suggestionFlag = "e";
+    }
+    else if (inputType === "wp") {
+      BingLocationService.convertToPoint(addr, inputType);
+      var interval = setInterval(function () {
+        suggestions = RouteCreator.getWaypoints();
+        if (suggestions) {
+          $scope.suggestions = suggestions;
+
+          // TODO: change this
+          $scope.wpAddresses[wpIndex] = $scope.suggestions[0];
+          console.log( $scope.wpAddresses)
+          clearInterval(interval);
+        }
+      }, 200); 
+     $scope.suggestionFlag = "wp" + wpIndex;
+
+    }
+
+    console.log($scope.suggestionFlag);
+    console.log(wpIndex);
   }
 
-
   $scope.next = function () {
-    BingLocationService.convertToPoint("King's Cross Station", "s");
-
-
+    // make a check to see if start, end and waypoints are valid coordinates
+    var route = {
+      start: $scope.startAddress,
+      end: $scope.endAddress,
+      wps : $scope.wpAddresses
+    }
+    console.log(route);
+    RouteData.set(route);
+    $state.go("customize_route");
+    console.log(RouteData.get())
   }
 
 })
@@ -270,7 +330,7 @@ angular.module('starter.controllers',['starter.services'])
 /**CONTROLLER
  */
 
-  .controller('CustomizeRouteCtrl', function($scope, $state, GeoLocation, BingLocationService) {
+  .controller('CustomizeRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, RouteData) {
     
     $scope.goBack = function () {
       $state.go('create_route')
@@ -278,12 +338,56 @@ angular.module('starter.controllers',['starter.services'])
 
     $scope.mapCreated = function (map) {
       $scope.map = map;
-      $scope.map.setView({
-          center: new Microsoft.Maps.Location(GeoLocation.getLatitude(), GeoLocation.getLongitude()),
-          zoom: 12
+
+      Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+          var data = RouteData.get();
+          var waypoints = [];
+
+          data.start.waypoints = [new Microsoft.Maps.Directions.Waypoint({ 
+            address: data.start.address 
+          })];
+
+          data.end.waypoints = [new Microsoft.Maps.Directions.Waypoint({ 
+            address: data.end.address
+          })];
+
+          for (var i = 0; i < data.wps.length; i++) {
+             data.wps[i].waypoints =  new Microsoft.Maps.Directions.Waypoint({ 
+              address: data.wps[i].address,
+              isViapoint: true
+             });
+          }
+
+          var waypoints = data.start.waypoints;
+          for (var i = 0; i < data.wps.length; i++) { 
+            waypoints = waypoints.concat(data.wps[i].waypoints);
+          }
+          waypoints = waypoints.concat(data.end.waypoints);
+          console.log(waypoints);
+
+
+           //Create an instance of the directions manager.
+           var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+           //Set Route Mode to transit.
+           directionsManager.setRequestOptions({
+               routeMode: Microsoft.Maps.Directions.RouteMode.transit,
+               distanceUnit: Microsoft.Maps.Directions.DistanceUnit.km,
+
+           });
+
+ 
+           //Add waypoints.
+           for(var i = 0; i <waypoints.length; i++) {
+            directionsManager.addWaypoint(waypoints[i]);
+            console.log(waypoints[i])
+           }
+
+           //Calculate directions.
+           directionsManager.calculateDirections(); 
+           console.log(directionsManager);
+
       });
-      var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
-      map.entities.push(pushpin);
     }
   })
 
