@@ -10,7 +10,7 @@
           </div>
           <div class="col">
           <input type="text" ng-change="updateList(searchQuery)" ng-model="searchQuery" name="search-bar"
-                 placeholder="Search by phone number">
+                 placeholder="Search by phone number" ng-model-options="{ debounce: 500 }">
           </div>
         </div>
 

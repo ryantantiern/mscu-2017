@@ -556,7 +556,7 @@ angular.module('starter.controllers',['starter.services'])
 
   // Search for user based on phone number or first/last (or both) name
   $scope.updateList = function(searchQuery){
-    $scope.filteredPeople = [];
+    $scope.filteredPeople = new Array();
     if (searchQuery && searchQuery.trim()!='') {
         var request = {
           method : "GET",
