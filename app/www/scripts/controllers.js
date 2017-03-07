@@ -371,7 +371,7 @@ angular.module('starter.controllers',['starter.services'])
 
            //Set Route Mode to transit.
            directionsManager.setRequestOptions({
-               routeMode: Microsoft.Maps.Directions.RouteMode.transit,
+               routeMode: Microsoft.Maps.Directions.RouteMode.walking,
                distanceUnit: Microsoft.Maps.Directions.DistanceUnit.km,
 
            });
