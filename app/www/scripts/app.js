@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives'])
+angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controllers', 'starter.services', 'starter.directives'])
 
-.run(function($ionicPlatform, GeoLocation) {
+.run(function($ionicPlatform, $localStorage, GeoLocation, $cordovaPush) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -20,9 +20,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }  
-
-    GeoLocation.getConstantLocation()
-
+    GeoLocation.getConstantLocation();
   });
 })
 .config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider){
@@ -71,34 +69,32 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
            templateUrl: "templates/profile.html",
            controller: "ProfileCtrl"
     })
+
     .state('friend_requests', {
            url: "/friend_requests",
            templateUrl: "templates/friend_requests.html",
            controller: "FrRequestsCtrl"
     })
-    
-  $urlRouterProvider.otherwise("/dashboard");
+  $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
   $ionicConfigProvider.views.forwardCache(true);
 })
 
 
-.run(function($rootScope, $location, $state, Auth) {
-/*
+.run(function($rootScope, $location,  $state, Auth) {
   $rootScope.$on('$stateChangeStart', function (event) {
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
 
       // Prevent non authenticated user to access app
-      if ($location.path() != '/dashboard' && $location.path() != '/register') {
+      if ($location.path() != '/login' && $location.path() != '/register') {
 
           if (!Auth.getUser()) {
             event.preventDefault();
-            $location.path('/dashboard'); // Set path to /login
-            $state.go('dashboard'); // Actually navigate to /login
+            $location.path('/login'); // Set path to /login
+            $state.go('login'); // Actually navigate to /login
           }
        }
    });
-*/
 })
 
