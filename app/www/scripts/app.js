@@ -4,15 +4,14 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'ngStorage'])
+angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controllers', 'starter.services', 'starter.directives'])
 
-.run(function($ionicPlatform, $localStorage, $cordovaPush) {
+.run(function($ionicPlatform, $localStorage, GeoLocation, $cordovaPush) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
       // Don't remove this line unless you know what you are doing. It stops the viewport
       // from snapping when text inputs are focused. Ionic handles this internally for
       // a much nicer keyboard experience.
@@ -20,7 +19,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
     if(window.StatusBar) {
       StatusBar.styleDefault();
-    }
+    }  
+    GeoLocation.getConstantLocation();
   });
 })
 .config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider){
@@ -51,6 +51,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           templateUrl: "templates/create_route.html",
           controller: "CreateRouteCtrl"
 	  })
+
+    .state('customize_route', {
+           url: "/customize_route",
+           templateUrl: "templates/customize_route.html",
+           controller: "CustomizeRouteCtrl"
+    })
+
 	  .state('add_friend', {
               url: "/add_friend",
               templateUrl: "templates/add_friend.html",
@@ -68,8 +75,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
            templateUrl: "templates/friend_requests.html",
            controller: "FrRequestsCtrl"
     })
-
-
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
@@ -78,7 +83,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 
 .run(function($rootScope, $location,  $state, Auth) {
-
   $rootScope.$on('$stateChangeStart', function (event) {
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
 
@@ -92,6 +96,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           }
        }
    });
-
 })
 

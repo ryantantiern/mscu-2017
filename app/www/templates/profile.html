@@ -22,22 +22,22 @@
       <div class="list  ">
         <label class="item item-input item-stacked-label">
           <span class="input-label">First Name</span>
-          <input id="firstName" ng-disabled="!editing"value="{{user_data.firstName}}" type="text"  placeholder="{{user_data.firstName}}">
+          <input id="firstName" ng-disabled="!editing" value="{{user_data.firstname}}" type="text"  placeholder="{{user_data.firstname}}">
         </label>
 
         <label class="item item-input item-stacked-label">
           <span class="input-label">Last Name</span>
-          <input id="lastName"  ng-disabled="!editing"value="{{user_data.lastName}}" type="text"  placeholder="{{user_data.lastName}}">
+          <input id="lastName"  ng-disabled="!editing" value="{{user_data.lastname}}" type="text"  placeholder="{{user_data.lastname}}">
         </label>
 
         <label class="item item-input item-stacked-label">
           <span class="input-label">Phone</span>
-          <input id="phone" ng-disabled="!editing"value="{{user_data.phone}}" type="text"  placeholder="{{user_data.phone}}">
+          <input id="phone" ng-disabled="!editing" value="{{user_data.phone}}" type="text"  placeholder="{{user_data.phone}}">
         </label>
 
         <label class="item item-input item-stacked-label">
           <span class="input-label">Date of birth</span>
-          <input id="dob" ng-disabled="!editing"value="{{user_data.dob}}" type="text"  placeholder="{{user_data.dob}}">
+          <input id="dob" ng-disabled="!editing" value="{{user_data.dob | date : 'dd-MM-yyyy'}}" type="text"  placeholder="{{user_data.dob | date : 'dd-MM-yyyy' }}">
         </label>
 
         <label class="item item-input item-stacked-label">
@@ -55,7 +55,7 @@
       <i class="icon ion-edit"></i>
       Change Password
     </button>
-    <button style="display:none" ng-click="saveChanges()"id="saveButton" class="button button-clear">
+    <button style="display:none" ng-click="saveChanges()" id="saveButton" class="button button-clear">
       <i class="icon ion-checkmark"></i>
       Save changes
     </button>

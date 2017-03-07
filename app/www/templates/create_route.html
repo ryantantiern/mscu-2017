@@ -1,38 +1,73 @@
 <ion-view view-title="Create Route">
     <ion-content class="padding login-bg">
-	
-		<a ng-click="goBack()"  class="item item-icon-left">
-          <i class="icon ion-chevron-left"></i>
-          Go back
-        </a>
-		
-		<iframe 
-		  name="mapframe" width="425" height="350" 
-		  src="https://www.google.com/maps?z=11&amp;f=d&amp;output=embed&amp">
-		</iframe>
-		<form method="get" action="https://www.google.com/maps" target="mapframe">
-			<div class="list">
+
+		<div class="list">
+			<a ng-click="goBack()"  class="item item-icon-left">
+			  <i class="icon ion-chevron-left"></i>
+			  Go back
+			</a>
+		</div>
+
+		<div class="list">
 			<label class="item item-input item-stacked-label">
-				<span class="input-label">Start Point</span>
-				<input name="saddr" id="saddr" type="text" placeholder="UCL, London">
+				<span class="input-label">Start</span>
+				<input ng-model="startAddress.address" ng-change="getSuggestions(startAddress.address, 's')" ng-model-options="{ debounce: 1500 }"  type="text" placeholder="Enter starting address" > 
 			</label>
-			<label class="item item-input item-stacked-label">
-				<span class="input-label">End Point</span>
-				<input name="daddr" id="daddr" type="text" placeholder="King's College, London">
-			</label>
-				<input name="output" type="hidden" value="embed">
-				<input name="f" type="hidden" value="d">
-				<input name="z" type="hidden" value="13">
-				
-				<div class="padding">
-					<button type="submit" class="button button-block button-positive">Submit</button>
+
+			<div ng-if="suggestionFlag == 's' && suggestions.length > 0">
+				<div ng-repeat="suggestion in suggestions">
+					<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
 				</div>
 			</div>
-		</form>
-		
-		
+			
+			<label class="item item-input item-stacked-label">
+			<span class="input-label">End</span>
+				<input ng-model="endAddress.address" ng-change="getSuggestions(endAddress.address, 'e')" ng-model-options="{ debounce: 1500 }" type="text" placeholder="Enter ending address">
+			</label>
 
-		
+			<div ng-if="suggestionFlag == 'e' && suggestions.length > 0">
+				<div ng-repeat="suggestion in suggestions">
+					<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
+				</div>
+			</div>
 
+		</div>
+
+		<div ng-if="wpAddresses.length > 0">
+			<div class="list">
+				<div ng-repeat="(i, wp) in wpAddresses track by $index">
+					<label class="item item-input item-label">
+						<span class="input-label">Way Point {{i+1}}</span>
+						<input ng-model="wp.address" ng-change="getSuggestions(wp.address, 'wp', i)" ng-model-options="{ debounce: 1500 }" type="text" > 
+					</label>
+					<div ng-if="suggestionFlag == 'wp{{i}}' && suggestions.length > 0">
+						<div ng-repeat="suggestion in suggestions">
+							<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="padding-bottom: 5vh;">
+			<div class="col">
+				<div class="button button-clear button-balanced" ng-click="addWpInput()">
+					New Waypoint&nbsp
+					<i class="icon ion-plus-round"></i>
+				</div>
+			</div>
+			<div class="col">
+				<div class="button button-clear button-assertive" ng-click="removeWpInput()">
+					Delete Waypoint&nbsp
+					<i class="icon ion-minus"></i>
+				</div>
+			</div>
+		</div>
+		
+		<div class="button button-block button-large button-positive" ng-click="next()">
+			Next&nbsp
+			<i class="icon-right ion-chevron-right"></i>
+		</div>
+
+	
 	</ion-content>
 </ion-view>

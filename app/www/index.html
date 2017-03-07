@@ -6,30 +6,34 @@
   <meta http-equiv="Content-Security-Policy"
          content="default-src *;
                   style-src * 'self' 'unsafe-inline' 'unsafe-eval';
-                  script-src * 'self' 'unsafe-inline' 'unsafe-eval';">
+                  script-src * 'self' 'unsafe-inline' 'unsafe-eval';
+                 img-src * 'self' data:;
+                 font-src * 'self' data:">
   <title></title>
   <link rel="manifest" href="manifest.json">
-  <!-- un-comment this code to enable service worker
-     <script>
-       if ('serviceWorker' in navigator) {
-         navigator.serviceWorker.register('service-worker.js')
-           .then(() => console.log('service worker installed'))
-           .catch(err => console.log('Error', err));
-       }
-     </script>-->
+
   <link href="lib/ionic/css/ionic.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
   <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
      <link href="css/ionic.app.css" rel="stylesheet">
      -->
+
   <!-- ionic/angularjs js -->
   <script src="lib/ionic/js/ionic.bundle.js"></script>
   <script src="lib/ionic/js/angular/angular-resource.js"></script>
+
+  <!--add the ngCordova file-->
+  <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+
   <!-- cordova script (this will be a 404 during development) -->
   <script src="lib/ngstorage/ngStorage.min.js"></script>
   <script src="lib/ngCordova/dist/ng-cordova.js"></script>
 
   <script src="cordova.js"></script>
+  
+  <!-- Bing Map -->
+  <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol'></script>
+
   <!-- your app's js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/controllers.js"></script>
@@ -48,7 +52,9 @@
   <ion-nav-view>
   <!-- HERE Angualar automatically inserts the views from the folder template -->
   </ion-nav-view>
+  <ion-footer-bar align-title="left" class="bar-dark">
 
+  </ion-footer-bar>
 </ion-pane>
 </body>
 </html>

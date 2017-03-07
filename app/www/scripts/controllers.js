@@ -134,11 +134,12 @@ angular.module('starter.controllers',['starter.services'])
  * DASHBOARD CONTROLLER
  */
 
-.controller('DashboardCtrl', function($scope, $state, Auth) {
-  // Ryan
+.controller('DashboardCtrl', function($scope, $state, Auth, GeoLocation) {
+  // Ryan 
   // Assign user_data to autheticated user
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.user_data = Auth.getUser();
+
   });
 
   // Ryan - end
@@ -160,23 +161,14 @@ angular.module('starter.controllers',['starter.services'])
   }
 })
 
+
+
+
 /**
  * FRIENDS CONTROLLER
  */
 
 .controller('FriendsCtrl', function($scope, $state, $http, Auth) {
-
-/*
-  Leave out for now - not in use
-
-  $scope.friends = [];
-  $scope.filteredFriends = [];
-  $scope.searchQuery = "";
-
-*/
-
-  // Ryan - List friends
-
   /**
    * @hashmap friend_list := update friends list only if friend is not already in list
    * TODO: Allow update on deletion too
@@ -246,11 +238,162 @@ angular.module('starter.controllers',['starter.services'])
  * CREATE ROUTE CONTROLLER
  */
 
-.controller('CreateRouteCtrl', function($scope, $state) {
-  $scope.goBack = function(){
-      $state.go('dashboard');
-  };
+.controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, RouteCreator, RouteData ) {
+ 
+ $scope.startAddress = {address : ""};
+ $scope.endAddress = {address : ""};
+ $scope.wpAddresses = [];
+ $scope.suggestions = [];
+ $scope.suggestionFlag = null;
+
+  $scope.goBack = function(){ $state.go('dashboard'); };
+  $scope.addWpInput = function () {
+    var wpInput = {address : ""}
+    $scope.wpAddresses.push(wpInput)
+  }
+  $scope.removeWpInput = function () { $scope.wpAddresses.pop() }
+
+  $scope.getSuggestions = function (addr, inputType, wpIndex=null) {
+    var suggestions = null;
+    if (inputType === "s") {
+      BingLocationService.convertToPoint(addr, inputType);
+      var interval = setInterval(function () {
+        suggestions = RouteCreator.getStart();
+        if (suggestions) {
+         // $scope.suggestions.splice(0, $scope.suggestions.length);
+          $scope.suggestions = suggestions;
+
+          // TODO: change this
+          $scope.startAddress = $scope.suggestions[0];
+
+          clearInterval(interval);
+        }
+      }, 200);  
+      $scope.suggestionFlag = "s";
+
+     
+     
+    }
+    else if (inputType === "e") {
+      BingLocationService.convertToPoint(addr, inputType);
+      var interval = setInterval(function () {
+        suggestions = RouteCreator.getEnd();
+        if (suggestions) {
+          $scope.suggestions = suggestions;
+
+          // TODO: change this
+          $scope.endAddress = $scope.suggestions[0];
+
+          clearInterval(interval);
+        }
+      }, 200);  
+      $scope.suggestionFlag = "e";
+    }
+    else if (inputType === "wp") {
+      BingLocationService.convertToPoint(addr, inputType);
+      var interval = setInterval(function () {
+        suggestions = RouteCreator.getWaypoints();
+        if (suggestions) {
+          $scope.suggestions = suggestions;
+
+          // TODO: change this
+          $scope.wpAddresses[wpIndex] = $scope.suggestions[0];
+          console.log( $scope.wpAddresses)
+          clearInterval(interval);
+        }
+      }, 200); 
+     $scope.suggestionFlag = "wp" + wpIndex;
+
+    }
+
+    console.log($scope.suggestionFlag);
+    console.log(wpIndex);
+  }
+
+  $scope.next = function () {
+    // make a check to see if start, end and waypoints are valid coordinates
+    var route = {
+      start: $scope.startAddress,
+      end: $scope.endAddress,
+      wps : $scope.wpAddresses
+    }
+    console.log(route);
+    RouteData.set(route);
+    $state.go("customize_route");
+    console.log(RouteData.get())
+  }
+
 })
+
+/**
+/**CONTROLLER
+ */
+
+  .controller('CustomizeRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, RouteData) {
+    
+    $scope.goBack = function () {
+      $state.go('create_route')
+    }
+
+    $scope.mapCreated = function (map) {
+      $scope.map = map;
+
+      Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+          var data = RouteData.get();
+          var waypoints = [];
+
+          data.start.waypoints = [new Microsoft.Maps.Directions.Waypoint({ 
+            address: data.start.address 
+          })];
+
+          data.end.waypoints = [new Microsoft.Maps.Directions.Waypoint({ 
+            address: data.end.address
+          })];
+
+          for (var i = 0; i < data.wps.length; i++) {
+             data.wps[i].waypoints =  new Microsoft.Maps.Directions.Waypoint({ 
+              address: data.wps[i].address,
+              isViapoint: true
+             });
+          }
+
+          var waypoints = data.start.waypoints;
+          for (var i = 0; i < data.wps.length; i++) { 
+            waypoints = waypoints.concat(data.wps[i].waypoints);
+          }
+          waypoints = waypoints.concat(data.end.waypoints);
+          console.log(waypoints);
+
+
+           //Create an instance of the directions manager.
+           var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+           //Set Route Mode to transit.
+           directionsManager.setRequestOptions({
+               routeMode: Microsoft.Maps.Directions.RouteMode.walking,
+               distanceUnit: Microsoft.Maps.Directions.DistanceUnit.km,
+
+           });
+
+ 
+           //Add waypoints.
+           for(var i = 0; i <waypoints.length; i++) {
+            directionsManager.addWaypoint(waypoints[i]);
+            console.log(waypoints[i])
+           }
+
+           //Calculate directions.
+           directionsManager.calculateDirections(); 
+           console.log(directionsManager);
+
+      });
+    }
+  })
+
+
+/**
+ * PROFILE CONTROLLER
+ */
 
 .controller('ProfileCtrl', function($scope, $ionicPopup, $state, loginData, $cordovaCamera, $ionicLoading, $localStorage, Auth) {
 
@@ -288,11 +431,8 @@ angular.module('starter.controllers',['starter.services'])
   $scope.user_data = Auth.getUser();
   $scope.editing = false;
   /* Delete this when grabbing from database */
-  $scope.user_data['firstName']= 'John';
-  $scope.user_data['lastName']='Doe';
-  $scope.user_data['phone']='07999999999';
+
   $scope.user_data['address']='Cuca macaii land';
-  $scope.user_data['dob']='11/06/1996';
   $scope.user_data['photo']=null;
 
   $scope.editProfile = function(){
@@ -308,6 +448,10 @@ angular.module('starter.controllers',['starter.services'])
       document.getElementById("editButton").style.display='block';
       document.getElementById("saveButton").style.display='none';
       $scope.editing = false;
+      // TODO: 
+      // compare differences with user_data and Auth.getUser()
+      // send api request to update differences
+      // make local change on Auth.set(user_data)
 
     };
 
@@ -337,7 +481,11 @@ angular.module('starter.controllers',['starter.services'])
                   } else
 
                   {
-                     return $scope.data;
+                    // TODO: 
+                    // send api request to check if old password is same  
+                    // if so, update to new password
+                    // 
+                    return $scope.data;
                   }
                }
             }, ]
@@ -403,18 +551,11 @@ angular.module('starter.controllers',['starter.services'])
       $state.go('dashboard');
   };
 
-/*  $scope.rawPeople = [{'id': 0,'firstName':'John' , 'lastName': 'Smith', 'phone':'07935682465', 'request_sent': false},
-                      {'id': 1,'firstName':'Ryan' , 'lastName': 'Alexander', 'phone':'07956324589', 'request_sent': false},
-                      {'id': 2,'firstName':'Maya' , 'lastName': 'Morgenstein', 'phone':'07945652401', 'request_sent': false},
-                      {'id': 3,'firstName':'Arthur' , 'lastName': 'Pendragon', 'phone':'07923690222', 'request_sent': false}];*/
-  $scope.rawPeople = [];
-  $scope.show = [];
   $scope.filteredPeople = [];
   $scope.searchQuery = "";
 
   // Search for user based on phone number or first/last (or both) name
   $scope.updateList = function(searchQuery){
-    //$scope.filteredPeople = $scope.rawPeople;
     $scope.filteredPeople = [];
     if (searchQuery && searchQuery.trim()!='') {
         var request = {
@@ -436,15 +577,12 @@ angular.module('starter.controllers',['starter.services'])
           $scope.filteredPeople = [];
         }
       });
-/*      $scope.filteredPeople = $scope.filteredPeople.filter((friend) => {
-              return (friend.phone.indexOf(searchQuery) > -1);
-            })*/
+
     }
   };
 
   $scope.sendFriendRequest = function(id) {
     for (var i in $scope.filteredPeople)
-      // TODO: Send API friend request
         if ($scope.filteredPeople[i].id == id) {
           var request = {
             method : "GET",
@@ -455,6 +593,7 @@ angular.module('starter.controllers',['starter.services'])
           }
 
           $http(request).then(function(result) {
+            console.log(result);
             if (result.data.message == 'success') {
               console.log(result);
               $scope.filteredPeople[i].request_sent = true;
@@ -465,7 +604,6 @@ angular.module('starter.controllers',['starter.services'])
   };
   $scope.cancelFriendRequest = function(id) {
      for (var i in $scope.filteredPeople)
-      // TODO: Cancel API friend request
          if ($scope.filteredPeople[i].id== id) {
           var request = {
             method : "DELETE",
