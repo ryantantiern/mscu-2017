@@ -1,7 +1,7 @@
 /* Empty. Add your own CSS if you like */
 
-.login-bg{
-  /*background-image: url('../img/bg2.jpg');*/
+ion-content {
+  background-image: url('../img/bg2.jpg');
   background-size: cover;
 }
 
@@ -48,3 +48,15 @@ textarea:disabled {
 
 }
 
+
+.ion-ios-bell {
+  font-size: 3em !important;
+}
+
+.icon-dark {
+  color: #000000;
+}
+
+.icon-assertive {
+  color: #FF0000;
+}

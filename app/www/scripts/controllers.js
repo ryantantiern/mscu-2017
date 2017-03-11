@@ -134,12 +134,11 @@ angular.module('starter.controllers',['starter.services'])
  * DASHBOARD CONTROLLER
  */
 
-.controller('DashboardCtrl', function($scope, $state, Auth, GeoLocation) {
-  // Ryan 
+.controller('DashboardCtrl', function($scope, $state, $ionicPopover, Auth, GeoLocation) {
+  // Ryan
   // Assign user_data to autheticated user
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.user_data = Auth.getUser();
-
   });
 
   // Ryan - end
@@ -158,6 +157,49 @@ angular.module('starter.controllers',['starter.services'])
     };
   $scope.goViewFrRequests = function () {
         $state.go('friend_requests')
+  };
+  $scope.goMyRoutes = function () {
+          $state.go('my_routes')
+  };
+
+  // TODO ryan : pull the notifications as the shared routes with me with the
+  // TODO:  'seen' attribute firstly being false
+  $scope.notifications = [{routeId:1, senderName: "John Doe"},
+                          {routeId:2, senderName: "John Smith"},
+                          {routeId:3, senderName: "Redhat Doe"},
+                          {routeId:3, senderName: "Redhat Doe"},
+                          {routeId:3, senderName: "Redhat Doe"},
+                          {routeId:3, senderName: "Redhat Doe"}]
+
+  var template = '<ion-popover-view><ion-header-bar> <h2 class="title">New routes from:</h1> </ion-header-bar> <ion-content><ul class="list"><li ng-click="seeRoute(ntf.routeId)" ng-repeat="ntf in notifications" class="item">{{ntf.senderName}}</li></ul> </ion-content></ion-popover-view>';
+
+  $scope.popover = $ionicPopover.fromTemplate(template, {
+      scope: $scope
+    });
+
+     $scope.openPopover = function($event) {
+        $scope.popover.show($event);
+      };
+      $scope.closePopover = function() {
+        $scope.popover.hide();
+      };
+      //Cleanup the popover when we're done with it!
+      $scope.$on('$destroy', function() {
+        $scope.popover.remove();
+      });
+      // Execute action on hidden popover
+      $scope.$on('popover.hidden', function() {
+        $scope.notifications = [];
+        // TODO ryan : mark new routes as seen in the database
+      });
+      // Execute action on remove popover
+      $scope.$on('popover.removed', function() {
+        // Execute action
+      });
+
+  $scope.seeRoute = function(routeId)
+  {
+    alert(routeId);
   }
 })
 
@@ -239,7 +281,7 @@ angular.module('starter.controllers',['starter.services'])
  */
 
 .controller('CreateRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, RouteCreator, RouteData ) {
- 
+
  $scope.startAddress = {address : ""};
  $scope.endAddress = {address : ""};
  $scope.wpAddresses = [];
@@ -268,11 +310,11 @@ angular.module('starter.controllers',['starter.services'])
 
           clearInterval(interval);
         }
-      }, 200);  
+      }, 200);
       $scope.suggestionFlag = "s";
 
-     
-     
+
+
     }
     else if (inputType === "e") {
       BingLocationService.convertToPoint(addr, inputType);
@@ -286,7 +328,7 @@ angular.module('starter.controllers',['starter.services'])
 
           clearInterval(interval);
         }
-      }, 200);  
+      }, 200);
       $scope.suggestionFlag = "e";
     }
     else if (inputType === "wp") {
@@ -301,7 +343,7 @@ angular.module('starter.controllers',['starter.services'])
           console.log( $scope.wpAddresses)
           clearInterval(interval);
         }
-      }, 200); 
+      }, 200);
      $scope.suggestionFlag = "wp" + wpIndex;
 
     }
@@ -329,10 +371,34 @@ angular.module('starter.controllers',['starter.services'])
 /**CONTROLLER
  */
 
-  .controller('CustomizeRouteCtrl', function($scope, $state, GeoLocation, BingLocationService, RouteData) {
-    
+  .controller('CustomizeRouteCtrl', function($scope,$ionicPopup, $state, GeoLocation, BingLocationService, RouteData) {
+
     $scope.goBack = function () {
       $state.go('create_route')
+    }
+
+    $scope.saveRoute = function() {
+      $scope.data = {};
+      var waypoints = RouteData.get();
+      $scope.data.title = waypoints.start.address + " - " + waypoints.end.address;
+
+      var myPopup = $ionicPopup.show({
+                  template: ' Title<textarea  disabled ng-model="data.title"></textarea>  Comments  <textarea ng-model="data.comments" > </textarea>',
+                  title: 'Save Route',
+                  subTitle: '',
+                  scope: $scope,
+                  buttons: [{
+                     text: 'Cancel'
+                  }, {
+                     text: '<b>Save</b>',
+                     type: 'button-positive',
+                     onTap: function(e) {
+                        alert('Route Saved');
+                        e.preventDefault();
+                     }
+                  }, ]
+               });
+
     }
 
     $scope.mapCreated = function (map) {
@@ -342,23 +408,23 @@ angular.module('starter.controllers',['starter.services'])
           var data = RouteData.get();
           var waypoints = [];
 
-          data.start.waypoints = [new Microsoft.Maps.Directions.Waypoint({ 
-            address: data.start.address 
+          data.start.waypoints = [new Microsoft.Maps.Directions.Waypoint({
+            address: data.start.address
           })];
 
-          data.end.waypoints = [new Microsoft.Maps.Directions.Waypoint({ 
+          data.end.waypoints = [new Microsoft.Maps.Directions.Waypoint({
             address: data.end.address
           })];
 
           for (var i = 0; i < data.wps.length; i++) {
-             data.wps[i].waypoints =  new Microsoft.Maps.Directions.Waypoint({ 
+             data.wps[i].waypoints =  new Microsoft.Maps.Directions.Waypoint({
               address: data.wps[i].address,
               isViapoint: true
              });
           }
 
           var waypoints = data.start.waypoints;
-          for (var i = 0; i < data.wps.length; i++) { 
+          for (var i = 0; i < data.wps.length; i++) {
             waypoints = waypoints.concat(data.wps[i].waypoints);
           }
           waypoints = waypoints.concat(data.end.waypoints);
@@ -375,7 +441,7 @@ angular.module('starter.controllers',['starter.services'])
 
            });
 
- 
+
            //Add waypoints.
            for(var i = 0; i <waypoints.length; i++) {
             directionsManager.addWaypoint(waypoints[i]);
@@ -383,7 +449,7 @@ angular.module('starter.controllers',['starter.services'])
            }
 
            //Calculate directions.
-           directionsManager.calculateDirections(); 
+           directionsManager.calculateDirections();
            console.log(directionsManager);
 
       });
@@ -448,7 +514,7 @@ angular.module('starter.controllers',['starter.services'])
       document.getElementById("editButton").style.display='block';
       document.getElementById("saveButton").style.display='none';
       $scope.editing = false;
-      // TODO: 
+      // TODO:
       // compare differences with user_data and Auth.getUser()
       // send api request to update differences
       // make local change on Auth.set(user_data)
@@ -481,10 +547,10 @@ angular.module('starter.controllers',['starter.services'])
                   } else
 
                   {
-                    // TODO: 
-                    // send api request to check if old password is same  
+                    // TODO:
+                    // send api request to check if old password is same
                     // if so, update to new password
-                    // 
+                    //
                     return $scope.data;
                   }
                }
@@ -698,6 +764,26 @@ angular.module('starter.controllers',['starter.services'])
       console.log(result);
       });
   }
+
+  $scope.goBack = function () {
+    $state.go('dashboard');
+  }
+})
+
+
+.controller('MyRoutesCtrl', function($scope, $state, Auth, $http) {
+
+  $scope.my_routes = [];
+  $scope.shared_routes = [];
+
+  $scope.my_routes.push({id: 1,title: "King's Cross, United Kingdom - London University, United Kingdom", comments: "Really nice!"});
+  $scope.shared_routes.push({id: 1,title: "London University, United Kingdom - King's Cross, United Kingdom", comments: "Really bad!"});
+
+  $scope.seeRoute = function(routeId)
+  {
+     // TODO (ryan) : here add the routing towards the map from my routes
+  }
+
 
   $scope.goBack = function () {
     $state.go('dashboard');

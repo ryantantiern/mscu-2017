@@ -6,9 +6,13 @@
     <file url="file://$PROJECT_DIR$/www/scripts/controllers.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/scripts/services.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/add_friend.html" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/www/templates/changePhoto.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/create_route.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/customize_route.html" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/dashboard.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/friend_requests.html" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/friends.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/login.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/my_routes.html" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/profile.html" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/register.html" charset="UTF-8" />
   </component>

@@ -1,8 +1,14 @@
 <ion-view view-title="Dashboard">
 
-      <ion-content class="padding-top padding-bottom login-bg">
+      <ion-content class="padding-top padding-bottom ">
         <div class="row">
+          <div class="col col-90">
           <h3>Welcome back, {{ user_data.firstname }} {{ user_data.lastname }} !</h3>
+          </div>
+          <div class="col">
+          <a ng-if="!notifications.length" ng-click="openPopover($event)" class="gi-3x icon-dark icon ion-ios-bell"></a>
+          <a ng-if="notifications.length" ng-click="openPopover($event)" class="gi-3x icon-assertive icon ion-ios-bell"></a>
+          </div>
         </div>
 
         <div class="list card">
@@ -27,14 +33,9 @@
             Create Route
           </a>
 
-          <a  class="item item-icon-left">
+          <a  ng-click="goMyRoutes()" class="item item-icon-left">
             <i class="icon ion-star"></i>
-            View Saved Routes
-          </a>
-
-          <a  class="item item-icon-left">
-            <i class="icon ion-email-unread"></i>
-            View friend/route requests
+            My routes
           </a>
 
           <a  ng-click="goProfile()" class="item item-icon-left">
