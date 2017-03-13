@@ -1,0 +1,62 @@
+<ion-view view-title="My routes">
+
+  <ion-content class="padding-top padding-bottom">
+
+    <div class="row">
+      <div class="col col-33">
+        <a ng-click="goBack()"  class="icon-left button button-clear button-dark ion-chevron-left">
+          Back
+        </a>
+      </div>
+
+      <div class="col col-offset-33">
+        <a ng-click="show_mine = !show_mine" ng-model="show_mine" class="button button-positive icon-right ion-shuffle   ">
+          Switch
+        </a>
+      </div>
+
+    </div>
+    <div class="row">
+      <h3>
+        <div ng-if="!show_mine"> My routes ({{ my_routes.length }}): </div>
+        <div ng-if="show_mine"> Shared routes({{ shared_routes.length }}):</div>
+      </h3>
+    </div>
+
+
+    <div class="card-wrapper">
+
+      <div id="myRoutes" ng-if="!show_mine">
+        <a ng-click="seeRoute(route.id)" ng-repeat="route in my_routes">
+          <div class="card">
+            <div class="item item-divider">
+              {{ route.title }}
+            </div>
+            <div class="item item-text-wrap">
+              {{ route.comments }}
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <div id="sharedRoutes" ng-if="show_mine">
+        <a ng-click="seeRoute(route.id)" ng-repeat="route in shared_routes">
+          <div class="card">
+            <div class="item item-divider">
+              {{ route.title }}
+            </div>
+            <div class="item item-text-wrap">
+              {{ route.comments }}
+            </div>
+          </div>
+
+        </a>
+      </div>
+    </div>
+
+
+
+
+  </ion-content>
+</ion-view>

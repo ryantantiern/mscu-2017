@@ -19,7 +19,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
     }
     if(window.StatusBar) {
       StatusBar.styleDefault();
-    }  
+    }
     GeoLocation.getConstantLocation();
   });
 })
@@ -75,6 +75,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
            templateUrl: "templates/friend_requests.html",
            controller: "FrRequestsCtrl"
     })
+
+    .state('my_routes', {
+               url: "/my_routes",
+               templateUrl: "templates/my_routes.html",
+               controller: "MyRoutesCtrl"
+        })
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations

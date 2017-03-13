@@ -1,17 +1,16 @@
 <ion-view view-title="Create Route">
-    <ion-content class="padding login-bg">
+    <ion-content class="padding">
 
 		<div class="list">
-			<a ng-click="goBack()"  class="item item-icon-left">
-			  <i class="icon ion-chevron-left"></i>
-			  Go back
-			</a>
-		</div>
+      <a ng-click="goBack()"  class="icon-left button button-clear button-dark ion-chevron-left">
+        Back
+      </a>
+    </div>
 
 		<div class="list">
 			<label class="item item-input item-stacked-label">
 				<span class="input-label">Start</span>
-				<input ng-model="startAddress.address" ng-change="getSuggestions(startAddress.address, 's')" ng-model-options="{ debounce: 1500 }"  type="text" placeholder="Enter starting address" > 
+				<input ng-model="startAddress.address" ng-change="getSuggestions(startAddress.address, 's')" ng-model-options="{ debounce: 1500 }"  type="text" placeholder="Enter starting address" >
 			</label>
 
 			<div ng-if="suggestionFlag == 's' && suggestions.length > 0">
@@ -19,7 +18,7 @@
 					<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
 				</div>
 			</div>
-			
+
 			<label class="item item-input item-stacked-label">
 			<span class="input-label">End</span>
 				<input ng-model="endAddress.address" ng-change="getSuggestions(endAddress.address, 'e')" ng-model-options="{ debounce: 1500 }" type="text" placeholder="Enter ending address">
@@ -38,7 +37,7 @@
 				<div ng-repeat="(i, wp) in wpAddresses track by $index">
 					<label class="item item-input item-label">
 						<span class="input-label">Way Point {{i+1}}</span>
-						<input ng-model="wp.address" ng-change="getSuggestions(wp.address, 'wp', i)" ng-model-options="{ debounce: 1500 }" type="text" > 
+						<input ng-model="wp.address" ng-change="getSuggestions(wp.address, 'wp', i)" ng-model-options="{ debounce: 1500 }" type="text" >
 					</label>
 					<div ng-if="suggestionFlag == 'wp{{i}}' && suggestions.length > 0">
 						<div ng-repeat="suggestion in suggestions">
@@ -62,12 +61,12 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="button button-block button-large button-positive" ng-click="next()">
 			Next&nbsp
 			<i class="icon-right ion-chevron-right"></i>
 		</div>
 
-	
+
 	</ion-content>
 </ion-view>
