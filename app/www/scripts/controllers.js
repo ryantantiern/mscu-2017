@@ -568,7 +568,6 @@ angular.module('starter.controllers',['starter.services'])
 
       $http(request).then(function(result) {
         if (result.data) {
-          console.log(result);
           for (var i = result.data.length - 1; i >= 0; i--) {
             $scope.filteredPeople.push(result.data[i]);
           }
@@ -576,6 +575,7 @@ angular.module('starter.controllers',['starter.services'])
         else {
           $scope.filteredPeople = [];
         }
+        console.log($scope.filteredPeople);
       });
 
     }
