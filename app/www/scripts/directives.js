@@ -12,10 +12,10 @@ angular.module('starter.directives', ['starter.services'])
       function initialize() {
         var mapOptions = {
           credentials: "Av5wBqmsnnQASubvgnpJc-tfOm8-nSSCq3KteunuqY4s4lhtA3LuyupF5Xq1R8ng",
-          mapTypeId: Microsoft.Maps.MapTypeId.road,
+          mapTypeId: Microsoft.Maps.MapTypeId.canvasLight,
           center: new Microsoft.Maps.Location(53.688, -2.039),
           zoom: 5,
-          maxZoom: 15,
+          maxZoom: 18,
           minZoom: 5,
           navigationBarOrientation:  Microsoft.Maps.NavigationBarOrientation.horizontal,
           showDashboard: false,

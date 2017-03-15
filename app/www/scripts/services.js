@@ -34,9 +34,25 @@ angular.module('starter.services',[])
 	.factory('RouteCreator', function () {
 		var start, end, waypoints;
 		return {
-			getStart : function () {return start;},
-			getEnd : function () {return end;},
-			getWaypoints : function () {return waypoints;},
+			getStart : function () {
+				if (start == null || (start.constructor == Array && start.length == 0) ) {
+					// So that empty array is not returned
+					return null;
+				}
+				return start;
+			},
+			getEnd : function () {
+				if (end == null || (end.constructor == Array && end.length == 0) ) {
+					return null;
+				}
+				return end;
+			},
+			getWaypoints : function () {
+				if (waypoints == null || (waypoints.constructor == Array && waypoints.length == 0) ) {
+					return null;
+				}
+				return waypoints;
+			},
 			addStart : function (start_args) {
 				if (!start) start = [];
 				if (start_args) {

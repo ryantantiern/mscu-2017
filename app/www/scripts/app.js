@@ -93,14 +93,14 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
 
       // Prevent non authenticated user to access app
-      if ($location.path() != '/login' && $location.path() != '/register') {
+/*      if ($location.path() != '/create_route' && $location.path() != '/create_route') {
 
           if (!Auth.getUser()) {
             event.preventDefault();
-            $location.path('/login'); // Set path to /login
-            $state.go('login'); // Actually navigate to /login
+            $location.path('/create_route'); // Set path to /login
+            $state.go('create_route'); // Actually navigate to /login
           }
-       }
+       }*/
    });
 })
 
