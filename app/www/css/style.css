@@ -8,8 +8,16 @@ ion-content {
 .bar-header {
   height: 70px;
 }
+.bar-header.modal-header {
+  height: 45px;
+}
+
+.bar-header.modal-header h1 {
+  font-size: 25px;
+}
+
 .has-header {
-  padding-top: 30px;
+  padding-top: 25px;
 }
 
 input[name=search-bar] {

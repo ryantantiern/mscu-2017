@@ -3,7 +3,7 @@ angular.module('starter.controllers',['starter.services'])
 /**
  * LOGIN CONTROLLER
  */
-.controller('LoginCtrl', function($scope, $state, $http, loginData, Auth) {
+.controller('LoginCtrl', function($scope, $state, $http,  Auth) {
 
    $scope.data = {};
    $scope.default_text = "Please login";
@@ -42,9 +42,6 @@ angular.module('starter.controllers',['starter.services'])
               user.data.access_token = result.data.access_token;
               Auth.setUser(user.data);
               $state.go('dashboard');
-
-
-              // loginData.updateForm(Auth.getUser());
             });
            }
        }, function(e) {
@@ -129,7 +126,10 @@ angular.module('starter.controllers',['starter.services'])
   // Ryan
   // Assign user_data to autheticated user
   $scope.$on('$ionicView.beforeEnter', function() {
-    $scope.user_data = Auth.getUser();
+    //$scope.user_data = Auth.getUser();
+    $scope.user_data = Auth.setUser({
+      access_token : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjlhN2U1MTExMGVmMDA0NjI2N2RmZTdhNTZhYWY0ODM2YTI1NDM0ZWMxYzliYTU3YjdkZDI2MDFlMzBhOGI0Yzk2YmRhNTI4NWJmYTM5ODBiIn0.eyJhdWQiOiIyIiwianRpIjoiOWE3ZTUxMTEwZWYwMDQ2MjY3ZGZlN2E1NmFhZjQ4MzZhMjU0MzRlYzFjOWJhNTdiN2RkMjYwMWUzMGE4YjRjOTZiZGE1Mjg1YmZhMzk4MGIiLCJpYXQiOjE0ODk4NzI3NTYsIm5iZiI6MTQ4OTg3Mjc1NiwiZXhwIjoxNTIxNDA4NzU2LCJzdWIiOiIxMSIsInNjb3BlcyI6WyIqIl19.oxIDaw7IQm4Bw3HeudL99xunZSfIOKzzeoTLxwyZGXAcylQlrK4WmnGfmYaPyOqPeG2-CV2CAEW92Ugo2r9xBPebN20qpqoySstdKb69T2907Sfz13Bqlz5Sa5-q0B-H78A47xzu3Mi3P-DabfnzQww5cIeBbqVNx8GIzQCoXCzYo7twQOKq6FqdmncNHoYGCwRbTGXq10M7bSjlXURDIZbCeUUyB-HSFKVtmw6jBxaee2jbVAsI0joYpC3JbdhSTFNRxaNyJ3bbtmyARyeKy0r3OV-CaJsza31-MoB2TXdx3-QuYcPczkoILtLuq1jQRU8JlumYST_lziiWxljNmwfwnTFZg__ZKSoH-V8__35VwE5Y8N-pF2lGDuz_djNDeut2AbsvMyqwCrJZytEUINb4tLW-5rrXvGDveKfY6Gm0mAO3eTlKwxlOzn3dOFbhT-wBOh7eF7Fah1UEr79mUroAatXDht3MBqMQnt9pVTx8NWFN8ewc94rdnj6iMNR9EHVX_6yXxm0e2fLh2_9gWyQYDgAzawfESwo7lMxDVaBofojUy75CQM8USkJr3FQih7wzS2ulSSkjdkWnU7Qaekgi1-7GlJswWAgYhDZLE1ELSHK8QrcRu-QfgFkuh5_ISZvXQn3QIPLolBDcWtfVrSqbYOmKY1MbuVtTCF8k4iM"
+    })
   });
 
   // Ryan - end
@@ -162,7 +162,11 @@ angular.module('starter.controllers',['starter.services'])
                           {routeId:3, senderName: "Redhat Doe"},
                           {routeId:3, senderName: "Redhat Doe"}]
 
-  var template = '<ion-popover-view><ion-header-bar> <h2 class="title">New routes from:</h1> </ion-header-bar> <ion-content><ul class="list"><li ng-click="seeRoute(ntf.routeId)" ng-repeat="ntf in notifications" class="item">{{ntf.senderName}}</li></ul> </ion-content></ion-popover-view>';
+  var template = '<ion-popover-view><ion-header-bar>\
+  <h2 class="title">New routes from:</h1> </ion-header-bar>\
+   <ion-content><ul class="list"><li ng-click="seeRoute(ntf.routeId)"\
+    ng-repeat="ntf in notifications" class="item">{{ntf.senderName}}</li></ul> \
+    </ion-content></ion-popover-view>';
 
   $scope.popover = $ionicPopover.fromTemplate(template, {
       scope: $scope
@@ -221,10 +225,7 @@ angular.module('starter.controllers',['starter.services'])
     }
 
     $http(request).then(function(result) {
-      console.log(result);
-
       for (var i in result.data.friends) {
-
         if (!$scope.friend_list[result.data.friends[i].id]) {
           var friend = {
             "id" : result.data.friends[i].id,
@@ -239,25 +240,12 @@ angular.module('starter.controllers',['starter.services'])
           $scope.friend_list[result.data.friends[i].id] = friend;
           // END - Should be written better
           //
-          console.log(friend);
         }
       }
-      console.log($scope.rawFriends);
+    },function () {
+      alert("Error: Could not update friends list");
     });
-
-  }, function () {
-    alert("Error: Could not update friends list");
   });
-
-// Ryan - End
-
-  /*
-    REDUNDANT - BAD CODE?
-    for (var i in $scope.rawFriends)
-    {
-      $scope.friends.push({'name': $scope.rawFriends[i].firstName+' '+$scope.rawFriends[i].lastName});
-    }
-  */
 
   $scope.goBack = function(){
       $state.go('dashboard');
@@ -371,11 +359,15 @@ angular.module('starter.controllers',['starter.services'])
   .controller('CustomizeRouteCtrl', function($scope,$ionicPopup, $state, RouteData, Auth, $http, GeoLocation) {
     var directionsManager;
     $scope.data = {};
+    $scope.map = {};
 
     $scope.goBack = function () {
-      $state.go('create_route')
+      $state.go('create_route');
       directionsManager.clearDisplay();
-      directionsManager.clearAll();
+      directionsManager.clearAll();        
+      $scope.map.layers.clear();        
+
+
     }
     function save() {
       // get waypoints coordinates
@@ -507,7 +499,7 @@ angular.module('starter.controllers',['starter.services'])
         })
         layer.add(pin);
         Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
-          console.log(e)
+          console.log("im here")
         });
 
         if (i == currentRoute.routeLegs.length - 1) {
@@ -520,14 +512,12 @@ angular.module('starter.controllers',['starter.services'])
           })
           layer.add(pin);
           Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
-            console.log(e)
+            console.log("im here")
           });
 
         }
       }
       $scope.map.layers.insert(layer);
-
-
     }
 
   })
@@ -537,7 +527,7 @@ angular.module('starter.controllers',['starter.services'])
  * PROFILE CONTROLLER
  */
 
-.controller('ProfileCtrl', function($scope, $ionicPopup, $state, loginData, $cordovaCamera, $ionicLoading, $localStorage, Auth) {
+.controller('ProfileCtrl', function($scope, $ionicPopup, $state, $cordovaCamera, $ionicLoading, $localStorage, Auth) {
 
   $scope.goBack = function(){
       $state.go('dashboard');
@@ -677,15 +667,6 @@ angular.module('starter.controllers',['starter.services'])
       			$ionicLoading.show({template: 'Errore di caricamento...', duration:500});
       		})
       	};
-
-
-
-
-
-
-
-
-
 })
 
 .controller('AddFriendCtrl', function($scope, $state, Auth, $http) {
@@ -847,22 +828,182 @@ angular.module('starter.controllers',['starter.services'])
 })
 
 
-.controller('MyRoutesCtrl', function($scope, $state, Auth, $http) {
+.controller('MyRoutesCtrl', function($scope, $state, Auth, $http, RouteData, $ionicActionSheet, $ionicModal) {
 
   $scope.my_routes = [];
   $scope.shared_routes = [];
+  $scope.friend_list = {};
 
-  $scope.my_routes.push({id: 1,title: "King's Cross, United Kingdom - London University, United Kingdom", comments: "Really nice!"});
-  $scope.shared_routes.push({id: 1,title: "London University, United Kingdom - King's Cross, United Kingdom", comments: "Really bad!"});
+  $scope.$on('$ionicView.beforeEnter', function () {
+    // List routes
+     var routesRequest = {
+       method : 'GET',
+       url : Auth.getApiUrl() + "/api/routes",
+       headers : {
+         Authorization : 'Bearer ' + Auth.getUser().access_token
+       }
+     }
+     $scope.my_routes = [];
+     $http(routesRequest).then(function(result) {
+        for (var i = 0; i < result.data.count; i++) {
+          $scope.my_routes.push({
+            id: result.data.routes[i].id,
+            body: result.data.routes[i].body,
+            title: "Route number " + (i+1), 
+            comments: "Really nice!"
+          });
+        }
+       }, function(e) {
+        console.log(e)
+       }
+     );
+     // list pending received routes
+     var pendingRoutes = routesRequest;
+     pendingRoutes.url = Auth.getApiUrl() + "/api/routes/received";
+     $scope.shared_routes = [];
+     $http(pendingRoutes).then(function(result) {
+        if (result.data.response.constructor == Array) {
+          for (var i = 0; i < result.data.response.length; i++) {
+            $scope.shared_routes.push({
+              id: result.data.response[i].id,
+              body: result.data.response[i].body,
+              title: "London University, United Kingdom - King's Cross, United Kingdom", 
+              comments: "Really bad!"
+            });
+          }
+        }
 
-  $scope.seeRoute = function(routeId)
+       }, function(e) {
+        console.log(e)
+       }
+     );
+
+     // Load friends in the background in preparation to be shared
+     var friendsRequest = {
+       method : 'GET',
+       url : Auth.getApiUrl() + "/api/friends",
+       headers : {
+         Authorization : 'Bearer ' + Auth.getUser().access_token
+       }
+     }
+
+     $http(friendsRequest).then(function(result) {
+       for (var i in result.data.friends) {
+         if (!$scope.friend_list[result.data.friends[i].id]) {
+           var friend = {
+             "id" : result.data.friends[i].id,
+             "firstName" : result.data.friends[i].firstname,
+             "lastName" : result.data.friends[i].lastname,
+             "phone" : result.data.friends[i].phone,
+             "checked" : false
+           };
+           $scope.friend_list[result.data.friends[i].id] = friend;
+         }
+       }
+     },function (e) {
+       console.log(e);
+     });
+
+
+   });
+
+  $scope.seeRoute = function(route)
   {
      // TODO (ryan) : here add the routing towards the map from my routes
+     RouteData.set(route.body);
+     console.log(route);
+     $state.go('view_route');
+    
   }
 
 
   $scope.goBack = function () {
     $state.go('dashboard');
   }
+
+  $ionicModal.fromTemplateUrl('templates/modals/friend_selector.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.showActions = function (route_id) {
+    var hideSheet = $ionicActionSheet.show({
+      buttons: [
+        { text: 'Share'}
+      ],
+      destructiveText: 'Delete',
+      cancelText: 'Cancel',
+      buttonClicked: function (i) {
+        if (i == 0) {
+          hideSheet();
+          friendsSelector(route_id);
+        }
+        return false;
+      }
+    });
+  }
+
+  function friendsSelector(route_id) {
+    $scope.selectedRouteId = route_id;
+    $scope.modal.show();
+  }
+
+  $scope.share = function() {
+    var requests = [];
+    for (var i in $scope.friend_list) {
+      if ($scope.friend_list[i].checked == true) {
+        requests.push({
+          method: 'GET',
+          url: Auth.getApiUrl() + "/api/routes/share/" + $scope.friend_list[i].id + "/" +  $scope.selectedRouteId,
+          headers : {
+            Authorization : 'Bearer ' + Auth.getUser().access_token
+          }
+        });
+      }
+    }
+    if (requests) {
+      for (var i = 0; i < requests.length; i++) {
+        $http(requests[i]).then(function(result) {console.log(result)},function (e) {console.log(e)});
+      }
+    }
+    $scope.modal.hide();
+  }
+
+  $scope.hideModal = function () {
+    $scope.modal.hide();
+    for (var i in $scope.friend_list) {
+      $scope.friend_list[i].checked = false;
+    }
+
+
+  }
 })
+
+/*
+VIEW ROUTE CONTROLLER
+ */
+
+.controller('ViewRouteCtrl', function($state, $scope, BingLocationService, RouteData) {
+  var route;
+  var directionsManager;
+
+  $scope.mapCreated = function (map) {
+    $scope.map = map;
+  }
+
+  $scope.$on('$ionicView.afterEnter', function () {
+    route = RouteData.get();
+    BingLocationService.createRoute(route, $scope.map);
+
+  });
+
+  $scope.goBack = function () {
+    RouteData.reset();      
+    $state.go('my_routes');
+    $scope.map.layers.clear();
+    BingLocationService.resetDirectionsManager();
+  }
+}) 
 

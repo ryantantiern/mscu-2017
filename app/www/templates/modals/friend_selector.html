@@ -1,0 +1,15 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-positive modal-header">
+  	<button class="button button-clear button-primary" ng-click="hideModal()">Cancel</button>
+  	<h1 class="title">Select Friends</h1>
+  	<button class="button button-clear button-primary" ng-click="share()">Share</button>
+  </ion-header-bar>
+  <ion-content>
+	<ion-list>
+		<ion-checkbox ng-repeat="friend in friend_list" ng-model="friend.checked" ng-checked="friend.checked">
+			<h3>{{friend.firstName}} {{friend.lastName}} </h3>
+			<p>{{friend.phone}}</p>
+		</ion-checkbox>
+	</ion-list>
+  </ion-content>
+</ion-modal-view>

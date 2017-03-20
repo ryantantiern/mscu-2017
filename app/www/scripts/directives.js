@@ -26,22 +26,20 @@ angular.module('starter.directives', ['starter.services'])
           disablePanning: false,
           enableClickableLogo: false,
           enableSearchLogo: false, 
-          enableInertia: false,
+          enableInertia: true,
           showLocateMeButton: true,
       };
     
-   
-      var map = new Microsoft.Maps.Map($element[0], mapOptions);
-      $scope.onCreate({map: map});
+     
+        var map = new Microsoft.Maps.Map($element[0], mapOptions);
+        $scope.onCreate({map: map});
       }
 
       if (document.readyState === "complete") {
         initialize();
       } else {
-      	console.log("Failed to initialize");
-       //Microsoft.maps.event.addDomListener(window, 'load', initialize);
+        Microsoft.maps.event.addDomListener(window, 'load', initialize);
       }
-
 
     }
   }
