@@ -7,6 +7,7 @@ angular.module('starter.controllers',['starter.services'])
 
    $scope.data = {};
    $scope.default_text = "Please login";
+   $scope.recognizedText = '';
 
      $scope.speakText = function(string) {
     window.TTS.speak({
@@ -18,6 +19,23 @@ angular.module('starter.controllers',['starter.services'])
        }, function (reason) {
            // Handle the error case
        });
+  };
+
+  $scope.record = function(entry) {
+    var recognition = new SpeechRecognition();
+    recognition.onresult = function(event) {
+        if (event.results.length > 0) {
+          if (entry == "username") {
+            $scope.data.username = event.results[0][0].transcript;
+            $scope.$apply()
+          }
+          if (entry == "password") {
+            $scope.data.password = event.results[0][0].transcript;
+            $scope.$apply()
+          }
+        }
+    };
+    recognition.start();
   };
   
    $scope.login = function(user_data) {
