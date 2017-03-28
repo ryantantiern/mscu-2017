@@ -524,6 +524,7 @@ angular.module('starter.controllers',['starter.services'])
           Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
             console.log("im here")
           });
+          console.log(directionsManager.getCurrentRoute());
 
         }
       }
