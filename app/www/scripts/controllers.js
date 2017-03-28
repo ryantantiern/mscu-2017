@@ -123,16 +123,8 @@ angular.module('starter.controllers',['starter.services'])
  */
 
 .controller('DashboardCtrl', function($scope, $state, $ionicPopover, Auth, GeoLocation) {
-  // Ryan
   // Assign user_data to autheticated user
-  $scope.$on('$ionicView.beforeEnter', function() {
-    $scope.user_data = Auth.getUser();
-/*    $scope.user_data = Auth.setUser({
-      access_token : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjlhN2U1MTExMGVmMDA0NjI2N2RmZTdhNTZhYWY0ODM2YTI1NDM0ZWMxYzliYTU3YjdkZDI2MDFlMzBhOGI0Yzk2YmRhNTI4NWJmYTM5ODBiIn0.eyJhdWQiOiIyIiwianRpIjoiOWE3ZTUxMTEwZWYwMDQ2MjY3ZGZlN2E1NmFhZjQ4MzZhMjU0MzRlYzFjOWJhNTdiN2RkMjYwMWUzMGE4YjRjOTZiZGE1Mjg1YmZhMzk4MGIiLCJpYXQiOjE0ODk4NzI3NTYsIm5iZiI6MTQ4OTg3Mjc1NiwiZXhwIjoxNTIxNDA4NzU2LCJzdWIiOiIxMSIsInNjb3BlcyI6WyIqIl19.oxIDaw7IQm4Bw3HeudL99xunZSfIOKzzeoTLxwyZGXAcylQlrK4WmnGfmYaPyOqPeG2-CV2CAEW92Ugo2r9xBPebN20qpqoySstdKb69T2907Sfz13Bqlz5Sa5-q0B-H78A47xzu3Mi3P-DabfnzQww5cIeBbqVNx8GIzQCoXCzYo7twQOKq6FqdmncNHoYGCwRbTGXq10M7bSjlXURDIZbCeUUyB-HSFKVtmw6jBxaee2jbVAsI0joYpC3JbdhSTFNRxaNyJ3bbtmyARyeKy0r3OV-CaJsza31-MoB2TXdx3-QuYcPczkoILtLuq1jQRU8JlumYST_lziiWxljNmwfwnTFZg__ZKSoH-V8__35VwE5Y8N-pF2lGDuz_djNDeut2AbsvMyqwCrJZytEUINb4tLW-5rrXvGDveKfY6Gm0mAO3eTlKwxlOzn3dOFbhT-wBOh7eF7Fah1UEr79mUroAatXDht3MBqMQnt9pVTx8NWFN8ewc94rdnj6iMNR9EHVX_6yXxm0e2fLh2_9gWyQYDgAzawfESwo7lMxDVaBofojUy75CQM8USkJr3FQih7wzS2ulSSkjdkWnU7Qaekgi1-7GlJswWAgYhDZLE1ELSHK8QrcRu-QfgFkuh5_ISZvXQn3QIPLolBDcWtfVrSqbYOmKY1MbuVtTCF8k4iM"
-    })*/
-  });
-
-  // Ryan - end
+  $scope.user_data = Auth.getUser();
 
   $scope.goViewFriends = function (){
       $state.go('friends');
@@ -151,6 +143,9 @@ angular.module('starter.controllers',['starter.services'])
   };
   $scope.goMyRoutes = function () {
           $state.go('my_routes')
+  };
+  $scope.logout = function () {
+          $state.go('login');
   };
 
   // TODO ryan : pull the notifications as the shared routes with me with the
@@ -372,11 +367,39 @@ angular.module('starter.controllers',['starter.services'])
     function save() {
       // get waypoints coordinates
       // call rest api
-      $scope.data.wps = directionsManager.getAllWaypoints();
-      $scope.data.wps = $scope.data.wps.map(function (wp) {
+      $scope.data.wps = [];
+
+      var currentRoute = directionsManager.getCurrentRoute();
+
+      // push actualStart : (lat,lon) & startDescription
+      // If StartAddress or EndAddress, use Start/EndAddress as startDescription instead
+      for (var i = 0; i < currentRoute.routeLegs.length; i++) {
+        for (var j = 0; j < currentRoute.routeLegs[i].subLegs.length; j++ ) {
+          $scope.data.wps.push([
+            currentRoute.routeLegs[i].subLegs[j].actualStart.latitude, 
+            currentRoute.routeLegs[i].subLegs[j].actualStart.longitude
+          ]);
+        }
+      }
+      $scope.data.wps.push([
+        currentRoute.routeLegs[currentRoute.routeLegs.length - 1]
+          .subLegs[currentRoute.routeLegs[currentRoute.routeLegs.length - 1].subLegs.length - 1]
+          .actualEnd
+          .latitude, 
+        currentRoute.routeLegs[currentRoute.routeLegs.length - 1]
+          .subLegs[currentRoute.routeLegs[currentRoute.routeLegs.length - 1].subLegs.length - 1]
+          .actualEnd
+          .longitude
+       ]);
+
+/*      $scope.data.wps = []
+      $scope.data.wps = directionsManager.getAllWaypoints();*/
+
+
+/*      $scope.data.wps = $scope.data.wps.map(function (wp) {
         var coord = [wp._waypointOptions.location.latitude, wp._waypointOptions.location.longitude];
         return coord;
-      });
+      });*/
       var request = {
         method : 'POST',
         url : Auth.getApiUrl() + "/api/routes/create",
@@ -394,7 +417,6 @@ angular.module('starter.controllers',['starter.services'])
         }
       }
       $http(request).then(function(result) {
-        console.log(result);
         alert("Route Saved!");
         $state.go('my_routes');
       }, function (e) {
@@ -426,7 +448,7 @@ angular.module('starter.controllers',['starter.services'])
                      type: 'button-positive',
                      onTap: function(e) {
                         save();
-                        console.log($scope.data.startAddress, $scope.data.endAddress);
+
                      }
                   }, ]
                });
@@ -491,7 +513,6 @@ angular.module('starter.controllers',['starter.services'])
     })
 
     function directionsUpdated(e) {
-     // console.log(directionsManager.getAllWaypoints());
       var currentRoute = directionsManager.getCurrentRoute();
       var layer = new Microsoft.Maps.Layer();
       for (var i = 0; i < currentRoute.routeLegs.length; i++) {
@@ -524,7 +545,8 @@ angular.module('starter.controllers',['starter.services'])
           Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
             console.log("im here")
           });
-          console.log(directionsManager.getCurrentRoute());
+
+
 
         }
       }
@@ -650,7 +672,6 @@ angular.module('starter.controllers',['starter.services'])
       			$scope.ftLoad = true;
       			$localstorage.set('photo', imageData);
       			$scope.user_data.photo = "data:image/jpeg;base64,"+imageData;
-
       			$ionicLoading.show({template: 'Getting photo...', duration:500});
       		},
       		function(err){
@@ -709,7 +730,7 @@ angular.module('starter.controllers',['starter.services'])
         else {
           $scope.filteredPeople = [];
         }
-        console.log($scope.filteredPeople);
+
       });
 
     }
@@ -725,11 +746,8 @@ angular.module('starter.controllers',['starter.services'])
               Authorization: "Bearer " + Auth.getUser().access_token
             }
           }
-
           $http(request).then(function(result) {
-            console.log(result);
             if (result.data.message == 'success') {
-              console.log(result);
               $scope.filteredPeople[i].request_sent = true;
             }
           });
@@ -748,7 +766,6 @@ angular.module('starter.controllers',['starter.services'])
           }
           $http(request).then(function(result) {
             if (result.data.message == 'success') {
-              console.log(result);
               $scope.filteredPeople[i].request_sent = false;
             }
             else {
@@ -783,7 +800,6 @@ angular.module('starter.controllers',['starter.services'])
             "lastname" : result.data.friends[i].lastname,
             "phone" : result.data.friends[i].phone
           };
-
           // Should be written better
           //
           $scope.friend_requests.push(user);
@@ -792,8 +808,6 @@ angular.module('starter.controllers',['starter.services'])
           //
         }
       }
-      console.log(data);
-      console.log($scope.friend_requests);
     });
   });
 
@@ -811,7 +825,6 @@ angular.module('starter.controllers',['starter.services'])
       var i = $scope.friend_requests.indexOf(user);
       $scope.friend_requests.splice(i,1);
       data[user.id] = null;
-      console.log(result);
       });
   }
 
@@ -829,7 +842,6 @@ angular.module('starter.controllers',['starter.services'])
       var i = $scope.friend_requests.indexOf(user);
       $scope.friend_requests.splice(i,1);
       data[user.id] = null;
-      console.log(result);
       });
   }
 
@@ -866,8 +878,6 @@ angular.module('starter.controllers',['starter.services'])
             end_address: result.data.routes[i].end_address,
             created_at : result.data.routes[i].created_at.date.split(" ")[0]
           });
-          console.log(result.data.routes[i].created_at);
-          console.log(typeof(result.data.routes[i].created_at.prototype));
         }
        }, function(e) {
         console.log(e)
@@ -878,14 +888,16 @@ angular.module('starter.controllers',['starter.services'])
      pendingRoutes.url = Auth.getApiUrl() + "/api/routes/received";
      $scope.shared_routes = [];
      $http(pendingRoutes).then(function(result) {
-        console.log(result);
         if (result.data.response.constructor == Array) {
           for (var i = 0; i < result.data.response.length; i++) {
             $scope.shared_routes.push({
               id: result.data.response[i].id,
               body: result.data.response[i].body,
-              title: "London University, United Kingdom - King's Cross, United Kingdom", // should be a title
-              comments: "Really bad!" // should be a chort description
+              title:  result.data.response[i].title, 
+              description: result.data.response[i].description,
+              start_address: result.data.response[i].start_address,
+              end_address: result.data.response[i].end_address,
+              created_at : result.data.response[i].created_at.split(" ")[0]
             });
           }
         }
@@ -928,7 +940,6 @@ angular.module('starter.controllers',['starter.services'])
   {
      // TODO (ryan) : here add the routing towards the map from my routes
      RouteData.set(route.body);
-     console.log(route);
      $state.go('view_route');
     
   }
@@ -946,6 +957,9 @@ angular.module('starter.controllers',['starter.services'])
   });
 
   $scope.showActions = function (route_id) {
+    for (var j = 0; j < $scope.friend_list.length; j++) {
+      $scope.friend_list[j].checked = false;
+    }
     var hideSheet = $ionicActionSheet.show({
       buttons: [
         { text: 'Share'}
@@ -954,7 +968,7 @@ angular.module('starter.controllers',['starter.services'])
       cancelText: 'Cancel',
       buttonClicked: function (i) {
         if (i == 0) {
-          hideSheet();
+          hideSheet(); 
           friendsSelector(route_id);
         }
         return false;
@@ -964,6 +978,7 @@ angular.module('starter.controllers',['starter.services'])
 
   function friendsSelector(route_id) {
     $scope.selectedRouteId = route_id;
+
     $scope.modal.show();
   }
 

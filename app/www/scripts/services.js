@@ -151,6 +151,7 @@ angular.module('starter.services',[])
 		var credentials = "Av5wBqmsnnQASubvgnpJc-tfOm8-nSSCq3KteunuqY4s4lhtA3LuyupF5Xq1R8ng";
 		var distance = 0.5;
 		var directionsManager;
+		var map;
 
 		function CallRestService(request) {
 			var script = document.createElement("script");
@@ -177,7 +178,6 @@ angular.module('starter.services',[])
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
 									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								console.log(result.resourceSets[0].resources[i]);
 								RouteCreator.addStart(suggestion);
 							}
 				  		}
@@ -194,7 +194,6 @@ angular.module('starter.services',[])
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
 									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								console.log(result.resourceSets[0].resources[i]);
 								RouteCreator.addEnd(suggestion);
 							}
 				  		}
@@ -212,7 +211,6 @@ angular.module('starter.services',[])
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
 									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								console.log(result.resourceSets[0].resources[i]);
 								RouteCreator.addWaypoint(suggestion);
 							}
 				  		}	
@@ -229,11 +227,11 @@ angular.module('starter.services',[])
 
 			createRoute : function (wps, mapScope) {
 
-				var map = mapScope;
+				map = mapScope;
 				// wps :: [[lat, lon], [lat, lon]]
 				Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
 
-							 wps = JSON.parse(wps);
+					   wps = JSON.parse(wps);
 				       var waypoints = [], startWp, endWp, viaWps = [];
 				       var lastIndex = wps.length - 1;
 
@@ -325,6 +323,7 @@ angular.module('starter.services',[])
 				if (directionsManager) {
 					directionsManager.clearAll();
 					directionsManager.clearDisplay();
+					map.layers.clear();
 				}
 			}
 		}

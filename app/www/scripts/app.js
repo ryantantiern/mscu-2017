@@ -90,7 +90,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
-  $ionicConfigProvider.views.forwardCache(true);
+ // $ionicConfigProvider.views.forwardCache(true);
 })
 
 
