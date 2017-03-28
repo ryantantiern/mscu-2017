@@ -37,11 +37,21 @@
         <a ng-click="seeRoute(route)" ng-repeat="route in my_routes" on-hold="showActions(route.id)">
           <div class="card">
             <div class="item item-divider">
-              {{ route.title }}
+              <div class="row" >
+                <div class="col col-74">
+                  {{ route.title }}
+                </div>
+                <div class="col col-26" style="text-align: right;">
+                  {{ route.created_at | date: "d MMMM y"}}
+                </div>
+                
+              </div>
             </div>
+
             <div class="item item-text-wrap">
-              {{ route.comments }}
+              {{ route.description }}
             </div>
+
           </div>
         </a>
 

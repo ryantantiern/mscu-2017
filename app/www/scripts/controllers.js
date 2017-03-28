@@ -19,7 +19,7 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
+             client_secret: "USpZo3NtpMYSmMzt0o2aYQn7RraSNKbiWAs8leJZ",
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -383,7 +383,9 @@ angular.module('starter.controllers',['starter.services'])
         data : {
           coordinates: JSON.stringify($scope.data.wps),
           title: ($scope.data.title) ? $scope.data.title : "",
-          comments: ($scope.data.comments) ? $scope.data.comments: ""
+          description: ($scope.data.description) ? $scope.data.description: "",
+          start_address:  ($scope.data.startAddress) ? $scope.data.startAddress : "",
+          end_address:  ($scope.data.endAddress) ? $scope.data.endAddress : "",
         },
         headers :  {
           'Content-Type' : 'application/json',
@@ -393,21 +395,27 @@ angular.module('starter.controllers',['starter.services'])
       }
       $http(request).then(function(result) {
         console.log(result);
-        alert("Route Saved!")
+        alert("Route Saved!");
+        $state.go('my_routes');
       }, function (e) {
         console.log(e);
-        alert("Error occured. check console log")
+        alert("Error occured. check console log");
+        $state.go('my_routes');
       });
+
+
 
     }
 
     $scope.saveRoute = function() {
       var waypoints = RouteData.get();
       $scope.data.title = "";
-      $scope.data.comments = "";
+      $scope.data.description = "";
+      $scope.data.startAddress =  waypoints.start.address.split(",")[0];
+      $scope.data.endAddress = waypoints.end.address.split(",")[0];
 
       var myPopup = $ionicPopup.show({
-                  template: ' Title<textarea ng-model="data.title"></textarea>Short Description<textarea ng-model="data.comments"></textarea>',
+                  template: ' Title<textarea ng-model="data.title"></textarea>Short Description<textarea ng-model="data.description"></textarea>',
                   title: 'Save Route',
                   subTitle: '',
                   scope: $scope,
@@ -417,7 +425,8 @@ angular.module('starter.controllers',['starter.services'])
                      text: '<b>Save</b>',
                      type: 'button-positive',
                      onTap: function(e) {
-                        save()
+                        save();
+                        console.log($scope.data.startAddress, $scope.data.endAddress);
                      }
                   }, ]
                });
@@ -429,6 +438,7 @@ angular.module('starter.controllers',['starter.services'])
     }
 
     $scope.$on("$ionicView.afterEnter" ,function(event, data) {
+      // Create route
       Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
              var data = RouteData.get();
              var waypoints = [];
@@ -849,9 +859,14 @@ angular.module('starter.controllers',['starter.services'])
           $scope.my_routes.push({
             id: result.data.routes[i].id,
             body: result.data.routes[i].body,
-            title: "Route number " + (i+1), 
-            comments: "Really nice!"
+            title:  result.data.routes[i].title, 
+            description: result.data.routes[i].description,
+            start_address: result.data.routes[i].start_address,
+            end_address: result.data.routes[i].end_address,
+            created_at : result.data.routes[i].created_at.date.split(" ")[0]
           });
+          console.log(result.data.routes[i].created_at);
+          console.log(typeof(result.data.routes[i].created_at.prototype));
         }
        }, function(e) {
         console.log(e)
