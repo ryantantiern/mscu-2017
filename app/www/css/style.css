@@ -20,6 +20,10 @@ ion-content {
   padding-top: 25px;
 }
 
+.popup-head {
+  background-color: #FFF;
+}
+
 input[name=search-bar] {
     width: 200px;
     height: 53px;

@@ -19,7 +19,7 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",//"xg0cppwULnXjYpr5VexhsPj3IWEYKmjnHUtsJU6Y", //"A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
+             client_secret: "A30fXBkF5oIRFKXV61P4EmghpDjFlhTIzvqd6OtW",
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -126,10 +126,10 @@ angular.module('starter.controllers',['starter.services'])
   // Ryan
   // Assign user_data to autheticated user
   $scope.$on('$ionicView.beforeEnter', function() {
-    //$scope.user_data = Auth.getUser();
-    $scope.user_data = Auth.setUser({
+    $scope.user_data = Auth.getUser();
+/*    $scope.user_data = Auth.setUser({
       access_token : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjlhN2U1MTExMGVmMDA0NjI2N2RmZTdhNTZhYWY0ODM2YTI1NDM0ZWMxYzliYTU3YjdkZDI2MDFlMzBhOGI0Yzk2YmRhNTI4NWJmYTM5ODBiIn0.eyJhdWQiOiIyIiwianRpIjoiOWE3ZTUxMTEwZWYwMDQ2MjY3ZGZlN2E1NmFhZjQ4MzZhMjU0MzRlYzFjOWJhNTdiN2RkMjYwMWUzMGE4YjRjOTZiZGE1Mjg1YmZhMzk4MGIiLCJpYXQiOjE0ODk4NzI3NTYsIm5iZiI6MTQ4OTg3Mjc1NiwiZXhwIjoxNTIxNDA4NzU2LCJzdWIiOiIxMSIsInNjb3BlcyI6WyIqIl19.oxIDaw7IQm4Bw3HeudL99xunZSfIOKzzeoTLxwyZGXAcylQlrK4WmnGfmYaPyOqPeG2-CV2CAEW92Ugo2r9xBPebN20qpqoySstdKb69T2907Sfz13Bqlz5Sa5-q0B-H78A47xzu3Mi3P-DabfnzQww5cIeBbqVNx8GIzQCoXCzYo7twQOKq6FqdmncNHoYGCwRbTGXq10M7bSjlXURDIZbCeUUyB-HSFKVtmw6jBxaee2jbVAsI0joYpC3JbdhSTFNRxaNyJ3bbtmyARyeKy0r3OV-CaJsza31-MoB2TXdx3-QuYcPczkoILtLuq1jQRU8JlumYST_lziiWxljNmwfwnTFZg__ZKSoH-V8__35VwE5Y8N-pF2lGDuz_djNDeut2AbsvMyqwCrJZytEUINb4tLW-5rrXvGDveKfY6Gm0mAO3eTlKwxlOzn3dOFbhT-wBOh7eF7Fah1UEr79mUroAatXDht3MBqMQnt9pVTx8NWFN8ewc94rdnj6iMNR9EHVX_6yXxm0e2fLh2_9gWyQYDgAzawfESwo7lMxDVaBofojUy75CQM8USkJr3FQih7wzS2ulSSkjdkWnU7Qaekgi1-7GlJswWAgYhDZLE1ELSHK8QrcRu-QfgFkuh5_ISZvXQn3QIPLolBDcWtfVrSqbYOmKY1MbuVtTCF8k4iM"
-    })
+    })*/
   });
 
   // Ryan - end
@@ -828,7 +828,7 @@ angular.module('starter.controllers',['starter.services'])
 })
 
 
-.controller('MyRoutesCtrl', function($scope, $state, Auth, $http, RouteData, $ionicActionSheet, $ionicModal) {
+.controller('MyRoutesCtrl', function($scope, $state, Auth, $http, RouteData, $ionicActionSheet, $ionicModal, $ionicPopup, $timeout) {
 
   $scope.my_routes = [];
   $scope.shared_routes = [];
@@ -862,13 +862,14 @@ angular.module('starter.controllers',['starter.services'])
      pendingRoutes.url = Auth.getApiUrl() + "/api/routes/received";
      $scope.shared_routes = [];
      $http(pendingRoutes).then(function(result) {
+        console.log(result);
         if (result.data.response.constructor == Array) {
           for (var i = 0; i < result.data.response.length; i++) {
             $scope.shared_routes.push({
               id: result.data.response[i].id,
               body: result.data.response[i].body,
-              title: "London University, United Kingdom - King's Cross, United Kingdom", 
-              comments: "Really bad!"
+              title: "London University, United Kingdom - King's Cross, United Kingdom", // should be a title
+              comments: "Really bad!" // should be a chort description
             });
           }
         }
@@ -976,10 +977,102 @@ angular.module('starter.controllers',['starter.services'])
     for (var i in $scope.friend_list) {
       $scope.friend_list[i].checked = false;
     }
-
-
   }
-})
+
+  // TODO : Accept or decline pending route
+  $scope.sharedRoutesAction = function (route) {
+    var hideSheet = $ionicActionSheet.show({
+      buttons: [
+        { text: 'View'},
+        { text: 'Save'},
+      ],
+      destructiveText: 'Decline',
+      cancelText: 'Cancel',
+      buttonClicked: function (i) {
+        switch(i) {
+          case 0: 
+            $scope.seeRoute(route);
+            break;
+          case 1: 
+            accept(route.id);
+            break;
+          default:
+            return false
+        }
+        hideSheet();
+      
+      },
+      destructiveButtonClicked: function () {
+        decline(route.id);
+        return true;
+      }
+    });
+  }
+
+  function accept(route_id) {
+    var request = {
+      method: 'GET',
+      url: Auth.getApiUrl() + "/api/routes/accept/" + route_id,
+      headers : {
+        Authorization : 'Bearer ' + Auth.getUser().access_token
+      }
+    }
+      $http(request).then(function(result) {
+        console.log(result)
+        var tick = $ionicPopup.show({
+          title : '<img id="tick" src="../img/tick.png" style="height: 50px; width: 50px">',
+          });
+        var j = 0;
+        while ($scope.shared_routes[j]) {
+          if ($scope.shared_routes[j].id == route_id) {
+            $scope.shared_routes.splice(j, 1);
+            break;
+          }
+          j++;
+        }
+
+        $timeout(function() {
+           tick.close(); 
+        }, 1200);
+
+      },function (e) {
+        console.log(e)
+      });
+
+    }
+
+    function decline (route_id) {
+      var request = {
+        method: 'GET',
+        url: Auth.getApiUrl() + "/api/routes/decline/" + route_id,
+        headers : {
+          Authorization : 'Bearer ' + Auth.getUser().access_token
+        }
+      }
+
+      $http(request).then(function(result) {
+        console.log(result)
+        var feedback = $ionicPopup.show({
+          title : 'Successful!',
+          });
+        var j = 0;
+        while ($scope.shared_routes[j]) {
+          if ($scope.shared_routes[j].id == route_id) {
+            $scope.shared_routes.splice(j, 1);
+            break;
+          }
+          j++;
+        }
+
+        $timeout(function() {
+           feedback.close(); 
+        }, 1200);
+
+      },function (e) {
+        console.log(e)
+      });
+    }
+  })
 
 /*
 VIEW ROUTE CONTROLLER

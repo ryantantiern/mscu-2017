@@ -20,13 +20,12 @@
       <h3>
         <div ng-if="!show_mine"> My routes ({{ my_routes.length }}): </div>
         <div ng-if="show_mine"> 
-        <div ng-if="shared_routes.length == 0">
-          No pending routes
-        </div>
-        <div ng-if="sharedRoutes.length > 0">
-          Shared routes({{ shared_routes.length }}):
-        </div>
-        
+          <div ng-if="shared_routes.length == 0">
+            No pending routes
+          </div>
+          <div ng-if="shared_routes.length > 0">
+            Shared routes ({{ shared_routes.length }}):
+          </div>
         </div>
       </h3>
     </div>
@@ -49,8 +48,7 @@
       </div>
 
       <div id="sharedRoutes" ng-if="show_mine">
-
-        <a ng-click="seeRoute(route)" ng-repeat="route in shared_routes">
+        <a ng-click="sharedRoutesAction(route)" ng-repeat="route in shared_routes">
           <div class="card">
             <div class="item item-divider">
               {{ route.title }}
