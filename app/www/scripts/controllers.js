@@ -192,6 +192,19 @@ angular.module('starter.controllers',['starter.services'])
         if (event.results.length > 0) {
             $scope.recognizedText = event.results[0][0].transcript;
             $scope.$apply()
+            if ($scope.recognizedText == 'One') {
+              $state.go('friends');
+            } if ($scope.recognizedText == 'Two') {
+              $state.go('friend_requests');
+            } if ($scope.recognizedText == 'Three') {
+              $state.go('add_friend');
+            } if ($scope.recognizedText == ('Four' || 'For')) {
+              $state.go('create_route');
+            } if ($scope.recognizedText == 'Five') {
+              $state.go('my_routes');
+            } if ($scope.recognizedText == 'Six') {
+              $state.go('profile');
+            }
         }
     };
     recognition.start();

@@ -14,13 +14,11 @@
         {{ default_text }}
       </h3>
       <label class="item item-input">
-        <input ng-model="data.username" type="text" placeholder="Email" on-tap="speakText('Enter email address')" required>
+        <input ng-model="data.username" type="text" placeholder="Email" required>
       </label>
-      <button on-tap=record("username")> Record </button>
-      <label class="item item-input" on-tap="speakText('Enter password')">
-        <input ng-model="data.password" type="password" placeholder="Password" on-tap="speakText('Enter password')" required>
+      <label class="item item-input">
+        <input ng-model="data.password" type="password" placeholder="Password" required>
       </label>
-      <button on-tap=record("password")> Record </button>
       <div class="row">
         <div class="col col-50">
           <button on-tap="login(data)" on-hold="speakText('Log in')" class="button button-block button-positive">
