@@ -81,10 +81,16 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
                templateUrl: "templates/my_routes.html",
                controller: "MyRoutesCtrl"
         })
+
+    .state('view_route', {
+               url: "/view_route",
+               templateUrl: "templates/view_route.html",
+               controller: "ViewRouteCtrl"
+        })
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
-  $ionicConfigProvider.views.forwardCache(true);
+ // $ionicConfigProvider.views.forwardCache(true);
 })
 
 
@@ -93,8 +99,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
 
       // Prevent non authenticated user to access app
-      if ($location.path() != '/login' && $location.path() != '/register') {
-
+      if ($location.path() != '/login' && $location.path() != '/register ') {
           if (!Auth.getUser()) {
             event.preventDefault();
             $location.path('/login'); // Set path to /login

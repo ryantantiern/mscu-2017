@@ -1,17 +1,4 @@
 angular.module('starter.services',[])
-
-	.service('loginData', function() {
-	 return {
-	   form: {},
-	   getForm: function() {
-	     return this.form;
-	   },
-	   updateForm: function(form) {
-	     this.form = form;
-	   }
-	 }
-	})
-
 	.factory('Auth', function() {
 		var user;
 		var apiurl;
@@ -34,9 +21,25 @@ angular.module('starter.services',[])
 	.factory('RouteCreator', function () {
 		var start, end, waypoints;
 		return {
-			getStart : function () {return start;},
-			getEnd : function () {return end;},
-			getWaypoints : function () {return waypoints;},
+			getStart : function () {
+				if (start == null || (start.constructor == Array && start.length == 0) ) {
+					// So that empty array is not returned
+					return null;
+				}
+				return start;
+			},
+			getEnd : function () {
+				if (end == null || (end.constructor == Array && end.length == 0) ) {
+					return null;
+				}
+				return end;
+			},
+			getWaypoints : function () {
+				if (waypoints == null || (waypoints.constructor == Array && waypoints.length == 0) ) {
+					return null;
+				}
+				return waypoints;
+			},
 			addStart : function (start_args) {
 				if (!start) start = [];
 				if (start_args) {
@@ -94,7 +97,7 @@ angular.module('starter.services',[])
 
 
 
-	.factory('GeoLocation',[ '$cordovaGeolocation', '$ionicPopup' ,'BingLocationService', function( $cordovaGeolocation, $ionicPopup, BingLocationService) {
+	.factory('GeoLocation',[ '$cordovaGeolocation', '$ionicPopup', function( $cordovaGeolocation, $ionicPopup) {
 		var watch, frequency =700 ,
 			latitude=0, longitude=0, 
 			accuracy =0; 
@@ -143,10 +146,12 @@ angular.module('starter.services',[])
 		}
 	}])
 
-	.factory("BingLocationService", function($http, RouteCreator) {
+	.factory("BingLocationService", function($http, RouteCreator, GeoLocation) {
 
 		var credentials = "Av5wBqmsnnQASubvgnpJc-tfOm8-nSSCq3KteunuqY4s4lhtA3LuyupF5Xq1R8ng";
-		var distance = 0.5
+		var distance = 0.5;
+		var directionsManager;
+		var map;
 
 		function CallRestService(request) {
 			var script = document.createElement("script");
@@ -159,7 +164,7 @@ angular.module('starter.services',[])
 			convertToPoint : function (address, inputType) {
 				if (address === "") {return;}
 				var baseURL = "http://dev.virtualearth.net/REST/v1/Locations/";
-				var countryReg = ",GB";
+				var countryReg = ",England";
 				var addressLine = address + " " + countryReg;
 				var geocodeRequest = baseURL + encodeURI(addressLine) + "?output=json";
 				if (inputType === "s") {
@@ -173,7 +178,6 @@ angular.module('starter.services',[])
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
 									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								console.log(result.resourceSets[0].resources[i]);
 								RouteCreator.addStart(suggestion);
 							}
 				  		}
@@ -190,7 +194,6 @@ angular.module('starter.services',[])
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
 									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								console.log(result.resourceSets[0].resources[i]);
 								RouteCreator.addEnd(suggestion);
 							}
 				  		}
@@ -208,7 +211,6 @@ angular.module('starter.services',[])
 									coordinates :  result.resourceSets[0].resources[i].geocodePoints[0].coordinates,
 									entityType : result.resourceSets[0].resources[i].entityType,
 								}
-								console.log(result.resourceSets[0].resources[i]);
 								RouteCreator.addWaypoint(suggestion);
 							}
 				  		}	
@@ -221,7 +223,109 @@ angular.module('starter.services',[])
 				}
 
 				CallRestService(geocodeRequest);
-			}    
+			}, 
+
+			createRoute : function (wps, mapScope) {
+
+				map = mapScope;
+				// wps :: [[lat, lon], [lat, lon]]
+				Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+
+					   wps = JSON.parse(wps);
+				       var waypoints = [], startWp, endWp, viaWps = [];
+				       var lastIndex = wps.length - 1;
+
+				       // start, end and via waypoints
+				       startWp = [new Microsoft.Maps.Directions.Waypoint({
+				         location: GeoLocation.Location(wps[0][0], wps[0][1]),
+				         isViapoint: false
+				       })];
+
+				       endWp = [new Microsoft.Maps.Directions.Waypoint({
+				         location: GeoLocation.Location(wps[lastIndex][0], wps[lastIndex][1]),
+				         isViapoint: false
+				       })];
+
+				       for (var i = 1; i < lastIndex; i++) {
+				           var tempWp =  new Microsoft.Maps.Directions.Waypoint({
+				           location:  GeoLocation.Location(wps[i][0], wps[i][1]),
+				           isViapoint: true
+				          });
+				           viaWps.push(tempWp);
+				       }
+
+				       waypoints = startWp;
+				       for (var i = 0; i < viaWps.length; i++) {
+				         waypoints = waypoints.concat(viaWps[i]);
+				       }
+				       waypoints = waypoints.concat(endWp);
+
+				        //Create an instance of the directions manager.
+				        directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+				        //Set Route Mode to transit.
+				        directionsManager.setRequestOptions({
+				            routeMode: Microsoft.Maps.Directions.RouteMode.walking,
+				            distanceUnit: Microsoft.Maps.Directions.DistanceUnit.km,
+				            routeDraggable: false
+				        });
+
+				        //Add waypoints.
+				        for(var i = 0; i <waypoints.length; i++) {
+				         directionsManager.addWaypoint(waypoints[i]);
+				        }
+
+				        //Calculate directions.
+				        directionsManager.calculateDirections();
+				        Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', directionsUpdated);
+				   });
+
+				function directionsUpdated(e) {
+				  var currentRoute, layer, selectedColour, coord, loc, pin;
+
+				  currentRoute = directionsManager.getCurrentRoute();
+				  layer = new Microsoft.Maps.Layer();
+
+				  for (var i = 0; i < currentRoute.routeLegs.length; i++) {
+				    selectedColour = "blue";
+				    if (i == 0) { selectedColour = "green" }
+
+				  	coord = [currentRoute.routeLegs[i].startWaypointLocation.latitude, 
+				  	  currentRoute.routeLegs[i].startWaypointLocation.longitude];
+				  	loc = GeoLocation.Location(coord[0], coord[1]);
+				  	pin = new Microsoft.Maps.Pushpin(loc, {
+				  	  color: selectedColour,
+				  	  text: i+1 + ""
+				  	});
+				  	Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
+				  	  console.log("im here");
+				  	});
+				  	layer.add(pin);
+
+				    if (i == currentRoute.routeLegs.length - 1) {
+				      coord = [currentRoute.routeLegs[i].endWaypointLocation.latitude, 
+				        currentRoute.routeLegs[i].endWaypointLocation.longitude];
+				      loc = GeoLocation.Location(coord[0], coord[1]);
+				      pin = new Microsoft.Maps.Pushpin(loc, {
+				        color: "red",
+				        text: i+2 + ""
+				      });
+				      Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
+				        console.log("im here")
+				      });
+				      layer.add(pin);
+				  	}
+				  }
+				 map.layers.insert(layer);
+				}
+			}, 
+			resetDirectionsManager : function () {
+				if (directionsManager) {
+					directionsManager.clearAll();
+					directionsManager.clearDisplay();
+					map.layers.clear();
+				}
+			}
 		}
 	})
 
