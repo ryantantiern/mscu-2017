@@ -1230,6 +1230,8 @@ VIEW ROUTE CONTROLLER
     $scope.itineraryItems = BingLocationService.getItineraryItems();
   });
 
+  // TODO (Nadia): Text ot Speech on itinerary items list
+
   $scope.goBack = function () {
     $state.go('view_route');
   }
