@@ -19,7 +19,9 @@ angular.module('starter.controllers',['starter.services'])
            data : {
              grant_type: "password",
              client_id: "2",
-             client_secret: "USpZo3NtpMYSmMzt0o2aYQn7RraSNKbiWAs8leJZ",
+             client_secret: "aWp7UktCBl9TULyr6iYOreKXtkfYz6NJDnLUOe5P",
+             // Development: m1YfbxAkR1nKsoXX3YmwTr47seXlc06o80ypUoTJ
+             // Production: aWp7UktCBl9TULyr6iYOreKXtkfYz6NJDnLUOe5P
              username : $scope.data.username,
              password : $scope.data.password,
              scope : "*"
@@ -31,7 +33,6 @@ angular.module('starter.controllers',['starter.services'])
          }
          $http(request).then(function(result) {
            if (result.data.access_token) {
-
             $http({
               method: "GET",
               url : Auth.getApiUrl() + "/api/user",
@@ -44,8 +45,10 @@ angular.module('starter.controllers',['starter.services'])
               $state.go('dashboard');
             });
            }
+           // console.log(result);
        }, function(e) {
-              alert(e.data.error + ': ' + e.data.message);
+            console.log(e);
+            alert(e.data.error + ': ' + e.data.message);
           });
 
          // Ryan - end
@@ -104,7 +107,7 @@ angular.module('starter.controllers',['starter.services'])
             $scope.goToLogin();
           }
           else {
-            console.log(result);
+            // console.log(result);
             alert("Something went wrong");
           }
         });
@@ -208,7 +211,6 @@ angular.module('starter.controllers',['starter.services'])
   $scope.friend_list = {};
 
   $scope.rawFriends = [];
-  console.log($scope.rawFriends);
 
   $scope.$on('$ionicView.beforeEnter', function () {
     var request = {
@@ -307,25 +309,21 @@ angular.module('starter.controllers',['starter.services'])
       var interval = setInterval(function () {
         suggestions = RouteCreator.getWaypoints();
         if (suggestions) {
-          console.log(suggestions)
           $scope.suggestions = suggestions;
 
           // TODO: change this
           $scope.wpAddresses[wpIndex] = $scope.suggestions[0];
-          console.log($scope.wpAddresses)
           clearInterval(interval);
         }
       }, 50);
      $scope.suggestionFlag = wpIndex;
 
     }
-
-    console.log($scope.suggestionFlag);
-    console.log(wpIndex);
   }
 
   $scope.selectSuggest = function (suggestion) {
-    console.log(suggestion)
+    // TODO: allow sellection of suggested places
+    // console.log(suggestion)
   }
 
   $scope.next = function () {
@@ -339,10 +337,9 @@ angular.module('starter.controllers',['starter.services'])
       end: $scope.endAddress,
       wps : $scope.wpAddresses
     }
-    console.log(route);
     RouteData.set(route);
     $state.go("customize_route");
-    console.log(RouteData.get())
+
   }
 
 })
@@ -351,10 +348,14 @@ angular.module('starter.controllers',['starter.services'])
 /**CONTROLLER
  */
 
-  .controller('CustomizeRouteCtrl', function($scope,$ionicPopup, $state, RouteData, Auth, $http, GeoLocation) {
+  .controller('CustomizeRouteCtrl', function($scope,$ionicPopup, $state, RouteData, Auth, $http, GeoLocation, Waypoint) {
     var directionsManager;
+    var originalWps = [];
+    var routeLen;
     $scope.data = {};
     $scope.map = {};
+    $scope.wp = {description : ""};
+
 
     $scope.goBack = function () {
       $state.go('create_route');
@@ -370,41 +371,35 @@ angular.module('starter.controllers',['starter.services'])
       $scope.data.wps = [];
 
       var currentRoute = directionsManager.getCurrentRoute();
+      var count = 0;
+      var waypointsPayload = {};
+
 
       // push actualStart : (lat,lon) & startDescription
       // If StartAddress or EndAddress, use Start/EndAddress as startDescription instead
       for (var i = 0; i < currentRoute.routeLegs.length; i++) {
         for (var j = 0; j < currentRoute.routeLegs[i].subLegs.length; j++ ) {
-          $scope.data.wps.push([
-            currentRoute.routeLegs[i].subLegs[j].actualStart.latitude, 
-            currentRoute.routeLegs[i].subLegs[j].actualStart.longitude
-          ]);
+          if (j == 0) {
+            waypointsPayload[count] = originalWps[i].toLean();
+          }
+          else {
+            waypointsPayload[count] = Waypoint.LeanWp(
+              count,
+              currentRoute.routeLegs[i].subLegs[j].actualStart.latitude,
+              currentRoute.routeLegs[i].subLegs[j].actualStart.longitude
+              );
+          }
+          count++;
         }
       }
-      $scope.data.wps.push([
-        currentRoute.routeLegs[currentRoute.routeLegs.length - 1]
-          .subLegs[currentRoute.routeLegs[currentRoute.routeLegs.length - 1].subLegs.length - 1]
-          .actualEnd
-          .latitude, 
-        currentRoute.routeLegs[currentRoute.routeLegs.length - 1]
-          .subLegs[currentRoute.routeLegs[currentRoute.routeLegs.length - 1].subLegs.length - 1]
-          .actualEnd
-          .longitude
-       ]);
 
-/*      $scope.data.wps = []
-      $scope.data.wps = directionsManager.getAllWaypoints();*/
-
-
-/*      $scope.data.wps = $scope.data.wps.map(function (wp) {
-        var coord = [wp._waypointOptions.location.latitude, wp._waypointOptions.location.longitude];
-        return coord;
-      });*/
+     waypointsPayload[count] = originalWps[currentRoute.routeLegs.length].toLean();
+     // console.log(waypointsPayload);
       var request = {
         method : 'POST',
         url : Auth.getApiUrl() + "/api/routes/create",
         data : {
-          coordinates: JSON.stringify($scope.data.wps),
+          waypoints: waypointsPayload, // now called waypoints
           title: ($scope.data.title) ? $scope.data.title : "",
           description: ($scope.data.description) ? $scope.data.description: "",
           start_address:  ($scope.data.startAddress) ? $scope.data.startAddress : "",
@@ -419,10 +414,10 @@ angular.module('starter.controllers',['starter.services'])
       $http(request).then(function(result) {
         alert("Route Saved!");
         $state.go('my_routes');
+        // console.log(result);
       }, function (e) {
         console.log(e);
-        alert("Error occured. check console log");
-        $state.go('my_routes');
+        alert(e);
       });
 
 
@@ -479,7 +474,8 @@ angular.module('starter.controllers',['starter.services'])
              for (var i = 0; i < data.wps.length; i++) {
                 data.wps[i].waypoints =  new Microsoft.Maps.Directions.Waypoint({
                  address: data.wps[i].address,
-                 isViapoint: true
+                 isViapoint: true,
+
                 });
              }
 
@@ -489,6 +485,10 @@ angular.module('starter.controllers',['starter.services'])
              }
              waypoints = waypoints.concat(data.end.waypoints);
 
+             // Used in directionsUpdated
+             routeLen = waypoints.length;
+
+             // console.log(waypoints);
               //Create an instance of the directions manager.
               directionsManager = new Microsoft.Maps.Directions.DirectionsManager($scope.map);
 
@@ -509,18 +509,53 @@ angular.module('starter.controllers',['starter.services'])
               Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', directionsUpdated);
 
 
+
          });
-    })
+    });
+
+    function saveWaypointMetadata (i) {
+      originalWps[i].setDesc($scope.wp.description);
+    }
+
+    function pushpinPopup (address, description, i) { 
+      $scope.wp.description = description;
+      $ionicPopup.show({
+          template: 'Description<textarea ng-model="wp.description"></textarea>',
+          title: address,
+          subTitle: '',
+          scope: $scope,
+          buttons: [{
+             text: 'Cancel'
+          }, 
+          {
+             text: '<b>Save</b>',
+             type: 'button-positive',
+             onTap: function() {
+                saveWaypointMetadata(i);
+             }
+          }]
+       });
+    }
+
 
     function directionsUpdated(e) {
       var currentRoute = directionsManager.getCurrentRoute();
       var layer = new Microsoft.Maps.Layer();
-      for (var i = 0; i < currentRoute.routeLegs.length; i++) {
+      var thisAddress;
+      var selectedColour;
 
-        var selectedColour = "blue";
-        if (i == 0) {
+      var routeData = RouteData.get();
+
+      for (var i = 0; i < currentRoute.routeLegs.length; i++) { 
+        if (i == 0) { 
+          thisAddress = routeData.start.address;
           selectedColour = "green"
         }
+        else {
+          thisAddress = routeData.wps[i-1].address
+          selectedColour = "blue";
+        }
+
         var coord = [currentRoute.routeLegs[i].startWaypointLocation.latitude, 
           currentRoute.routeLegs[i].startWaypointLocation.longitude];
         var loc = GeoLocation.Location(coord[0], coord[1]);
@@ -528,11 +563,30 @@ angular.module('starter.controllers',['starter.services'])
           color: selectedColour,
           text: i+1 + ""
         })
-        layer.add(pin);
+        // Should only run once
+        if (originalWps.length != routeLen) {
+          // Create Waypoint objects
+          var waypointObject = Waypoint.Wp(
+              i, 
+              coord[0],
+              coord[1],
+              thisAddress
+            )
+          originalWps.push(waypointObject);
+        }
+        var value = i;
         Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
-          console.log("im here")
+          // e.target.entity.iconText must be an INT  
+          pushpinPopup(
+            originalWps[e.target.entity.iconText - 1].address.split(",")[0], 
+            originalWps[e.target.entity.iconText - 1].description,
+            e.target.entity.iconText - 1);
+
         });
 
+        layer.add(pin);
+
+        // Because #routeLegs = #waypoints - 1
         if (i == currentRoute.routeLegs.length - 1) {
           var coord = [currentRoute.routeLegs[i].endWaypointLocation.latitude, 
             currentRoute.routeLegs[i].endWaypointLocation.longitude];
@@ -541,17 +595,36 @@ angular.module('starter.controllers',['starter.services'])
             color: "red",
             text: i+2 + ""
           })
-          layer.add(pin);
+
+          if (originalWps.length != routeLen) {
+            thisAddress = routeData.end.address;
+            var waypointObject = Waypoint.Wp(
+                i+1, 
+                coord[0],
+                coord[1],
+                thisAddress
+            )
+            originalWps.push(waypointObject);
+          }
+
           Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
-            console.log("im here")
+            pushpinPopup(
+              originalWps[routeLen - 1].address.split(",")[0], 
+              originalWps[routeLen - 1].description,
+              e.target.entity.iconText - 1);
           });
 
-
+          layer.add(pin);
 
         }
+
+
       }
       $scope.map.layers.insert(layer);
+
     }
+
+    // function wpPopup()
 
   })
 
@@ -871,14 +944,20 @@ angular.module('starter.controllers',['starter.services'])
         for (var i = 0; i < result.data.count; i++) {
           $scope.my_routes.push({
             id: result.data.routes[i].id,
-            body: result.data.routes[i].body,
+            body: result.data.routes[i].body, // Won't need this
             title:  result.data.routes[i].title, 
             description: result.data.routes[i].description,
             start_address: result.data.routes[i].start_address,
             end_address: result.data.routes[i].end_address,
+            _created_at : result.data.routes[i].created_at,
             created_at : result.data.routes[i].created_at.date.split(" ")[0]
           });
         }
+
+        $scope.my_routes.sort(function(a, b){
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+
        }, function(e) {
         console.log(e)
        }
@@ -897,6 +976,7 @@ angular.module('starter.controllers',['starter.services'])
               description: result.data.response[i].description,
               start_address: result.data.response[i].start_address,
               end_address: result.data.response[i].end_address,
+              _created_at : result.data.routes[i].created_at,
               created_at : result.data.response[i].created_at.split(" ")[0]
             });
           }
@@ -939,9 +1019,20 @@ angular.module('starter.controllers',['starter.services'])
   $scope.seeRoute = function(route)
   {
      // TODO (ryan) : here add the routing towards the map from my routes
-     RouteData.set(route.body);
-     $state.go('view_route');
-    
+     var waypointsRequest = {
+          method : 'GET',
+          url : Auth.getApiUrl() + "/api/routes/waypoints/" + route.id,
+          headers : {
+            Authorization : 'Bearer ' + Auth.getUser().access_token
+          }
+        }
+      $http(waypointsRequest).then(function(result) {
+        RouteData.set(result.data[0]);
+        $state.go('view_route');
+      }, function (e) {
+        console.log(e);
+        alert("An error has occured");
+      })
   }
 
 
@@ -995,11 +1086,6 @@ angular.module('starter.controllers',['starter.services'])
         });
       }
     }
-    if (requests) {
-      for (var i = 0; i < requests.length; i++) {
-        $http(requests[i]).then(function(result) {console.log(result)},function (e) {console.log(e)});
-      }
-    }
     $scope.modal.hide();
   }
 
@@ -1049,7 +1135,7 @@ angular.module('starter.controllers',['starter.services'])
       }
     }
       $http(request).then(function(result) {
-        console.log(result)
+        // console.log(result)
         var tick = $ionicPopup.show({
           title : '<img id="tick" src="../img/tick.png" style="height: 50px; width: 50px">',
           });
@@ -1082,7 +1168,7 @@ angular.module('starter.controllers',['starter.services'])
       }
 
       $http(request).then(function(result) {
-        console.log(result)
+        // console.log(result)
         var feedback = $ionicPopup.show({
           title : 'Successful!',
           });
@@ -1118,10 +1204,14 @@ VIEW ROUTE CONTROLLER
   }
 
   $scope.$on('$ionicView.afterEnter', function () {
-    route = RouteData.get();
-    BingLocationService.createRoute(route, $scope.map);
+    waypoints = RouteData.get();
+    BingLocationService.renderRoute(waypoints, $scope.map);
 
   });
+
+  $scope.viewDirections = function () {
+    $state.go('directions');
+  }
 
   $scope.goBack = function () {
     RouteData.reset();      
@@ -1129,5 +1219,18 @@ VIEW ROUTE CONTROLLER
     $scope.map.layers.clear();
     BingLocationService.resetDirectionsManager();
   }
-}) 
+})
 
+/**
+ * DIRECTIONS CONTROLLER
+ */
+.controller('DirectionsCtrl', function($state, $scope, BingLocationService) {
+  $scope.itineraryItems = [];
+  $scope.$on('$ionicView.afterEnter', function () {
+    $scope.itineraryItems = BingLocationService.getItineraryItems();
+  });
+
+  $scope.goBack = function () {
+    $state.go('view_route');
+  }
+})

@@ -1,4 +1,6 @@
 angular.module('starter.services',[])
+	
+
 	.factory('Auth', function() {
 		var user;
 		var apiurl;
@@ -77,6 +79,61 @@ angular.module('starter.services',[])
 				if (e) { end = null; }
 				if (wp) { waypoints = []; }	
 			}
+		}
+	})
+
+	.factory('Waypoint', function () {
+		function Wp(pos, latitude, longitude, add=null, desc=null, t=null) {
+			var wpObj = {
+				position:  pos,
+				lat: latitude,
+				lon: longitude,
+				address: (add)? add : "", 
+				description: (desc)? description : "",
+				tag: (t)? t : "",
+				setAdd: function (newAdd) {
+					this.address = newAdd;
+				},
+				setDesc: function (newDesc) {
+					this.description = newDesc
+				},
+				setTag: function (newTag) {
+					this.tag = newTag
+				}, 
+				setPos: function (newPos) {
+					this.position = newPos;
+				},
+				toLean: function () {
+					return {
+						lat: this.lat,
+						lon: this.lon,
+						address: this.address, 
+						description: this.description,
+						tag: this.tag,
+					}
+				}
+			};
+
+			return wpObj;
+		}
+
+		function LeanWp(pos, latitude, longitude, add=null, desc=null, t=null) {
+			var wpObj = {
+				//position:  pos,
+				lat: latitude,
+				lon: longitude,
+				address: (add)? add : "", 
+				description: (desc)? description : "",
+				tag: (t)? t : ""
+			}
+
+			return wpObj;
+		}
+
+
+		return {
+			Wp : Wp,
+			LeanWp: LeanWp
 		}
 	})
 
@@ -225,40 +282,37 @@ angular.module('starter.services',[])
 				CallRestService(geocodeRequest);
 			}, 
 
-			createRoute : function (wps, mapScope) {
+			renderRoute : function (wps, mapScope) {
 
 				map = mapScope;
+				var infoboxes = [];
+				var infoboxToggle = false;
 				// wps :: [[lat, lon], [lat, lon]]
 				Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+					   infoboxes = [];
+				       var waypoints = [];
 
-					   wps = JSON.parse(wps);
-				       var waypoints = [], startWp, endWp, viaWps = [];
 				       var lastIndex = wps.length - 1;
-
-				       // start, end and via waypoints
-				       startWp = [new Microsoft.Maps.Directions.Waypoint({
-				         location: GeoLocation.Location(wps[0][0], wps[0][1]),
-				         isViapoint: false
-				       })];
-
-				       endWp = [new Microsoft.Maps.Directions.Waypoint({
-				         location: GeoLocation.Location(wps[lastIndex][0], wps[lastIndex][1]),
-				         isViapoint: false
-				       })];
-
-				       for (var i = 1; i < lastIndex; i++) {
-				           var tempWp =  new Microsoft.Maps.Directions.Waypoint({
-				           location:  GeoLocation.Location(wps[i][0], wps[i][1]),
-				           isViapoint: true
-				          });
-				           viaWps.push(tempWp);
-				       }
-
-				       waypoints = startWp;
-				       for (var i = 0; i < viaWps.length; i++) {
-				         waypoints = waypoints.concat(viaWps[i]);
-				       }
-				       waypoints = waypoints.concat(endWp);
+				       for (var i = 0; i < wps.length; i++) {
+				       		if (i == 0 || i == wps.length - 1) {
+		       			       	waypoints.push(
+		       			       		new Microsoft.Maps.Directions.Waypoint({
+		       				         address: wps[i].address,
+		       				         isViapoint: false
+		       				     	})
+		       			       	);
+				       		}
+				       		else {
+				       			waypoints.push(
+						       		new Microsoft.Maps.Directions.Waypoint({
+							         location: GeoLocation.Location(wps[i].lat, wps[i].lon),
+							         isViapoint: true
+							     	})
+					       		);
+				       		}
+	
+				       	}
+	
 
 				        //Create an instance of the directions manager.
 				        directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
@@ -269,22 +323,36 @@ angular.module('starter.services',[])
 				            distanceUnit: Microsoft.Maps.Directions.DistanceUnit.km,
 				            routeDraggable: false
 				        });
-
+				        infoboxToggle = false;
 				        //Add waypoints.
 				        for(var i = 0; i <waypoints.length; i++) {
-				         directionsManager.addWaypoint(waypoints[i]);
+							directionsManager.addWaypoint(waypoints[i]);
+							if (wps[i].description) {
+								var infobox = new Microsoft.Maps.Infobox(
+									GeoLocation.Location(wps[i].lat, wps[i].lon),
+									{
+										description: wps[i].description,
+										visible: false,
+										showCloseButton: false,
+										maxWidth: 186
+									});
+								infobox.setMap(map);
+								infoboxes.push(infobox);
+							}
 				        }
 
 				        //Calculate directions.
 				        directionsManager.calculateDirections();
 				        Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', directionsUpdated);
+				        Microsoft.Maps.Events.addHandler(map, 'click', toggleInfoboxes);
+
 				   });
 
 				function directionsUpdated(e) {
-				  var currentRoute, layer, selectedColour, coord, loc, pin;
+
+				  var currentRoute, selectedColour, coord, loc, pin;
 
 				  currentRoute = directionsManager.getCurrentRoute();
-				  layer = new Microsoft.Maps.Layer();
 
 				  for (var i = 0; i < currentRoute.routeLegs.length; i++) {
 				    selectedColour = "blue";
@@ -297,10 +365,8 @@ angular.module('starter.services',[])
 				  	  color: selectedColour,
 				  	  text: i+1 + ""
 				  	});
-				  	Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
-				  	  console.log("im here");
-				  	});
-				  	layer.add(pin);
+
+				  	map.entities.push(pin);
 
 				    if (i == currentRoute.routeLegs.length - 1) {
 				      coord = [currentRoute.routeLegs[i].endWaypointLocation.latitude, 
@@ -310,21 +376,39 @@ angular.module('starter.services',[])
 				        color: "red",
 				        text: i+2 + ""
 				      });
-				      Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
-				        console.log("im here")
-				      });
-				      layer.add(pin);
+				      map.entities.push(pin);
 				  	}
 				  }
-				 map.layers.insert(layer);
+				}
+
+				function toggleInfoboxes () {
+					infoboxToggle = (infoboxToggle) ? false : true;
+					if (infoboxes.length > 0) {
+						for (i in infoboxes) {
+							infoboxes[i].setOptions({
+								visible: infoboxToggle
+							});
+						}
+					}
 				}
 			}, 
 			resetDirectionsManager : function () {
 				if (directionsManager) {
 					directionsManager.clearAll();
 					directionsManager.clearDisplay();
-					map.layers.clear();
+					map.entities.clear();
 				}
+			}, 
+			getItineraryItems: function () {
+				var routeLegs = directionsManager.getCurrentRoute().routeLegs;
+				var itineraryItems = [];
+				for (var i = 0; i < routeLegs.length; i++) {
+					var localItinenaryItems = routeLegs[i].itineraryItems;
+					for(var j = 0; j < localItinenaryItems.length; j++) {
+						itineraryItems.push(localItinenaryItems[j].preIntersectionHints[0]);
+					}
+				}
+				return itineraryItems;
 			}
 		}
 	})

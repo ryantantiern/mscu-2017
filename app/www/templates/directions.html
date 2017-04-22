@@ -1,0 +1,18 @@
+<ion-view view-title="My routes">
+  <ion-content class="padding-top padding-bottom">
+    <div class="row">
+      <div class="col col-33">
+        <a ng-click="goBack()"  class="icon-left button button-clear button-dark ion-chevron-left">
+          Back
+        </a>
+      </div>
+    </div>
+    
+    <div class="directions itinerary-items">
+      <div class="card" ng-repeat="itinerary in itineraryItems">
+        <div class="item item-text-wrap">{{ itinerary }}</div>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>
