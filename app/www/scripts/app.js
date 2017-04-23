@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controllers', 'starter.services', 'starter.directives'])
+angular.module('starter', ['ionic', 'ionic.cloud', 'ngCordova', 'ngStorage', 'starter.controllers', 'starter.services', 'starter.directives'])
 
 .run(function($ionicPlatform, $localStorage, GeoLocation, $cordovaPush) {
   $ionicPlatform.ready(function() {
@@ -23,7 +23,13 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
     GeoLocation.getConstantLocation();
   });
 })
-.config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider){
+.config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicCloudProvider){
+
+  $ionicCloudProvider.init({
+      "core": {
+        "app_id": "a7c50deb"
+      }
+    });
 
   $stateProvider
     .state('login', {
@@ -87,6 +93,11 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
                templateUrl: "templates/view_route.html",
                controller: "ViewRouteCtrl"
         })
+    .state('directions', {
+               url: "/directions",
+               templateUrl: "templates/directions.html",
+               controller: "DirectionsCtrl"
+        })
   $urlRouterProvider.otherwise("/login");
 
   // Cache forward navigations
@@ -97,7 +108,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngStorage', 'starter.controlle
 .run(function($rootScope, $location,  $state, Auth) {
   $rootScope.$on('$stateChangeStart', function (event) {
       if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
-
+      // "http://second-year-project.azurewebsites.net"
       // Prevent non authenticated user to access app
       if ($location.path() != '/login' && $location.path() != '/register ') {
           if (!Auth.getUser()) {

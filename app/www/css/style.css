@@ -1,8 +1,13 @@
 /* Empty. Add your own CSS if you like */
+@import url('https://fonts.googleapis.com/css?family=Quicksand:500');
 
 ion-content {
   background-image: url('../img/bg2.jpg');
   background-size: cover;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
 }
 
 .bar-header {
@@ -70,5 +75,16 @@ textarea:disabled {
 
 .icon-assertive {
   color: #FF0000;
+}
+
+/* Directions */
+.directions.itinerary-items >.card >.item
+{
+  background-color: #ccf5ff;
+}
+
+/* Customize Route */
+.create-route > input[type="text"] {
+  background-color: #f8f8f8;
 }
 

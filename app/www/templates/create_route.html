@@ -6,45 +6,46 @@
         Back
       </a>
     </div>
-
-		<div class="list">
-			<label class="item item-input item-stacked-label">
-				<span class="input-label">Start</span>
-				<input ng-model="startAddress.address" ng-change="getSuggestions(startAddress.address, 's')" ng-focus="suggestions = null" ng-model-options="{ debounce: 500 }"  type="text" placeholder="Enter starting address" >
-			</label>
-
-			<div ng-if="suggestionFlag == 's' && suggestions.length > 0">
-				<div ng-repeat="suggestion in suggestions" ng-click="selectSuggest(suggestion)"n>
-					<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
-				</div>
-			</div>
-
-			<label class="item item-input item-stacked-label">
-				<span class="input-label">End</span>
-					<input ng-model="endAddress.address" ng-change="getSuggestions(endAddress.address, 'e')" ng-focus="suggestions = null" ng-model-options="{ debounce: 500 }" type="text" placeholder="Enter ending address" >
-			</label>
-
-			<div ng-if="suggestionFlag == 'e' && suggestions.length > 0">
-				<div ng-repeat="suggestion in suggestions" ng-click="selectSuggest(suggestion)">
-					<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
-				</div>
-			</div>
-
-		</div>
-
-		<div ng-if="wpAddresses.length > 0">
+		
+		<div class="create-route">
 			<div class="list">
-				<div ng-repeat="(i, wp) in wpAddresses track by $index">
-					<label class="item item-input item-label">
-						<span class="input-label">Way Point {{i+1}}</span>
-						<input ng-model="wp.address" ng-change="getSuggestions(wp.address, 'wp', i)" ng-model-options="{ debounce: 500 }" type="text" ng-focus="suggestions = null">
-					</label>
-					<div ng-if="suggestionFlag == '{{i}}' && suggestions.length > 0">
-						<div ng-repeat="suggestion in suggestions" ng-click="selectSuggest(suggestion)">
-							<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
-						</div>
-					</div>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Start</span>
+					<input ng-model="startAddress.address" ng-change="getSuggestions(startAddress.address, 's')" ng-focus="suggestions = null" ng-model-options="{ debounce: 700 }"  type="text" style="background-color: #FFF;" >
+				</label>
 
+				<div ng-if="suggestionFlag == 's' && suggestions.length > 0">
+					<div ng-repeat="suggestion in suggestions" ng-click="selectSuggest(suggestion)"n>
+						<label class="item">{{suggestion.address}}</label>
+					</div>
+				</div>
+
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">End</span>
+						<input ng-model="endAddress.address" ng-change="getSuggestions(endAddress.address, 'e')" ng-focus="suggestions = null" ng-model-options="{ debounce: 700 }" type="text"  style="background-color: #FFF;" >
+				</label>
+
+				<div ng-if="suggestionFlag == 'e' && suggestions.length > 0">
+					<div ng-repeat="suggestion in suggestions" ng-click="selectSuggest(suggestion)">
+						<label class="item">{{suggestion.address}}</label>
+					</div>
+				</div>
+			</div>
+
+			<div ng-if="wpAddresses.length > 0">
+				<div class="list">
+					<div ng-repeat="(i, wp) in wpAddresses track by $index">
+						<label class="item item-input item-label">
+							<span class="input-label">Way Point {{i+1}}</span>
+							<input ng-model="wp.address" ng-change="getSuggestions(wp.address, 'wp', i)" ng-model-options="{ debounce: 500 }" type="text" ng-focus="suggestions = null">
+						</label>
+						<div ng-if="suggestionFlag == '{{i}}' && suggestions.length > 0">
+							<div ng-repeat="suggestion in suggestions" ng-click="selectSuggest(suggestion)">
+								<label class="item" style="background-color: #F8F8F8;">{{suggestion.address}}</label>
+							</div>
+						</div>
+
+					</div>
 				</div>
 			</div>
 		</div>
