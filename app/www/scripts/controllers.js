@@ -155,10 +155,6 @@ angular.module('starter.controllers',['starter.services'])
 
 .controller('DashboardCtrl', function($scope, $state, $ionicPopover, Auth, GeoLocation) {
   // Assign user_data to autheticated user
-<<<<<<< HEAD
-  $scope.$on('$ionicView.beforeEnter', function() {
-    $scope.user_data = Auth.getUser();
-  });
 
    $scope.recognizedText = '';
  
@@ -182,7 +178,7 @@ angular.module('starter.controllers',['starter.services'])
             $scope.$apply()
             if ($scope.recognizedText == 'One') {
               $state.go('friends');
-            } if ($scope.recognizedText == 'Two') {
+            } if ($scope.recognizedText == ('Two' || 'To' || 'Too')) {
               $state.go('friend_requests');
             } if ($scope.recognizedText == 'Three') {
               $state.go('add_friend');
@@ -199,9 +195,7 @@ angular.module('starter.controllers',['starter.services'])
   };
 
   // Ryan - end
-=======
   $scope.user_data = Auth.getUser();
->>>>>>> origin/master
 
   $scope.goViewFriends = function (){
       $state.go('friends');
@@ -923,12 +917,8 @@ angular.module('starter.controllers',['starter.services'])
   }
 })
 
-<<<<<<< HEAD
-.controller('MyRoutesCtrl', function($scope, $state, Auth, $http) {
-=======
 
 .controller('MyRoutesCtrl', function($scope, $state, Auth, $http, RouteData, $ionicActionSheet, $ionicModal, $ionicPopup, $timeout) {
->>>>>>> origin/master
 
   $scope.my_routes = [];
   $scope.shared_routes = [];
@@ -960,6 +950,73 @@ angular.module('starter.controllers',['starter.services'])
         console.log(e)
        }
      );
+
+ 
+$scope.sleep = function(milliseconds){
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+};
+
+
+
+
+  $scope.speakText = function(string) {
+    window.TTS.speak({
+           text: string,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           // Do Something after success
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+
+
+  $scope.readRoutes = function() {
+    $scope.sleep(3000)
+    for (var i = 0; i < $scope.my_routes.length; i++) {
+      $scope.sleep(7000)
+      $scope.speakText($scope.my_routes[i].title)
+      $scope.sleep(5000)
+    }
+  };
+
+
+
+  $scope.recognizedText = '';
+ 
+  $scope.record = function() {
+    var recognition = new SpeechRecognition();
+    recognition.onresult = function(event) {
+        if (event.results.length > 0) {
+            $scope.recognizedText = event.results[0][0].transcript;
+            $scope.$apply()
+            if ($scope.recognizedText == 'One') {
+              $scope.seeRoute(scope.my_routes[1])
+            } if ($scope.recognizedText == ('Two' || 'To' || 'Too')) {
+              $scope.seeRoute(scope.my_routes[2])
+            } if ($scope.recognizedText == 'Three') {
+              $scope.seeRoute(scope.my_routes[3])
+            } if ($scope.recognizedText == ('Four' || 'For')) {
+              $scope.seeRoute(scope.my_routes[4])
+            } if ($scope.recognizedText == 'Five') {
+              $scope.seeRoute(scope.my_routes[5])
+            } if ($scope.recognizedText == 'Six') {
+              $scope.seeRoute(scope.my_routes[6])
+            }
+        }
+    };
+    recognition.start();
+  };
+
+
+
+
      // list pending received routes
      var pendingRoutes = routesRequest;
      pendingRoutes.url = Auth.getApiUrl() + "/api/routes/received";
