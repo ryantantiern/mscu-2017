@@ -49,6 +49,7 @@ angular.module('starter.controllers',['starter.services'])
        }, function(e) {
             console.log(e);
             alert(e.data.error + ': ' + e.data.message);
+            alert("Input valid client secret");
           });
 
          // Ryan - end
@@ -148,6 +149,7 @@ angular.module('starter.controllers',['starter.services'])
           $state.go('my_routes')
   };
   $scope.logout = function () {
+          $scope.user_data = {};
           $state.go('login');
   };
 
@@ -967,6 +969,7 @@ angular.module('starter.controllers',['starter.services'])
      pendingRoutes.url = Auth.getApiUrl() + "/api/routes/received";
      $scope.shared_routes = [];
      $http(pendingRoutes).then(function(result) {
+      console.log(result.data);
         if (result.data.response.constructor == Array) {
           for (var i = 0; i < result.data.response.length; i++) {
             $scope.shared_routes.push({
@@ -976,7 +979,7 @@ angular.module('starter.controllers',['starter.services'])
               description: result.data.response[i].description,
               start_address: result.data.response[i].start_address,
               end_address: result.data.response[i].end_address,
-              _created_at : result.data.routes[i].created_at,
+              _created_at : result.data.response[i].created_at,
               created_at : result.data.response[i].created_at.split(" ")[0]
             });
           }
@@ -1086,6 +1089,11 @@ angular.module('starter.controllers',['starter.services'])
         });
       }
     }
+    for (var i in requests) {
+      $http(requests[i]).then(function(result){
+        console.log(result);
+      });
+    }
     $scope.modal.hide();
   }
 
@@ -1137,7 +1145,7 @@ angular.module('starter.controllers',['starter.services'])
       $http(request).then(function(result) {
         // console.log(result)
         var tick = $ionicPopup.show({
-          title : '<img id="tick" src="../img/tick.png" style="height: 50px; width: 50px">',
+          title : '<h1>Successful</h1>',
           });
         var j = 0;
         while ($scope.shared_routes[j]) {
@@ -1228,6 +1236,7 @@ VIEW ROUTE CONTROLLER
   $scope.itineraryItems = [];
   $scope.$on('$ionicView.afterEnter', function () {
     $scope.itineraryItems = BingLocationService.getItineraryItems();
+    console.log($scope.itineraryItems);
   });
 
   // TODO (Nadia): Text ot Speech on itinerary items list

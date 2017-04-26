@@ -7,9 +7,8 @@
         </a>
       </div>
     </div>
-    
     <div class="directions itinerary-items">
-      <div class="card" ng-repeat="itinerary in itineraryItems">
+      <div class="card" ng-repeat="(i, itinerary) in itineraryItems track by $index">
         <div class="item item-text-wrap">{{ itinerary }}</div>
       </div>
     </div>
