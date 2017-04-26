@@ -16,7 +16,10 @@ class CreateRoutesTable extends Migration
         Schema::create('routes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->json('body');
+            $table->string('title');
+            $table->longText('description');
+            $table->string('start_address');
+            $table->string('end_address');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

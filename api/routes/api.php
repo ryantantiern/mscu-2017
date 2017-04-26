@@ -47,6 +47,7 @@ Route::post('/register', 'RegisterController@register');
 
 Route::group(['prefix' => 'routes'], function() {
 	Route::get('/', 'RouteController@routes')->middleware('auth:api');
+	Route::get('/waypoints/{route}', 'RouteController@waypoints')->middleware('auth:api');
 	Route::post('/create', 'RouteController@create')->middleware('auth:api');
 	Route::delete('/delete/{route_id}', 'RouteController@delete')->middleware('auth:api');
 	Route::get('/share/{user_id}/{route_id}', 'RouteController@share')->middleware('auth:api');
@@ -61,10 +62,12 @@ Route::group(['prefix' => 'friends'], function () {
 	Route::get('/', 'FriendController@friends')->middleware('auth:api');
 	Route::get('/add/{user_id}', 'FriendController@add')->middleware('auth:api');
 	Route::get('/delete/{user_id}', 'FriendController@delete')->middleware('auth:api');
+	Route::delete('/requests/cancel/{user_id}', 'FriendController@cancel')->middleware('auth:api');
 	Route::get('/requests/received', 'FriendController@received')->middleware('auth:api');
 	Route::get('/requests/sent', 'FriendController@sent')->middleware('auth:api');
 	Route::get('/accept/{user_id}', 'FriendController@accept')->middleware('auth:api');
 	Route::get('/decline/{user_id}', 'FriendController@decline')->middleware('auth:api');
-
 });
+
+Route::get('search/{query}', 'SearchController@search')->middleware('auth:api');
 
