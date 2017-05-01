@@ -9,34 +9,34 @@ angular.module('starter.controllers',['starter.services'])
    $scope.default_text = "Please login";
    $scope.recognizedText = '';
 
-     $scope.speakText = function(string) {
+
+        $scope.speak = function(string) {
     window.TTS.speak({
            text: string,
            locale: 'en-GB',
            rate: 1.5
        }, function () {
-           // Do Something after success
+           
+
        }, function (reason) {
            // Handle the error case
        });
   };
 
-  $scope.record = function(entry) {
+$scope.record = function() {
     var recognition = new SpeechRecognition();
     recognition.onresult = function(event) {
         if (event.results.length > 0) {
-          if (entry == "username") {
-            $scope.data.username = event.results[0][0].transcript;
+            $scope.recognizedText = event.results[0][0].transcript;
             $scope.$apply()
-          }
-          if (entry == "password") {
-            $scope.data.password = event.results[0][0].transcript;
-            $scope.$apply()
-          }
+             document.getElementById("myNav").style.width = "100%";
         }
     };
     recognition.start();
   };
+
+
+
   
    $scope.login = function(user_data) {
 
@@ -185,7 +185,7 @@ angular.module('starter.controllers',['starter.services'])
               $state.go('friend_requests');
             } if ($scope.recognizedText == 'Three') {
               $state.go('add_friend');
-            } if ($scope.recognizedText == ('Four' || 'For')) {
+            } if ($scope.recognizedText == ('For' | 'Four')) {
               $state.go('create_route');
             } if ($scope.recognizedText == 'Five') {
               $state.go('my_routes');
@@ -280,6 +280,9 @@ angular.module('starter.controllers',['starter.services'])
 
   $scope.rawFriends = [];
 
+  $scope.stringOfFriends = " ";
+$scope.c = 1;
+
   $scope.$on('$ionicView.beforeEnter', function () {
     var request = {
       method : 'GET',
@@ -305,12 +308,44 @@ angular.module('starter.controllers',['starter.services'])
           $scope.friend_list[result.data.friends[i].id] = friend;
           // END - Should be written better
           //
+        $scope.stringOfFriends =  $scope.stringOfFriends + 'friend ' + $scope.c + ' ' + result.data.friends[i].firstname + " " + result.data.friends[i].lastname + " ";
+$scope.c = $scope.c  + 1;
         }
       }
+      $scope.speakText = function() {
+    TTS.speak({
+           text: 'You have ' + $scope.rawFriends.length+ ' friends',
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+        //what to do after text to speech
+        $scope.speakText1(" " + $scope.stringOfFriends)
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+ $scope.speakText1 = function(string) {
+    TTS.speak({
+           text: string,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           // Do Something after success
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+
     },function () {
       alert("Error: Could not update friends list");
     });
+
+
   });
+
+
+  
+ 
 
   $scope.goBack = function(){
       $state.go('dashboard');
@@ -921,6 +956,13 @@ angular.module('starter.controllers',['starter.services'])
 .controller('FrRequestsCtrl', function($scope, $state, Auth, $http) {
   var data = {};
   $scope.friend_requests = [];
+  $scope.stringOfFriendRequests = " "
+  $scope.c = 1;
+
+
+
+ 
+
 
   $scope.$on('$ionicView.beforeEnter', function () {
     var request = {
@@ -946,8 +988,67 @@ angular.module('starter.controllers',['starter.services'])
           data[result.data.friends[i].id] = user;
           // END - Should be written better
           //
+          $scope.stringOfFriendRequests = $scope.stringOfFriendRequests + 'select ' + $scope.c + 'to accept a friend request from ' + result.data.friends[i].firstname + ' ' + result.data.friends[i].lastname + ' '
+          $scope.c = $scope.c + 1
         }
       }
+         $scope.speakText = function() {
+    TTS.speak({
+           text: 'You have ' + $scope.friend_requests.length+ ' friend requests',
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+        //what to do after text to speech
+        $scope.speakText1(" " + $scope.stringOfFriendRequests)
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+ $scope.speakText1 = function(string) {
+    TTS.speak({
+           text: string,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           // Do Something after success
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+
+      $scope.recognizedText = '';
+ 
+  $scope.record = function() {
+    var recognition = new SpeechRecognition();
+    recognition.onresult = function(event) {
+        if (event.results.length > 0) {
+            $scope.recognizedText = event.results[0][0].transcript;
+            $scope.$apply()
+            if ($scope.recognizedText == 'One') {
+              $scope.accept($scope.friend_requests[0])
+              $scope.speakText1('you have accepted your friend request with ' +  $scope.friend_requests[0].firstname + ' ' + $scope.friend_requests[0].lastname)
+
+            } if ($scope.recognizedText == ('Two' || 'To' || 'Too')) {
+              $scope.accept($scope.friend_requests[1])
+              $scope.speakText1('you have accepted your friend request with ' +  $scope.friend_requests[1].firstname + ' ' + $scope.friend_requests[1].lastname)
+            } if ($scope.recognizedText == 'Three') {
+              $scope.accept($scope.friend_requests[2])
+              $scope.speakText1('you have accepted your friend request with ' +  $scope.friend_requests[2].firstname + ' ' + $scope.friend_requests[2].lastname)
+            } if ($scope.recognizedText == ('For' | 'Four')) {
+              $scope.accept($scope.friend_requests[3])
+              $scope.speakText1('you have accepted your friend request with ' +  $scope.friend_requests[3].firstname + ' ' + $scope.friend_requests[3].lastname)
+            } if ($scope.recognizedText == 'Five') {
+              $scope.accept($scope.friend_requests[4])
+              $scope.speakText1('you have accepted your friend request with ' +  $scope.friend_requests[4].firstname + ' ' + $scope.friend_requests[4].lastname)
+            } if ($scope.recognizedText == 'Six') {
+              $scope.accept($scope.friend_requests[5])
+              $scope.speakText1('you have accepted your friend request with ' +  $scope.friend_requests[5].firstname + ' ' + $scope.friend_requests[5].lastname)
+            }
+        }
+    };
+    recognition.start();
+  };
+
     });
   });
 
@@ -985,6 +1086,8 @@ angular.module('starter.controllers',['starter.services'])
       });
   }
 
+ 
+
   $scope.goBack = function () {
     $state.go('dashboard');
   }
@@ -993,9 +1096,17 @@ angular.module('starter.controllers',['starter.services'])
 
 .controller('MyRoutesCtrl', function($scope, $state, Auth, $http, RouteData, $ionicActionSheet, $ionicModal, $ionicPopup, $timeout) {
 
+
+
+
   $scope.my_routes = [];
   $scope.shared_routes = [];
   $scope.friend_list = {};
+  $scope.stringOfMyRoutes = " ";
+  $scope.stringOfPendingRoutes= " ";
+  $scope.c = 1;
+  $scope.d = 1;
+  $scope.show_mine = false;
 
   $scope.$on('$ionicView.beforeEnter', function () {
     // List routes
@@ -1019,32 +1130,24 @@ angular.module('starter.controllers',['starter.services'])
             _created_at : result.data.routes[i].created_at,
             created_at : result.data.routes[i].created_at.date.split(" ")[0]
           });
+          $scope.stringOfMyRoutes = $scope.stringOfMyRoutes + ' select ' + $scope.c + ' to view route ' +  result.data.routes[i].title + ' with description ' + result.data.routes[i].description
+          $scope.c = $scope.c + 1;
         }
 
-        $scope.my_routes.sort(function(a, b){
-          return new Date(b.created_at) - new Date(a.created_at);
-        });
-
-       }, function(e) {
-        console.log(e)
-       }
-     );
-
- 
-$scope.sleep = function(milliseconds){
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-};
-
-
-
-
-  $scope.speakText = function(string) {
-    window.TTS.speak({
+                 $scope.speakText = function() {
+    TTS.speak({
+           text: 'You have ' + $scope.my_routes.length+ ' routes. Select 0 to view pending routes.',
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+        //what to do after text to speech
+        $scope.speakText1(" " + $scope.stringOfMyRoutes)
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+ $scope.speakText1 = function(string) {
+    TTS.speak({
            text: string,
            locale: 'en-GB',
            rate: 1.5
@@ -1055,19 +1158,7 @@ $scope.sleep = function(milliseconds){
        });
   };
 
-
-  $scope.readRoutes = function() {
-    $scope.sleep(3000)
-    for (var i = 0; i < $scope.my_routes.length; i++) {
-      $scope.sleep(7000)
-      $scope.speakText($scope.my_routes[i].title)
-      $scope.sleep(5000)
-    }
-  };
-
-
-
-  $scope.recognizedText = '';
+      $scope.recognizedText = '';
  
   $scope.record = function() {
     var recognition = new SpeechRecognition();
@@ -1075,24 +1166,42 @@ $scope.sleep = function(milliseconds){
         if (event.results.length > 0) {
             $scope.recognizedText = event.results[0][0].transcript;
             $scope.$apply()
+            if ($scope.recognizedText == 'Zero') {
+              $scope.show_mine = true;
+              $scope.seePendingRoutes()
+            }
             if ($scope.recognizedText == 'One') {
-              $scope.seeRoute(scope.my_routes[1])
+              $scope.seeRoute($scope.my_routes[0])
+
             } if ($scope.recognizedText == ('Two' || 'To' || 'Too')) {
-              $scope.seeRoute(scope.my_routes[2])
+              $scope.seeRoute($scope.my_routes[1])
+
             } if ($scope.recognizedText == 'Three') {
-              $scope.seeRoute(scope.my_routes[3])
-            } if ($scope.recognizedText == ('Four' || 'For')) {
-              $scope.seeRoute(scope.my_routes[4])
+              $scope.seeRoute($scope.my_routes[2])
+             
+            } if ($scope.recognizedText == ('For' | 'Four')) {
+              $scope.seeRoute($scope.my_routes[3])
+
             } if ($scope.recognizedText == 'Five') {
-              $scope.seeRoute(scope.my_routes[5])
+              $scope.seeRoute($scope.my_routes[4])
+
             } if ($scope.recognizedText == 'Six') {
-              $scope.seeRoute(scope.my_routes[6])
+              $scope.seeRoute($scope.my_routes[5])
+              
             }
         }
     };
     recognition.start();
   };
 
+        $scope.my_routes.sort(function(a, b){
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+
+       }, function(e) {
+        console.log(e)
+       }
+     );
 
 
 
@@ -1120,6 +1229,37 @@ $scope.sleep = function(milliseconds){
         console.log(e)
        }
      );
+     $scope.seePendingRoutes = function(){
+          var pendingRoutes = routesRequest;
+     pendingRoutes.url = Auth.getApiUrl() + "/api/routes/received";
+     $scope.shared_routes = [];
+     $http(pendingRoutes).then(function(result) {
+        if (result.data.response.constructor == Array) {
+          for (var i = 0; i < result.data.response.length; i++) {
+            $scope.shared_routes.push({
+              id: result.data.response[i].id,
+              body: result.data.response[i].body,
+              title:  result.data.response[i].title, 
+              description: result.data.response[i].description,
+              start_address: result.data.response[i].start_address,
+              end_address: result.data.response[i].end_address,
+              _created_at : result.data.routes[i].created_at,
+              created_at : result.data.response[i].created_at.split(" ")[0]
+            });
+
+             $scope.stringOfPendingRoutes = $scope.stringOfPendingRoutes + ' select pending' + $scope.d + ' to accept route' + result.data.response[i].title + ' with description ' + result.data.response[i].description
+
+             $scope.d = $scope.d + 1
+          }
+        }
+        $scope.speakText1('you have ' + $scope.shared_routes.length + ' pending routes ' + $scope.stringOfPendingRoutes)
+
+       }, function(e) {
+        console.log(e)
+       }
+     );
+
+   }
 
      // Load friends in the background in preparation to be shared
      var friendsRequest = {
@@ -1333,6 +1473,29 @@ VIEW ROUTE CONTROLLER
   var route;
   var directionsManager;
 
+  $scope.speak = function(string) {
+    window.TTS.speak({
+           text: string,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           
+
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+
+$scope.record = function() {
+    var recognition = new SpeechRecognition();
+    recognition.onresult = function(event) {
+        if (event.results.length > 0) {
+            $state.go('directions');
+        }
+    };
+    recognition.start();
+  };
+
   $scope.mapCreated = function (map) {
     $scope.map = map;
   }
@@ -1365,6 +1528,20 @@ VIEW ROUTE CONTROLLER
   });
 
   // TODO (Nadia): Text ot Speech on itinerary items list
+
+
+  $scope.speak = function(string) {
+    window.TTS.speak({
+           text: string,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           
+
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
 
   $scope.goBack = function () {
     $state.go('view_route');

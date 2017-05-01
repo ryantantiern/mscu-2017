@@ -1,7 +1,7 @@
 <ion-view view-title="My routes">
 
-  <ion-content class="padding-top padding-bottom" has-bouncing="false">
 
+<ion-content class="padding-top padding-bottom">
     <div class="row">
       <div class="col col-33">
         <a ng-click="goBack()"  class="icon-left button button-clear button-dark ion-chevron-left">
@@ -14,14 +14,17 @@
           Switch
         </a>
 
-        <button on-double-tap = "readRoutes()" on-hold = "record()">Default Button</button>
-
       </div>
 
     </div>
     <div class="row">
       <h3>
         <div ng-if="!show_mine"> My routes ({{ my_routes.length }}): </div>
+              <div class="card">
+          <div class="item item-text-wrap">
+            {{recognizedText}}
+          </div>
+      </div>
         <div ng-if="show_mine"> 
           <div ng-if="shared_routes.length == 0">
             No pending routes

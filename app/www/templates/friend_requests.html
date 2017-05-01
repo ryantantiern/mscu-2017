@@ -1,11 +1,20 @@
 <ion-view view-title="Friend Requests">
 
+<div id="myNav" class="overlay" style="width:100%;">
+  <a href="javascript:void(0)" class="closebtn" on-double-tap = "speakText()" on-hold = "record()" on-swipe-right="goBack()">;</a>
+</div> 
+
   <ion-content class="padding-top padding-bottom">
         <div class="row">
           <div class="col col-33">
             <a on-tap="goBack()" on-hold="speakText('Go back')" class="icon-left button button-clear button-dark ion-chevron-left">
               Back
             </a>
+          </div>
+        </div>
+                <div class="card">
+          <div class="item item-text-wrap">
+            {{recognizedText}}
           </div>
         </div>
             <div class="list">

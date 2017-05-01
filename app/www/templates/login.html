@@ -1,11 +1,19 @@
 <ion-view view-title="Login">
 
+    <div id="myNav" class="overlay">
+  <a href="javascript:void(0)" class="closebtn" on-double-tap = "speak('email address?')" on-hold= "record()">;</a>
+  </div>
+
     <ion-content class="padding">
+
+
       <div class="row">
         <h4  ><b>Cities Unlocked is a unique collaboration between Guide Dogs and Microsoft,
-          which explores the potential technology has to enable people living with sight
+          which explores the potential technology to enable people living with sight
           loss to get out and about, independently and confidently, in our towns and cities.</b> </h4>
       </div>
+
+      <button style="background-color: transparent; width: 100%;" on-tap = "speak('Leave A 400 Totenham Court Road towards Tottenham street. Turn right on to Torrington Place. Turn left on to Malet Place. Arrive at Malet Place. Nice print room cafe. Leave Malet Place towards Torrington Place. Turn right on to Torrington Place.')" on-hold = "record()"> - </button>
 
       <h3  ng-if="data.username">
         Hello!
