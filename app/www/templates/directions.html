@@ -1,7 +1,7 @@
 <ion-view view-title="My routes">
-<div id="myNav" style= "width: 100%" class="overlay">
-  <a href="javascript:void(0)" class="closebtn" on-hold= "record()" on-double-tap = "speakText('Directions Goodge Street to British Library. ')" on-swipe-right="goBack()">;</a>
-  </div> 
+<div id="myNav" class="overlay" style="width:100%;">
+  <a href="javascript:void(0)" class="closebtn" on-double-tap = "speakText()" on-hold = "record()" on-swipe-right="goBack()">;</a>
+</div> 
   <ion-content class="padding-top padding-bottom">
     <div class="row">
       <div class="col col-33">
@@ -10,9 +10,8 @@
         </a>
       </div>
     </div>
-    
     <div class="directions itinerary-items">
-      <div class="card" ng-repeat="itinerary in itineraryItems track by $index">
+      <div class="card" ng-repeat="(i, itinerary) in itineraryItems track by $index">
         <div class="item item-text-wrap">{{ itinerary }}</div>
       </div>
     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Route;
 use App\User;
+use App\Waypoint;
 
 class RouteController extends Controller
 {
@@ -13,35 +14,65 @@ class RouteController extends Controller
         //Todo: response should not expose id of route within the table
         $user = $request->user();
         $routes = $user->routes()->get();
-        $response = ['status' => 'response', 'response' => 'routes', 'count' => $routes->count() , 'routes' => $routes];
+        $response = [
+            'status' => 'succes', 
+            'count' => $routes->count() , 
+            'routes' => $routes->map(function($route) {
+                return [
+                    "id" => $route->id,
+                    "title" =>  $route->title, 
+                    "description" => $route->description,
+                    "start_address" => $route->start_address,
+                    "end_address" => $route->end_address,
+                    "created_at" => $route->created_at,
+                ];
+            })
+        ];
         return $response;
+    }
+
+    public function waypoints(Route $route) {
+        return [$route->waypoints()->get()];
     }
 
     public function create(Request $request)
     {
-    	$json_coordinates = $request->input('coordinates');
-    	$array_coordinates = json_decode($json_coordinates);
-
-    	if (!is_array($array_coordinates)) {
-    		return ['status' => 'error', 'error' => 'Route is not an array'];
-      	}
+    
+        $payload = $request->all();
+        $waypoints = $payload["waypoints"];
 
         // Error checking
-      	foreach ($array_coordinates as $coord) {
-      		if (!is_array($coord)) { return ['status' => 'error' , 'error' => 'Coordinates are not an array']; }
-      		if (!count($coord) == 2) { return ['status' => 'error', 'error' => 'Not a a pair of coordinates']; }
-			foreach ($coord as $val) {
-				if (!is_numeric($val)) { return ['status' => 'error', 'error' => 'Coordinate is not numeric value']; }
-  			}
-      	}
-	    
-    	$route = Route::create([
-    		'user_id' => $request->user()->id,
-    		'body' => $json_coordinates
-    	]);
+        foreach ($waypoints as $i=>$wp) {
+           if (!$wp["lat"] || !$wp["lon"]) {
+                return ["error" => "Missing lat, lon value at waypoint #{$i}"];
+           }
+           else if (!is_numeric($wp["lat"]) || !is_numeric($wp["lon"])) {
+                return ["error" => "Lat, Lon is not valid numeric coordinate(s) at waypoint #{$i}"];
+           }
+        }
 
-        $response = ['status' => 'response', 'response' => 'route', 'route' => $route];
-    	return $route;
+        // Add position to waypoints
+        $waypoints = collect($waypoints)->map(function($wp, $i) {
+            $wp["position"] = $i;
+            return new Waypoint($wp);
+        });
+
+
+        
+
+        // Create Route
+        $route = Route::create([
+            'user_id' => $request->user()->id,
+            'title' => $request->input('title'),
+            'description' => $request->input('description'), 
+            'start_address' => $request->input('start_address'),
+            'end_address' => $request->input('end_address'),
+        ]);
+        
+        // Convert objects to Waypoint objects
+       $route->waypoints()->saveMany($waypoints);
+       
+        return ['success'];
     }
 
     public function delete(Request $request, $route_id)

@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-         'email', 'password',
+         'email', 'password', 'phone', 'dob', 'firstname', 'lastname'
     ];
 
     /**
@@ -31,6 +31,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // public function findForPassport($username) {
+    //     return $this->where('username', $username)->first();
+    // }
 
     public function routes()
     {
@@ -68,7 +72,11 @@ class User extends Authenticatable
     {   
         Route::create([
                 'user_id' => $this->id,
-                'body' => $route->body
+                'body' => $route->body,
+                'title' => $route->title,
+                'description' => $route->description, 
+                'start_address' => $route->start_address,
+                'end_address' => $route->end_address
         ]);
         $this->receivedRoutes()->wherePivot('route_id', $route->id)->first()->pivot->update([
             'accepted' => true

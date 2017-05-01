@@ -16,6 +16,10 @@ angular.module('starter.services',[])
 		 	},
 		 	getApiUrl : function() {
 		 		return (apiurl)? apiurl : false;
+		 	},
+		 	destroy : function () {
+		 		user = null;
+		 		apiurl = null;
 		 	}
 		 }
 	})

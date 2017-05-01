@@ -10,31 +10,6 @@ angular.module('starter.controllers',['starter.services'])
    $scope.recognizedText = '';
 
 
-        $scope.speak = function(string) {
-    window.TTS.speak({
-           text: string,
-           locale: 'en-GB',
-           rate: 1.5
-       }, function () {
-           
-
-       }, function (reason) {
-           // Handle the error case
-       });
-  };
-
-$scope.record = function() {
-    var recognition = new SpeechRecognition();
-    recognition.onresult = function(event) {
-        if (event.results.length > 0) {
-            $scope.recognizedText = event.results[0][0].transcript;
-            $scope.$apply()
-             document.getElementById("myNav").style.width = "100%";
-        }
-    };
-    recognition.start();
-  };
-
 
 
   
@@ -1188,6 +1163,29 @@ $scope.c = $scope.c  + 1;
             } if ($scope.recognizedText == 'Six') {
               $scope.seeRoute($scope.my_routes[5])
               
+            } if ($scope.recognizedText == 'Pending one') {
+              $scope.accept($scope.shared_routes[0].id)
+              $scope.speakText1('you have accepted the shared route ' +  $scope.shared_routes[0].title)
+            }
+            if ($scope.recognizedText == 'Pending to') {
+              $scope.accept($scope.shared_routes[1].id)
+              $scope.speakText1('you have accepted the shared route ' +  $scope.shared_routes[1].title)
+              
+            }
+            if ($scope.recognizedText == 'Pending three') {
+              $scope.accept($scope.shared_routes[2].id)
+              $scope.speakText1('you have accepted the shared route ' +  $scope.shared_routes[2].title)
+              
+            }
+            if ($scope.recognizedText == 'Pending for') {
+              $scope.accept($scope.shared_routes[3].id)
+              $scope.speakText1('you have accepted the shared route ' +  $scope.shared_routes[3].title)
+              
+            }
+            if ($scope.recognizedText == 'Pending five') {
+              $scope.accept($scope.shared_routes[4].id)
+              $scope.speakText1('you have accepted the shared route ' +  $scope.shared_routes[4].title)
+              
             }
         }
     };
@@ -1219,7 +1217,7 @@ $scope.c = $scope.c  + 1;
               description: result.data.response[i].description,
               start_address: result.data.response[i].start_address,
               end_address: result.data.response[i].end_address,
-              _created_at : result.data.routes[i].created_at,
+              
               created_at : result.data.response[i].created_at.split(" ")[0]
             });
           }
@@ -1243,11 +1241,11 @@ $scope.c = $scope.c  + 1;
               description: result.data.response[i].description,
               start_address: result.data.response[i].start_address,
               end_address: result.data.response[i].end_address,
-              _created_at : result.data.routes[i].created_at,
+             
               created_at : result.data.response[i].created_at.split(" ")[0]
             });
 
-             $scope.stringOfPendingRoutes = $scope.stringOfPendingRoutes + ' select pending' + $scope.d + ' to accept route' + result.data.response[i].title + ' with description ' + result.data.response[i].description
+             $scope.stringOfPendingRoutes = $scope.stringOfPendingRoutes + ' select pending ' + $scope.d + ' to accept route' + result.data.response[i].title + ' with description ' + result.data.response[i].description
 
              $scope.d = $scope.d + 1
           }
@@ -1385,7 +1383,7 @@ $scope.c = $scope.c  + 1;
             $scope.seeRoute(route);
             break;
           case 1: 
-            accept(route.id);
+            $scope.accept(route.id);
             break;
           default:
             return false
@@ -1400,7 +1398,7 @@ $scope.c = $scope.c  + 1;
     });
   }
 
-  function accept(route_id) {
+  $scope.accept = function(route_id) {
     var request = {
       method: 'GET',
       url: Auth.getApiUrl() + "/api/routes/accept/" + route_id,
@@ -1473,28 +1471,39 @@ VIEW ROUTE CONTROLLER
   var route;
   var directionsManager;
 
-  $scope.speak = function(string) {
-    window.TTS.speak({
-           text: string,
+
+ $scope.speakText = function() {
+    TTS.speak({
+           text: 'Would you like to view the directions?',
            locale: 'en-GB',
            rate: 1.5
        }, function () {
-           
-
+        //what to do after text to speech
+        $scope.speakText1(" " + $scope.stringOfMyRoutes)
        }, function (reason) {
            // Handle the error case
        });
   };
 
-$scope.record = function() {
+  $scope.recognizedText = '';
+
+ 
+  $scope.record = function() {
     var recognition = new SpeechRecognition();
     recognition.onresult = function(event) {
         if (event.results.length > 0) {
-            $state.go('directions');
+            $scope.recognizedText = event.results[0][0].transcript;
+            $scope.$apply()
+            if ($scope.recognizedText == 'Yes') {
+              $scope.viewDirections()
+            } if ($scope.recognizedText == 'No') {
+              $scope.goBack()
+            } 
         }
     };
     recognition.start();
   };
+
 
   $scope.mapCreated = function (map) {
     $scope.map = map;
@@ -1523,25 +1532,29 @@ $scope.record = function() {
  */
 .controller('DirectionsCtrl', function($state, $scope, BingLocationService) {
   $scope.itineraryItems = [];
+  $scope.directionsInString = ' ';
   $scope.$on('$ionicView.afterEnter', function () {
     $scope.itineraryItems = BingLocationService.getItineraryItems();
+    for(var i in $scope.itineraryItems) {
+    $scope.directionsInString = $scope.directionsInString + $scope.itineraryItems[i]
+  }
   });
 
-  // TODO (Nadia): Text ot Speech on itinerary items list
 
-
-  $scope.speak = function(string) {
-    window.TTS.speak({
-           text: string,
+   $scope.speakText = function() {
+    TTS.speak({
+           text: ' ' + $scope.directionsInString,
            locale: 'en-GB',
            rate: 1.5
        }, function () {
-           
-
+        //what to do after text to speech
        }, function (reason) {
            // Handle the error case
        });
   };
+
+
+
 
   $scope.goBack = function () {
     $state.go('view_route');

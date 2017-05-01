@@ -107,7 +107,8 @@ angular.module('starter', ['ionic', 'ionic.cloud', 'ngCordova', 'ngStorage', 'st
 
 .run(function($rootScope, $location,  $state, Auth) {
   $rootScope.$on('$stateChangeStart', function (event) {
-      if (!Auth.getApiUrl()) Auth.setApiUrl("http://second-year-project.azurewebsites.net");
+  		var apiurl = "http://second-year-project.azurewebsites.net";
+      if (!Auth.getApiUrl()) Auth.setApiUrl(apiurl);
       // "http://second-year-project.azurewebsites.net"
       // Prevent non authenticated user to access app
       if ($location.path() != '/login' && $location.path() != '/register ') {
