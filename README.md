@@ -1,6 +1,6 @@
 # mscu-2017
 ## Server Pre-requisite ##
-Composer__
+Composer<br/>
 PHP >= 5.6.4
 Hosted (or local) PostgreSQL Database
 
