@@ -32,11 +32,10 @@ Laravel follows an MVC Framework. Check out [Laravel](https://laravel.com/docs/5
 #### Controllers ####
 Location: /api/app/Http/Controllers<br/>
 Key Files: <br/>
-<u>FriendController.php<br/>
+FriendController.php<br/>
 RegisterController.php<br/>
 RouteController.php<br/>
 SearchController.php<br/>
-</u>
 <br/>
 #### Models ####
 Location: /api/app<br/>
@@ -60,7 +59,7 @@ Key Files: All<br/>
 Location: /app/www/templates<br/>
 Key Files: All<br/>
 <br/>
-Scripts<br/>
+#### Scripts ####
 Location: /app/www/scripts<br/>
 Key Files: <br/>
 app.js<br/>
