@@ -1,13 +1,13 @@
 # mscu-2017
 ## Server Pre-requisite ##
-Composer<br/>
-PHP >= 5.6.4<br/>
-Hosted (or local) PostgreSQL Database<br/>
+1. Composer<br/>
+2. PHP >= 5.6.4<br/>
+3. Hosted (or local) PostgreSQL Database<br/>
 
 ## App Pre-requisites ##
-Node.js 6.x LTS<br/>
-[Android](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html): Java Development Kit (JDK) 7, Android SDK<br/>
-iOS: Xcode (Non OSX users cannot build for iOS)<br/>
+1. Node.js 6.x LTS<br/>
+2. [Android](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html): Java Development Kit (JDK) 7, Android SDK<br/>
+3. iOS: Xcode (Non OSX users cannot build for iOS)<br/>
 
 ## Server setup ##
 
