@@ -29,33 +29,34 @@ To deploy the app, follow the guide on [Publishing your app](http://ionicframewo
 
 Laravel follows an MVC Framework. Check out [Laravel](https://laravel.com/docs/5.4/structure) for more details.
 <br/>
-Controllers<br/>
+#### Controllers ####
 Location: /api/app/Http/Controllers<br/>
 Key Files: <br/>
-FriendController.php<br/>
+<u>FriendController.php<br/>
 RegisterController.php<br/>
 RouteController.php<br/>
 SearchController.php<br/>
+</u>
 <br/>
-Models<br/>
+#### Models ####
 Location: /api/app<br/>
 Key FIles:<br/>
 Route.php<br/>
 User.php<br/>
 Waypoint.php<br/>
 <br/>
-Routes<br/>
+#### Routes ####
 Location:/api/routes<br/>
 Key Files: <br/>
 api.php<br/>
 <br/>
-Database Migrations<br/>
+#### Database Migrations ####
 Location: /api/database/migrations<br/>
 Key Files: All<br/>
 <br/>
-## App Directory ##
+## APP Directory ##
 
-Template Views<br/>
+#### Template Views ####
 Location: /app/www/templates<br/>
 Key Files: All<br/>
 <br/>
