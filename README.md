@@ -1,17 +1,17 @@
 # mscu-2017
 ## Server Pre-requisite ##
 Composer<br/>
-PHP >= 5.6.4
-Hosted (or local) PostgreSQL Database
+PHP >= 5.6.4<br/>
+Hosted (or local) PostgreSQL Database<br/>
 
 ## App Pre-requisites ##
-Node.js 6.x LTS
-[Android](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html): Java Development Kit (JDK) 7, Android SDK 
-iOS: Xcode (Non OSX users cannot build for iOS)
+Node.js 6.x LTS<br/>
+[Android](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html): Java Development Kit (JDK) 7, Android SDK<br/>
+iOS: Xcode (Non OSX users cannot build for iOS)<br/>
 
 ## Server setup ##
 
-In your database base server, create a new database called api_cu or run execute query CREATE DATABASE api_cu. At the root of /api directory, change .env to insert appropriate DB_USERNAME, DB_HOSTNAME, DB_PASSWORD to resemble your PostgreSQL instance. Upload the /api directory into your web server via SSH or your favourite FTP client. In the terminal/cmd, execute php composer.phar install to install the project dependencies. After the dependencies had been installed, execute php artisan migrate followed by php artisan passport:install. This will create a database migration within api_cu of your PostgreSQL instance then initialize the Passport package to create a new client secret key. It will return to the console  “Laravel Password Grant Client” followed by a key. Store this key in a secure place. 
+In your database base server, create a new database called `api_cu` or run execute query `CREATE DATABASE api_cu`. At the root of `/api` directory, change `.env` to insert appropriate `DB_USERNAME, DB_HOSTNAME, DB_PASSWORD` to resemble your PostgreSQL instance. Upload the `/api` directory into your web server via SSH or your favourite FTP client. In the terminal/cmd, execute `php composer.phar` install to install the project dependencies. After the dependencies had been installed, execute `php artisan migrate` followed by `php artisan passport:install`. This will create a database migration within `api_cu` of your PostgreSQL instance then initialize the Passport package to create a new client secret key. It will return to the console  <i>“Laravel Password Grant Client”</i>followed by a key. Store this key in a secure place. 
 
 ## App setup ##
 
